@@ -1,75 +1,60 @@
-import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { registerGetVehicleSpecsTool } from "./tools/getVehicleSpecs.js";
+import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
+import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
+import { registerGetMarketValueTool } from "./tools/getMarketValue.js";
+import { registerGetVehicleHistoryTool } from "./tools/getVehicleHistory.js";
+import { registerGetVehicleImagesTool } from "./tools/getVehicleImages.js";
+import { registerGetVehicleRecallsTool } from "./tools/getVehicleRecalls.js";
+import { registerVinOcrTool } from "./tools/vinOcr.js";
+import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
+import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
+import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
+import { MCP_OBJECT } from "./MCP_OBJECT";
 
-// Define our MCP agent with tools
-export class MyMCP extends McpAgent {
-	server = new McpServer({
-		name: "Authless Calculator",
-		version: "1.0.0",
-	});
+const server = new McpServer({
+  name: "carsxe",
+  version: "1.0.1",
+  capabilities: {
+    resources: {},
+    tools: {},
+  },
+});
 
-	async init() {
-		// Simple addition tool
-		this.server.tool(
-			"add",
-			{ a: z.number(), b: z.number() },
-			async ({ a, b }) => ({
-				content: [{ type: "text", text: String(a + b) }],
-			})
-		);
+registerGetVehicleSpecsTool(server);
+registerDecodeVehiclePlateTool(server);
+registerInternationalVinDecoderTool(server);
+registerGetMarketValueTool(server);
+registerGetVehicleHistoryTool(server);
+registerGetVehicleImagesTool(server);
+registerGetVehicleRecallsTool(server);
+registerVinOcrTool(server);
+registerGetYearMakeModelTool(server);
+registerDecodeObdCodeTool(server);
+registerRecognizePlateImageTool(server);
 
-		// Calculator tool with multiple operations
-		this.server.tool(
-			"calculate",
-			{
-				operation: z.enum(["add", "subtract", "multiply", "divide"]),
-				a: z.number(),
-				b: z.number(),
-			},
-			async ({ operation, a, b }) => {
-				let result: number;
-				switch (operation) {
-					case "add":
-						result = a + b;
-						break;
-					case "subtract":
-						result = a - b;
-						break;
-					case "multiply":
-						result = a * b;
-						break;
-					case "divide":
-						if (b === 0)
-							return {
-								content: [
-									{
-										type: "text",
-										text: "Error: Cannot divide by zero",
-									},
-								],
-							};
-						result = a / b;
-						break;
-				}
-				return { content: [{ type: "text", text: String(result) }] };
-			}
-		);
-	}
+async function main() {
+  try {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.error("🚀 Vehicle Specs MCP Server v1.0.1 running on stdio");
+  } catch (error) {
+    console.error("💥 Failed to start server:", error);
+    process.exit(1);
+  }
 }
 
+main();
+
 export default {
-	fetch(request: Request, env: Env, ctx: ExecutionContext) {
-		const url = new URL(request.url);
-
-		if (url.pathname === "/sse" || url.pathname === "/sse/message") {
-			return MyMCP.serveSSE("/sse").fetch(request, env, ctx);
-		}
-
-		if (url.pathname === "/mcp") {
-			return MyMCP.serve("/mcp").fetch(request, env, ctx);
-		}
-
-		return new Response("Not found", { status: 404 });
-	},
+  async fetch(
+    request: Request,
+    env: any,
+    ctx: ExecutionContext
+  ): Promise<Response> {
+    return new Response("MCP server is live");
+  },
 };
+
+export { MCP_OBJECT };
