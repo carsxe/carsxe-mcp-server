@@ -37,6 +37,7 @@ export function registerRecognizePlateImageTool(
       }
       // POST request with body as imageUrl
       const apiKey = getApiKey();
+      console.log("apiKey recognizePlateImage", apiKey ? `***${apiKey.slice(-4)}` : "null");
       if (!apiKey) {
         return {
           content: [

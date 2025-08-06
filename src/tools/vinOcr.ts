@@ -37,6 +37,7 @@ export function registerVinOcrTool(
       }
       // POST request with body as imageUrl
       const apiKey = getApiKey();
+      console.log("apiKey vinOcr", apiKey ? `***${apiKey.slice(-4)}` : "null");
       if (!apiKey) {
         return {
           content: [

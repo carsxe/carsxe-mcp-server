@@ -16,7 +16,8 @@ export default {
       return new Response("Missing X-API-Key header", { status: 401 });
     }
 
-    // Set the API key for this request
+    // Set the API key for this request - this should work in Cloudflare Workers
+    // because each request runs in its own isolate
     setApiKey(apiKey);
 
     if (url.pathname === "/sse" || url.pathname === "/sse/message") {

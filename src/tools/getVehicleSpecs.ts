@@ -20,7 +20,7 @@ export function registerGetVehicleSpecsTool(
     },
     async ({ vin }) => {
       const apiKey = getApiKey();
-      console.log("apiKey getVehicleSpecs", apiKey);
+      console.log("apiKey getVehicleSpecs", apiKey ? `***${apiKey.slice(-4)}` : "null");
       if (!apiKey) {
         return {
           content: [

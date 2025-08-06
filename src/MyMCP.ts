@@ -12,16 +12,17 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-// Module-level storage for the current API key
+// Simple approach: store API key in a global variable
+// This works in Cloudflare Workers because each request runs in its own isolate
 let currentApiKey: string | null = null;
 
-// Function to set the API key from request headers
 export function setApiKey(apiKey: string) {
   currentApiKey = apiKey;
+  console.log("Setting API key:", apiKey ? "***" + apiKey.slice(-4) : "null");
 }
 
-// Function to get the current API key
 export function getApiKey(): string | null {
+  console.log("Getting API key:", currentApiKey ? "***" + currentApiKey.slice(-4) : "null");
   return currentApiKey;
 }
 
