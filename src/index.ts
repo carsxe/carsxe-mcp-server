@@ -14,13 +14,19 @@ export default {
       return new Response("Missing X-API-Key header", { status: 401 });
     }
 
-    console.log("Original request API key:", apiKey ? "***" + apiKey.slice(-4) : "null");
+    console.log("Setting API key in context:", apiKey ? "***" + apiKey.slice(-4) : "null");
+
+    // Set the API key in the execution context props
+    (ctx as any).props = (ctx as any).props || {};
+    (ctx as any).props.API_KEY = apiKey;
 
     if (url.pathname === "/sse" || url.pathname === "/sse/message") {
+      // @ts-ignore
       return MyMCP.serveSSE("/sse").fetch(request, env, ctx);
     }
 
     if (url.pathname === "/mcp") {
+      // @ts-ignore
       return MyMCP.serve("/mcp").fetch(request, env, ctx);
     }
 

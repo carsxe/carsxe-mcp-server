@@ -19,39 +19,23 @@ export class MyMCP extends McpAgent {
   });
 
   async init() {
-    // Try accessing request from server context
-    const getApiKeyFromServer = (): string | null => {
-      // Check if server has access to request context
-      console.log("Server context:", typeof (this.server as any).request);
-      console.log("Server keys:", Object.keys(this.server));
-
-      // Try different ways to access the original request
-      const serverAny = this.server as any;
-      if (serverAny.request) {
-        const apiKey =
-          serverAny.request.headers?.get?.("X-API-Key") ||
-          serverAny.request.headers?.get?.("x-api-key");
-        console.log(
-          "API key from server request:",
-          apiKey ? "***" + apiKey.slice(-4) : "null"
-        );
-        return apiKey;
-      }
-
-      console.log("No request context found in server");
-      return null;
+    // Function to get API key from execution context props
+    const getApiKey = (): string | null => {
+      const apiKey = (this.props as any)?.API_KEY;
+      console.log("Getting API key from props:", apiKey ? "***" + apiKey.slice(-4) : "null");
+      return apiKey || null;
     };
 
-    registerGetVehicleSpecsTool(this.server, getApiKeyFromServer);
-    registerDecodeVehiclePlateTool(this.server, getApiKeyFromServer);
-    registerInternationalVinDecoderTool(this.server, getApiKeyFromServer);
-    registerGetMarketValueTool(this.server, getApiKeyFromServer);
-    registerGetVehicleHistoryTool(this.server, getApiKeyFromServer);
-    registerGetVehicleImagesTool(this.server, getApiKeyFromServer);
-    registerGetVehicleRecallsTool(this.server, getApiKeyFromServer);
-    registerVinOcrTool(this.server, getApiKeyFromServer);
-    registerGetYearMakeModelTool(this.server, getApiKeyFromServer);
-    registerDecodeObdCodeTool(this.server, getApiKeyFromServer);
-    registerRecognizePlateImageTool(this.server, getApiKeyFromServer);
+    registerGetVehicleSpecsTool(this.server, getApiKey);
+    registerDecodeVehiclePlateTool(this.server, getApiKey);
+    registerInternationalVinDecoderTool(this.server, getApiKey);
+    registerGetMarketValueTool(this.server, getApiKey);
+    registerGetVehicleHistoryTool(this.server, getApiKey);
+    registerGetVehicleImagesTool(this.server, getApiKey);
+    registerGetVehicleRecallsTool(this.server, getApiKey);
+    registerVinOcrTool(this.server, getApiKey);
+    registerGetYearMakeModelTool(this.server, getApiKey);
+    registerDecodeObdCodeTool(this.server, getApiKey);
+    registerRecognizePlateImageTool(this.server, getApiKey);
   }
 }
