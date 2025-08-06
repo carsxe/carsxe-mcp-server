@@ -12,18 +12,27 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-// Simple approach: store API key in a global variable
-// This works in Cloudflare Workers because each request runs in its own isolate
-let currentApiKey: string | null = null;
+// Store API key globally with timestamp-based cleanup to prevent memory leaks
+const apiKeyStore: { [requestId: string]: { apiKey: string; timestamp: number } } = {};
 
-export function setApiKey(apiKey: string) {
-  currentApiKey = apiKey;
-  console.log("Setting API key:", apiKey ? "***" + apiKey.slice(-4) : "null");
+export function setApiKeyForRequest(requestId: string, apiKey: string) {
+  // Clean up old entries (older than 5 minutes)
+  const now = Date.now();
+  Object.keys(apiKeyStore).forEach(id => {
+    if (now - apiKeyStore[id].timestamp > 5 * 60 * 1000) {
+      delete apiKeyStore[id];
+    }
+  });
+  
+  apiKeyStore[requestId] = { apiKey, timestamp: now };
+  console.log("Setting API key for request:", requestId, apiKey ? "***" + apiKey.slice(-4) : "null");
 }
 
-export function getApiKey(): string | null {
-  console.log("Getting API key:", currentApiKey ? "***" + currentApiKey.slice(-4) : "null");
-  return currentApiKey;
+export function getApiKeyForRequest(requestId: string): string | null {
+  const entry = apiKeyStore[requestId];
+  const apiKey = entry?.apiKey || null;
+  console.log("Getting API key for request:", requestId, apiKey ? "***" + apiKey.slice(-4) : "null");
+  return apiKey;
 }
 
 export class MyMCP extends McpAgent {
@@ -32,7 +41,22 @@ export class MyMCP extends McpAgent {
     version: "1.0.1",
   });
 
+  private static currentRequestId: string | null = null;
+
+  static setRequestId(requestId: string) {
+    MyMCP.currentRequestId = requestId;
+  }
+
+  static getCurrentRequestId(): string | null {
+    return MyMCP.currentRequestId;
+  }
+
   async init() {
+    const getApiKey = () => {
+      const requestId = MyMCP.getCurrentRequestId();
+      return requestId ? getApiKeyForRequest(requestId) : null;
+    };
+
     registerGetVehicleSpecsTool(this.server, getApiKey);
     registerDecodeVehiclePlateTool(this.server, getApiKey);
     registerInternationalVinDecoderTool(this.server, getApiKey);
