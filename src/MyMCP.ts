@@ -12,7 +12,7 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-export class CarsXEMCP extends McpAgent {
+export class MyMCP extends McpAgent {
   server = new McpServer({
     name: "carsxe",
     version: "1.0.1",
