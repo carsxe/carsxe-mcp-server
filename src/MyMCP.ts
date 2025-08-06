@@ -12,43 +12,17 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-// Global API key storage with additional timing information for debugging
-interface ApiKeyEntry {
-  apiKey: string;
-  timestamp: number;
-  requestCounter: number;
+// Simple global variable to store current request's API key
+let currentApiKey: string | null = null;
+
+export function setApiKey(apiKey: string) {
+  currentApiKey = apiKey;
+  console.log("API key set:", apiKey ? "***" + apiKey.slice(-4) : "null");
 }
 
-let globalApiKeyEntry: ApiKeyEntry | null = null;
-let requestCounter = 0;
-
-export function setGlobalApiKey(apiKey: string) {
-  requestCounter++;
-  globalApiKeyEntry = {
-    apiKey,
-    timestamp: Date.now(),
-    requestCounter
-  };
-  console.log(`[Request ${requestCounter}] Setting global API key:`, apiKey ? "***" + apiKey.slice(-4) : "null", `at ${globalApiKeyEntry.timestamp}`);
-}
-
-export function getGlobalApiKey(): string | null {
-  if (!globalApiKeyEntry) {
-    console.log("Getting global API key: null (no entry)");
-    return null;
-  }
-  
-  const { apiKey, timestamp, requestCounter: reqId } = globalApiKeyEntry;
-  const age = Date.now() - timestamp;
-  console.log(`[Request ${reqId}] Getting global API key:`, apiKey ? "***" + apiKey.slice(-4) : "null", `(age: ${age}ms)`);
-  
-  // If the API key is older than 30 seconds, consider it stale
-  if (age > 30000) {
-    console.log("API key is stale, returning null");
-    return null;
-  }
-  
-  return apiKey;
+export function getApiKey(): string | null {
+  console.log("API key retrieved:", currentApiKey ? "***" + currentApiKey.slice(-4) : "null");
+  return currentApiKey;
 }
 
 export class MyMCP extends McpAgent {
@@ -58,16 +32,16 @@ export class MyMCP extends McpAgent {
   });
 
   async init() {
-    registerGetVehicleSpecsTool(this.server, getGlobalApiKey);
-    registerDecodeVehiclePlateTool(this.server, getGlobalApiKey);
-    registerInternationalVinDecoderTool(this.server, getGlobalApiKey);
-    registerGetMarketValueTool(this.server, getGlobalApiKey);
-    registerGetVehicleHistoryTool(this.server, getGlobalApiKey);
-    registerGetVehicleImagesTool(this.server, getGlobalApiKey);
-    registerGetVehicleRecallsTool(this.server, getGlobalApiKey);
-    registerVinOcrTool(this.server, getGlobalApiKey);
-    registerGetYearMakeModelTool(this.server, getGlobalApiKey);
-    registerDecodeObdCodeTool(this.server, getGlobalApiKey);
-    registerRecognizePlateImageTool(this.server, getGlobalApiKey);
+    registerGetVehicleSpecsTool(this.server, getApiKey);
+    registerDecodeVehiclePlateTool(this.server, getApiKey);
+    registerInternationalVinDecoderTool(this.server, getApiKey);
+    registerGetMarketValueTool(this.server, getApiKey);
+    registerGetVehicleHistoryTool(this.server, getApiKey);
+    registerGetVehicleImagesTool(this.server, getApiKey);
+    registerGetVehicleRecallsTool(this.server, getApiKey);
+    registerVinOcrTool(this.server, getApiKey);
+    registerGetYearMakeModelTool(this.server, getApiKey);
+    registerDecodeObdCodeTool(this.server, getApiKey);
+    registerRecognizePlateImageTool(this.server, getApiKey);
   }
 }
