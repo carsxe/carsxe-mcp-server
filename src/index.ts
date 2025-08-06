@@ -6,8 +6,11 @@ export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
 
-    // Extract API key from X-API-Key header
-    const apiKey = request.headers.get("X-API-Key");
+    // Extract API key from X-API-Key header or search params
+    const apiKey =
+      request.headers.get("X-API-Key") || url.searchParams.get("key");
+
+    console.log("apiKey", apiKey);
 
     if (!apiKey) {
       return new Response("Missing X-API-Key header", { status: 401 });
