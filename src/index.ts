@@ -1,4 +1,4 @@
-import { MCP_OBJECT } from "./MCP_OBJECT";
+import { CarsXEMCP } from "./CarsXEMCP";
 
 export default {
   async fetch(
@@ -6,6 +6,8 @@ export default {
     env: any,
     ctx: ExecutionContext
   ): Promise<Response> {
+    const { pathname } = new URL(request.url);
+
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -17,18 +19,19 @@ export default {
       });
     }
 
-    // Get Durable Object stub
-    const id = env.MCP_OBJECT.idFromName("mcp");
-    const stub = env.MCP_OBJECT.get(id);
+    // Handle SSE transport (legacy)
+    if (pathname.startsWith("/sse")) {
+      return CarsXEMCP.serveSSE("/sse").fetch(request, env, ctx);
+    }
 
-    // Forward the request to the DO
-    const response = await stub.fetch(request);
+    // Handle Streamable HTTP transport (new standard)
+    if (pathname.startsWith("/mcp")) {
+      return CarsXEMCP.serve("/mcp").fetch(request, env, ctx);
+    }
 
-    // Apply CORS to response
-    const corsified = new Response(response.body, response);
-    corsified.headers.set("Access-Control-Allow-Origin", "*");
-    return corsified;
+    // Default to MCP endpoint for backward compatibility
+    return CarsXEMCP.serve("/").fetch(request, env, ctx);
   },
 };
 
-export { MCP_OBJECT };
+export { CarsXEMCP };

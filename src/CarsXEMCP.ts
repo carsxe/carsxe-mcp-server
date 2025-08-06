@@ -1,3 +1,4 @@
+import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerGetVehicleSpecsTool } from "./tools/getVehicleSpecs.js";
 import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
@@ -11,19 +12,13 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-export class MCP_OBJECT {
-  server: McpServer;
+export class CarsXEMCP extends McpAgent {
+  server = new McpServer({
+    name: "carsxe",
+    version: "1.0.1",
+  });
 
-  constructor(readonly state: DurableObjectState, readonly env: any) {
-    this.server = new McpServer({
-      name: "carsxe",
-      version: "1.0.1",
-      capabilities: {
-        tools: {},
-        resources: {},
-      },
-    });
-
+  async init() {
     registerGetVehicleSpecsTool(this.server);
     registerDecodeVehiclePlateTool(this.server);
     registerInternationalVinDecoderTool(this.server);
@@ -35,21 +30,5 @@ export class MCP_OBJECT {
     registerGetYearMakeModelTool(this.server);
     registerDecodeObdCodeTool(this.server);
     registerRecognizePlateImageTool(this.server);
-  }
-
-  async fetch(request: Request): Promise<Response> {
-    // Extract request payload and headers
-    const body = request.method === "GET" ? undefined : await request.text();
-    const { url, method, headers } = request;
-
-    const mcpreq = new Request(url, {
-      method,
-      headers,
-      body,
-    });
-
-    // Use the server to respond to the request
-    const response = await this.server.handleRequest(mcpreq);
-    return response;
   }
 }

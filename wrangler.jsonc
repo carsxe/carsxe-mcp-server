@@ -1,29 +1,27 @@
 {
   "name": "carsxe-mcp-server",
   "main": "build/index.js",
-  "compatibility_date": "2025-08-01",
+  "compatibility_date": "2025-07-30",
   "compatibility_flags": ["nodejs_compat"],
   "modules": true,
   "build": {
     "command": "tsc"
   },
+  "migrations": [
+    {
+      "new_sqlite_classes": ["CarsXEMCP"],
+      "tag": "v1"
+    }
+  ],
   "durable_objects": {
     "bindings": [
       {
-        "name": "MCP_OBJECT",
-        "class_name": "MCP_OBJECT"
+        "class_name": "CarsXEMCP",
+        "name": "MCP_OBJECT"
       }
     ]
   },
-  "migrations": [
-    {
-      "tag": "v2",
-      "renamed_classes": [
-        {
-          "from": "MyMCP",
-          "to": "MCP_OBJECT"
-        }
-      ]
-    }
-  ]
+  "observability": {
+    "enabled": true
+  }
 }
