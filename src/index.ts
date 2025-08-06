@@ -1,4 +1,4 @@
-import { MyMCP, setApiKey } from "./MyMCP";
+import { MyMCP } from "./MyMCP";
 
 export { MyMCP };
 
@@ -14,8 +14,7 @@ export default {
       return new Response("Missing X-API-Key header", { status: 401 });
     }
 
-    // Set the API key in the global variable
-    setApiKey(apiKey);
+    console.log("Original request API key:", apiKey ? "***" + apiKey.slice(-4) : "null");
 
     if (url.pathname === "/sse" || url.pathname === "/sse/message") {
       return MyMCP.serveSSE("/sse").fetch(request, env, ctx);
