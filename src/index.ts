@@ -1,4 +1,4 @@
-import { MyMCP, setApiKeyForRequest } from "./MyMCP";
+import { MyMCP, setGlobalApiKey } from "./MyMCP";
 
 export { MyMCP };
 
@@ -14,12 +14,8 @@ export default {
       return new Response("Missing X-API-Key header", { status: 401 });
     }
 
-    // Generate a unique request ID and store the API key
-    const requestId = `req_${Date.now()}_${Math.random()
-      .toString(36)
-      .substring(2, 11)}`;
-    setApiKeyForRequest(requestId, apiKey);
-    MyMCP.setRequestId(requestId);
+    // Set the API key globally with enhanced tracking
+    setGlobalApiKey(apiKey);
 
     if (url.pathname === "/sse" || url.pathname === "/sse/message") {
       return MyMCP.serveSSE("/sse").fetch(request, env, ctx);

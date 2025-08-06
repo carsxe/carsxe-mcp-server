@@ -12,36 +12,42 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
-// Store API key globally with timestamp-based cleanup to prevent memory leaks
-const apiKeyStore: {
-  [requestId: string]: { apiKey: string; timestamp: number };
-} = {};
-
-export function setApiKeyForRequest(requestId: string, apiKey: string) {
-  // Clean up old entries (older than 5 minutes)
-  const now = Date.now();
-  Object.keys(apiKeyStore).forEach((id) => {
-    if (now - apiKeyStore[id].timestamp > 5 * 60 * 1000) {
-      delete apiKeyStore[id];
-    }
-  });
-
-  apiKeyStore[requestId] = { apiKey, timestamp: now };
-  console.log(
-    "Setting API key for request:",
-    requestId,
-    apiKey ? "***" + apiKey.slice(-4) : "null"
-  );
+// Global API key storage with additional timing information for debugging
+interface ApiKeyEntry {
+  apiKey: string;
+  timestamp: number;
+  requestCounter: number;
 }
 
-export function getApiKeyForRequest(requestId: string): string | null {
-  const entry = apiKeyStore[requestId];
-  const apiKey = entry?.apiKey || null;
-  console.log(
-    "Getting API key for request:",
-    requestId,
-    apiKey ? "***" + apiKey.slice(-4) : "null"
-  );
+let globalApiKeyEntry: ApiKeyEntry | null = null;
+let requestCounter = 0;
+
+export function setGlobalApiKey(apiKey: string) {
+  requestCounter++;
+  globalApiKeyEntry = {
+    apiKey,
+    timestamp: Date.now(),
+    requestCounter
+  };
+  console.log(`[Request ${requestCounter}] Setting global API key:`, apiKey ? "***" + apiKey.slice(-4) : "null", `at ${globalApiKeyEntry.timestamp}`);
+}
+
+export function getGlobalApiKey(): string | null {
+  if (!globalApiKeyEntry) {
+    console.log("Getting global API key: null (no entry)");
+    return null;
+  }
+  
+  const { apiKey, timestamp, requestCounter: reqId } = globalApiKeyEntry;
+  const age = Date.now() - timestamp;
+  console.log(`[Request ${reqId}] Getting global API key:`, apiKey ? "***" + apiKey.slice(-4) : "null", `(age: ${age}ms)`);
+  
+  // If the API key is older than 30 seconds, consider it stale
+  if (age > 30000) {
+    console.log("API key is stale, returning null");
+    return null;
+  }
+  
   return apiKey;
 }
 
@@ -51,37 +57,17 @@ export class MyMCP extends McpAgent {
     version: "1.0.1",
   });
 
-  private static currentRequestId: string | null = null;
-
-  static setRequestId(requestId: string) {
-    MyMCP.currentRequestId = requestId;
-  }
-
-  static getCurrentRequestId(): string | null {
-    return MyMCP.currentRequestId;
-  }
-
   async init() {
-    const getApiKey = () => {
-      const requestId = MyMCP.getCurrentRequestId();
-      console.log(
-        "requestId",
-        requestId,
-        requestId ? getApiKeyForRequest(requestId) : null
-      );
-      return requestId ? getApiKeyForRequest(requestId) : null;
-    };
-
-    registerGetVehicleSpecsTool(this.server, getApiKey);
-    registerDecodeVehiclePlateTool(this.server, getApiKey);
-    registerInternationalVinDecoderTool(this.server, getApiKey);
-    registerGetMarketValueTool(this.server, getApiKey);
-    registerGetVehicleHistoryTool(this.server, getApiKey);
-    registerGetVehicleImagesTool(this.server, getApiKey);
-    registerGetVehicleRecallsTool(this.server, getApiKey);
-    registerVinOcrTool(this.server, getApiKey);
-    registerGetYearMakeModelTool(this.server, getApiKey);
-    registerDecodeObdCodeTool(this.server, getApiKey);
-    registerRecognizePlateImageTool(this.server, getApiKey);
+    registerGetVehicleSpecsTool(this.server, getGlobalApiKey);
+    registerDecodeVehiclePlateTool(this.server, getGlobalApiKey);
+    registerInternationalVinDecoderTool(this.server, getGlobalApiKey);
+    registerGetMarketValueTool(this.server, getGlobalApiKey);
+    registerGetVehicleHistoryTool(this.server, getGlobalApiKey);
+    registerGetVehicleImagesTool(this.server, getGlobalApiKey);
+    registerGetVehicleRecallsTool(this.server, getGlobalApiKey);
+    registerVinOcrTool(this.server, getGlobalApiKey);
+    registerGetYearMakeModelTool(this.server, getGlobalApiKey);
+    registerDecodeObdCodeTool(this.server, getGlobalApiKey);
+    registerRecognizePlateImageTool(this.server, getGlobalApiKey);
   }
 }
