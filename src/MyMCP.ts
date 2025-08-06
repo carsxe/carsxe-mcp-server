@@ -13,25 +13,35 @@ import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
 // Store API key globally with timestamp-based cleanup to prevent memory leaks
-const apiKeyStore: { [requestId: string]: { apiKey: string; timestamp: number } } = {};
+const apiKeyStore: {
+  [requestId: string]: { apiKey: string; timestamp: number };
+} = {};
 
 export function setApiKeyForRequest(requestId: string, apiKey: string) {
   // Clean up old entries (older than 5 minutes)
   const now = Date.now();
-  Object.keys(apiKeyStore).forEach(id => {
+  Object.keys(apiKeyStore).forEach((id) => {
     if (now - apiKeyStore[id].timestamp > 5 * 60 * 1000) {
       delete apiKeyStore[id];
     }
   });
-  
+
   apiKeyStore[requestId] = { apiKey, timestamp: now };
-  console.log("Setting API key for request:", requestId, apiKey ? "***" + apiKey.slice(-4) : "null");
+  console.log(
+    "Setting API key for request:",
+    requestId,
+    apiKey ? "***" + apiKey.slice(-4) : "null"
+  );
 }
 
 export function getApiKeyForRequest(requestId: string): string | null {
   const entry = apiKeyStore[requestId];
   const apiKey = entry?.apiKey || null;
-  console.log("Getting API key for request:", requestId, apiKey ? "***" + apiKey.slice(-4) : "null");
+  console.log(
+    "Getting API key for request:",
+    requestId,
+    apiKey ? "***" + apiKey.slice(-4) : "null"
+  );
   return apiKey;
 }
 
@@ -54,6 +64,11 @@ export class MyMCP extends McpAgent {
   async init() {
     const getApiKey = () => {
       const requestId = MyMCP.getCurrentRequestId();
+      console.log(
+        "requestId",
+        requestId,
+        requestId ? getApiKeyForRequest(requestId) : null
+      );
       return requestId ? getApiKeyForRequest(requestId) : null;
     };
 
