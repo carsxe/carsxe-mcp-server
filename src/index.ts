@@ -10,14 +10,14 @@ export default {
     const apiKey =
       request.headers.get("X-API-Key") || url.searchParams.get("key");
 
-    console.log("apiKey", apiKey);
-
     if (!apiKey) {
       return new Response("Missing X-API-Key header", { status: 401 });
     }
 
     // Generate a unique request ID and store the API key
-    const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    const requestId = `req_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 11)}`;
     setApiKeyForRequest(requestId, apiKey);
     MyMCP.setRequestId(requestId);
 
