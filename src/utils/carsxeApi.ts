@@ -9,11 +9,11 @@ import * as dotenv from "dotenv";
 
 export async function carsxeApiRequest<T>(
   endpoint: string,
-  params: Record<string, string>
+  params: Record<string, string>,
+  apiKey: string
 ): Promise<T | null> {
-  const API_KEY = process.env.CARSXE_API_KEY!;
   const CARSXE_API_BASE = "https://api.carsxe.com";
-  const queryParams = new URLSearchParams({ key: API_KEY, ...params });
+  const queryParams = new URLSearchParams({ key: apiKey, ...params });
   const url = `${CARSXE_API_BASE}/${endpoint}?${queryParams.toString()}`;
   try {
     const response = await fetch(url);

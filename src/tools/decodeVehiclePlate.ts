@@ -4,7 +4,10 @@ import { CarsXEPlateDecoderResponse } from "../types/carsxe.js";
 import { formatPlateDecoderResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerDecodeVehiclePlateTool(server: McpServer) {
+export function registerDecodeVehiclePlateTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "decode-vehicle-plate",
     "Decode a vehicle's license plate to get VIN and basic vehicle info",
@@ -19,9 +22,22 @@ export function registerDecodeVehiclePlateTool(server: McpServer) {
         .describe("Country code (default: US)"),
     },
     async ({ plate, state, country }) => {
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
       const data = await carsxeApiRequest<CarsXEPlateDecoderResponse>(
         "v2/platedecoder",
-        { plate, state, country }
+        { plate, state, country },
+        apiKey
       );
       if (!data || !data.success) {
         return {

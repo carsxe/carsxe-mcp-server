@@ -12,6 +12,19 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 
+// Module-level storage for the current API key
+let currentApiKey: string | null = null;
+
+// Function to set the API key from request headers
+export function setApiKey(apiKey: string) {
+  currentApiKey = apiKey;
+}
+
+// Function to get the current API key
+export function getApiKey(): string | null {
+  return currentApiKey;
+}
+
 export class MyMCP extends McpAgent {
   server = new McpServer({
     name: "carsxe",
@@ -19,16 +32,16 @@ export class MyMCP extends McpAgent {
   });
 
   async init() {
-    registerGetVehicleSpecsTool(this.server);
-    registerDecodeVehiclePlateTool(this.server);
-    registerInternationalVinDecoderTool(this.server);
-    registerGetMarketValueTool(this.server);
-    registerGetVehicleHistoryTool(this.server);
-    registerGetVehicleImagesTool(this.server);
-    registerGetVehicleRecallsTool(this.server);
-    registerVinOcrTool(this.server);
-    registerGetYearMakeModelTool(this.server);
-    registerDecodeObdCodeTool(this.server);
-    registerRecognizePlateImageTool(this.server);
+    registerGetVehicleSpecsTool(this.server, getApiKey);
+    registerDecodeVehiclePlateTool(this.server, getApiKey);
+    registerInternationalVinDecoderTool(this.server, getApiKey);
+    registerGetMarketValueTool(this.server, getApiKey);
+    registerGetVehicleHistoryTool(this.server, getApiKey);
+    registerGetVehicleImagesTool(this.server, getApiKey);
+    registerGetVehicleRecallsTool(this.server, getApiKey);
+    registerVinOcrTool(this.server, getApiKey);
+    registerGetYearMakeModelTool(this.server, getApiKey);
+    registerDecodeObdCodeTool(this.server, getApiKey);
+    registerRecognizePlateImageTool(this.server, getApiKey);
   }
 }

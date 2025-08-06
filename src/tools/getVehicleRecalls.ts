@@ -4,7 +4,10 @@ import { CarsXERecallsResponse } from "../types/carsxe.js";
 import { formatRecallsResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerGetVehicleRecallsTool(server: McpServer) {
+export function registerGetVehicleRecallsTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "get-vehicle-recalls",
     "Get vehicle recall information by VIN",
@@ -16,9 +19,25 @@ export function registerGetVehicleRecallsTool(server: McpServer) {
         .describe("17-character Vehicle Identification Number"),
     },
     async ({ vin }) => {
-      const data = await carsxeApiRequest<CarsXERecallsResponse>("v1/recalls", {
-        vin,
-      });
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
+      const data = await carsxeApiRequest<CarsXERecallsResponse>(
+        "v1/recalls",
+        {
+          vin,
+        },
+        apiKey
+      );
       if (!data) {
         return {
           content: [

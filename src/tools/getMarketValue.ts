@@ -4,7 +4,10 @@ import { CarsXEMarketValueResponse } from "../types/carsxe.js";
 import { formatMarketValueResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerGetMarketValueTool(server: McpServer) {
+export function registerGetMarketValueTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "get-market-value",
     "Get the estimated market value for a vehicle by VIN",
@@ -24,9 +27,22 @@ export function registerGetMarketValueTool(server: McpServer) {
       const params: Record<string, string> = { vin };
       if (state) params.state = state;
       if (country) params.country = country;
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
       const data = await carsxeApiRequest<CarsXEMarketValueResponse>(
         "v2/marketvalue",
-        params
+        params,
+        apiKey
       );
       if (!data) {
         return {

@@ -4,7 +4,10 @@ import { CarsXEImagesResponse } from "../types/carsxe.js";
 import { formatImagesResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerGetVehicleImagesTool(server: McpServer) {
+export function registerGetVehicleImagesTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "get-vehicle-images",
     "Get vehicle images by make, model, and optional filters",
@@ -51,9 +54,22 @@ export function registerGetVehicleImagesTool(server: McpServer) {
           stringParams[key] = String(value);
         }
       }
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
       const data = await carsxeApiRequest<CarsXEImagesResponse>(
         "images",
-        stringParams
+        stringParams,
+        apiKey
       );
       if (!data) {
         return {

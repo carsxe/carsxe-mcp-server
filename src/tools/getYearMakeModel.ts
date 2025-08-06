@@ -4,7 +4,10 @@ import { formatYearMakeModelResponse } from "../formatters/carsxe.js";
 import { carsxeApiRequest } from "../utils/carsxeApi.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerGetYearMakeModelTool(server: McpServer) {
+export function registerGetYearMakeModelTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "get-year-make-model",
     "Get comprehensive vehicle info by year, make, model, and optional trim",
@@ -22,9 +25,22 @@ export function registerGetYearMakeModelTool(server: McpServer) {
     async ({ year, make, model, trim }) => {
       const params: Record<string, string> = { year, make, model };
       if (trim) params.trim = trim;
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
       const data = (await carsxeApiRequest<CarsXEYearMakeModelResponse>(
         "v1/ymm",
-        params
+        params,
+        apiKey
       )) as CarsXEYearMakeModelResponse;
       if (!data || !data.success) {
         return {

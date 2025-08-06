@@ -11,7 +11,10 @@ import * as dotenv from "dotenv";
 
 // dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-export function registerVinOcrTool(server: McpServer) {
+export function registerVinOcrTool(
+  server: McpServer,
+  getApiKey: () => string | null
+) {
   server.tool(
     "vin-ocr",
     "Recognize and extract the VIN from a vehicle image URL using OCR",
@@ -33,9 +36,20 @@ export function registerVinOcrTool(server: McpServer) {
         };
       }
       // POST request with body as imageUrl
-      const API_KEY = process.env.CARSXE_API_KEY!;
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "❌ API key not provided. Please ensure X-API-Key header is set.",
+            },
+          ],
+        };
+      }
+
       const CARSXE_API_BASE = "https://api.carsxe.com";
-      const url = `${CARSXE_API_BASE}/vinocr?key=${API_KEY}`;
+      const url = `${CARSXE_API_BASE}/vinocr?key=${apiKey}`;
       let data: CarsXEVinOcrResponse | null = null;
       try {
         const response = await fetch(url, {
