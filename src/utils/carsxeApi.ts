@@ -13,7 +13,11 @@ export async function carsxeApiRequest<T>(
   apiKey: string
 ): Promise<T | null> {
   const CARSXE_API_BASE = "https://api.carsxe.com";
-  const queryParams = new URLSearchParams({ key: apiKey, ...params });
+  const queryParams = new URLSearchParams({
+    key: apiKey,
+    source: "mcp",
+    ...params,
+  });
   const url = `${CARSXE_API_BASE}/${endpoint}?${queryParams.toString()}`;
   try {
     const response = await fetch(url);

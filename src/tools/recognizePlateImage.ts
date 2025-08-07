@@ -37,7 +37,10 @@ export function registerRecognizePlateImageTool(
       }
       // POST request with body as imageUrl
       const apiKey = getApiKey();
-      console.log("apiKey recognizePlateImage", apiKey ? `***${apiKey.slice(-4)}` : "null");
+      console.log(
+        "apiKey recognizePlateImage",
+        apiKey ? `***${apiKey.slice(-4)}` : "null"
+      );
       if (!apiKey) {
         return {
           content: [
@@ -50,7 +53,7 @@ export function registerRecognizePlateImageTool(
       }
 
       const CARSXE_API_BASE = "https://api.carsxe.com";
-      const url = `${CARSXE_API_BASE}/platerecognition?key=${apiKey}`;
+      const url = `${CARSXE_API_BASE}/platerecognition?key=${apiKey}&source=mcp`;
       let data: CarsXEPlateRecognitionResponse | null = null;
       try {
         const response = await fetch(url, {

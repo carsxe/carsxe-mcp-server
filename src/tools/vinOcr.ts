@@ -50,7 +50,7 @@ export function registerVinOcrTool(
       }
 
       const CARSXE_API_BASE = "https://api.carsxe.com";
-      const url = `${CARSXE_API_BASE}/vinocr?key=${apiKey}`;
+      const url = `${CARSXE_API_BASE}/vinocr?key=${apiKey}&source=mcp`;
       let data: CarsXEVinOcrResponse | null = null;
       try {
         const response = await fetch(url, {
