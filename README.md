@@ -49,7 +49,7 @@ Follow these steps to set up Claude Desktop and connect it to our CarsXE MCP ser
 #### a. Open Claude Desktop Settings
 
 - Launch the Claude Desktop app
-- Click on **File** in the menu bar
+- Click on **Claude** in the menu bar
 - Select **Settings**
 - In the Settings window, go to the **Developer** tab (you may need to scroll or expand advanced options)
 - Click **Edit Config** (or **Open Config File**)
@@ -86,12 +86,15 @@ Follow these steps to set up Claude Desktop and connect it to our CarsXE MCP ser
 
 - Close and reopen the Claude Desktop app to apply the new configuration.
 
+  > It may take a short delay for the changes to take effect.
+
 ### 3️⃣ Verify the CarsXE MCP Server is Available
 
 - After restarting, open Claude Desktop.
-- Go to the tools or plugins section (usually in the sidebar or under a tools menu).
+- Go to the tools or plugins section (usually in the search bar or under a tools menu).
 - You should see **CarsXE** listed as an available MCP server/tool.
 - Try running a CarsXE tool (e.g., get-vehicle-specs) to verify everything is working.
+  > This will only work if your API key is associated with an active subscription.
 
 ## 🛠️ Available Tools & Example Prompts
 
