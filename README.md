@@ -5,6 +5,16 @@ A modular, extensible Model Context Protocol (MCP) server for querying and analy
 
 ---
 
+## 🌐 MCP Registry
+
+This server is published in the **official MCP Registry** as:
+
+- **Server name:** `io.github.carsxe/carsxe-mcp`
+
+Any MCP‑aware client or registry can discover and connect to this server using that name.
+
+---
+
 ## ℹ️ What is CarsXE MCP Server?
 
 The CarsXE MCP server is a **Node.js/TypeScript** application that exposes a suite of tools for querying comprehensive vehicle data from the CarsXE API. It is designed for seamless integration with LLMs (like Anthropic Claude, OpenAI GPT, etc.), chatbots, and developer tools, providing:
