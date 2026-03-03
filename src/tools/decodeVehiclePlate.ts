@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerDecodeVehiclePlateTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "decode-vehicle-plate",
@@ -37,7 +37,7 @@ export function registerDecodeVehiclePlateTool(
       const data = await carsxeApiRequest<CarsXEPlateDecoderResponse>(
         "v2/platedecoder",
         { plate, state, country },
-        apiKey
+        apiKey,
       );
       if (!data || !data.success) {
         return {
@@ -57,6 +57,6 @@ export function registerDecodeVehiclePlateTool(
           },
         ],
       };
-    }
+    },
   );
 }

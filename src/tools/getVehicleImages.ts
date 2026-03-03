@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerGetVehicleImagesTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "get-vehicle-images",
@@ -37,7 +37,7 @@ export function registerGetVehicleImagesTool(
         .string()
         .optional()
         .describe(
-          "Public, Share, ShareCommercially, Modify, ModifyCommercially (optional)"
+          "Public, Share, ShareCommercially, Modify, ModifyCommercially (optional)",
         ),
       format: z
         .string()
@@ -69,7 +69,7 @@ export function registerGetVehicleImagesTool(
       const data = await carsxeApiRequest<CarsXEImagesResponse>(
         "images",
         stringParams,
-        apiKey
+        apiKey,
       );
       if (!data) {
         return {
@@ -89,6 +89,6 @@ export function registerGetVehicleImagesTool(
           },
         ],
       };
-    }
+    },
   );
 }

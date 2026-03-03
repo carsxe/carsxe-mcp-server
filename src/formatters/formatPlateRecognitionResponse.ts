@@ -1,5 +1,5 @@
 export function formatPlateRecognitionResponse(
-  data: import("../types/carsxe.js").CarsXEPlateRecognitionResponse
+  data: import("../types/carsxe.js").CarsXEPlateRecognitionResponse,
 ): string {
   if (!data.success) {
     return `❌ Plate recognition failed. ${data.message || "Unknown error."}`;
@@ -29,7 +29,7 @@ export function formatPlateRecognitionResponse(
           ? `- **Other Candidates:**\n${result.candidates
               .slice(1)
               .map(
-                (c: any) => `  - ${c.plate} (${(c.score * 100).toFixed(1)}%)`
+                (c: any) => `  - ${c.plate} (${(c.score * 100).toFixed(1)}%)`,
               )
               .join("\n")}`
           : null,

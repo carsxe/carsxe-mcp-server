@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerGetYearMakeModelTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "get-year-make-model",
@@ -40,7 +40,7 @@ export function registerGetYearMakeModelTool(
       const data = (await carsxeApiRequest<CarsXEYearMakeModelResponse>(
         "v1/ymm",
         params,
-        apiKey
+        apiKey,
       )) as CarsXEYearMakeModelResponse;
       if (!data || !data.success) {
         return {
@@ -62,6 +62,6 @@ export function registerGetYearMakeModelTool(
           },
         ],
       };
-    }
+    },
   );
 }

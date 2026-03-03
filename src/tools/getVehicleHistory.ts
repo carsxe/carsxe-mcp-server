@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerGetVehicleHistoryTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "get-vehicle-history",
@@ -40,7 +40,7 @@ export function registerGetVehicleHistoryTool(
       const data = await carsxeApiRequest<CarsXEHistoryResponse>(
         "history",
         params,
-        apiKey
+        apiKey,
       );
       if (!data || !data.success) {
         return {
@@ -60,6 +60,6 @@ export function registerGetVehicleHistoryTool(
           },
         ],
       };
-    }
+    },
   );
 }

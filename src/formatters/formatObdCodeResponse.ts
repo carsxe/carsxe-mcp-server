@@ -1,5 +1,5 @@
 export function formatObdCodeResponse(
-  data: import("../types/carsxe.js").CarsXEObdCodeResponse
+  data: import("../types/carsxe.js").CarsXEObdCodeResponse,
 ): string {
   if (!data.success) {
     return `❌ OBD code lookup failed.`;

@@ -9,3 +9,4 @@ export { formatVinOcrResponse } from "./formatVinOcrResponse.js";
 export { formatYearMakeModelResponse } from "./formatYearMakeModelResponse.js";
 export { formatObdCodeResponse } from "./formatObdCodeResponse.js";
 export { formatPlateRecognitionResponse } from "./formatPlateRecognitionResponse.js";
+export { formatLienTheftResponse } from "./formatLienTheftResponse.js";

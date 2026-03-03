@@ -1,32 +1,25 @@
 import { z } from "zod";
 import { carsxeApiRequest } from "../utils/carsxeApi.js";
-import { CarsXEMarketValueResponse } from "../types/carsxe.js";
-import { formatMarketValueResponse } from "../formatters/carsxe.js";
+import { CarsXELienTheftResponse } from "../types/carsxe.js";
+import { formatLienTheftResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-export function registerGetMarketValueTool(
+export function registerGetLienTheftTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
   server.tool(
-    "get-market-value",
-    "Get the estimated market value for a vehicle by VIN",
+    "get-lien-theft",
+    "Get lien and theft information for a vehicle by VIN",
     {
       vin: z
         .string()
         .min(17)
         .max(17)
         .describe("17-character Vehicle Identification Number"),
-      state: z.string().optional().describe("US state abbreviation (optional)"),
-      country: z
-        .string()
-        .optional()
-        .describe("Country code (optional, default: US)"),
     },
-    async ({ vin, state, country }) => {
+    async ({ vin }) => {
       const params: Record<string, string> = { vin };
-      if (state) params.state = state;
-      if (country) params.country = country;
       const apiKey = getApiKey();
       if (!apiKey) {
         return {
@@ -39,17 +32,17 @@ export function registerGetMarketValueTool(
         };
       }
 
-      const data = await carsxeApiRequest<CarsXEMarketValueResponse>(
-        "v2/marketvalue",
+      const data = await carsxeApiRequest<CarsXELienTheftResponse>(
+        "lien-theft",
         params,
         apiKey,
       );
-      if (!data) {
+      if (!data || !data.success) {
         return {
           content: [
             {
               type: "text",
-              text: "❌ Failed to retrieve market value. Please check the VIN and try again.",
+              text: "❌ Failed to retrieve lien-theft information. Please check the VIN and try again.",
             },
           ],
         };
@@ -58,7 +51,7 @@ export function registerGetMarketValueTool(
         content: [
           {
             type: "text",
-            text: formatMarketValueResponse(data),
+            text: formatLienTheftResponse(data),
           },
         ],
       };

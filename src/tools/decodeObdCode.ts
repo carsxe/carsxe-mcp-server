@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerDecodeObdCodeTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "decode-obd-code",
@@ -40,7 +40,7 @@ export function registerDecodeObdCodeTool(
       const data = (await carsxeApiRequest<CarsXEObdCodeResponse>(
         "obdcodesdecoder",
         { code },
-        apiKey
+        apiKey,
       )) as CarsXEObdCodeResponse;
       if (!data || !data.success) {
         return {
@@ -60,6 +60,6 @@ export function registerDecodeObdCodeTool(
           },
         ],
       };
-    }
+    },
   );
 }

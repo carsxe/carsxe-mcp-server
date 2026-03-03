@@ -72,7 +72,7 @@ export function formatRecallsResponse(data: CarsXERecallsResponse): string {
           "",
         ]
           .filter(Boolean)
-          .join("\n")
+          .join("\n"),
       );
     });
   }

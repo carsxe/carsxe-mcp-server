@@ -24,7 +24,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
         `  - **Disposition:** ${rec.VehicleDispositionText || "N/A"}`,
         `  - **Intended for Export:** ${
           rec.VehicleIntendedForExportCode === "Y" ? "Yes" : "No"
-        }`
+        }`,
       );
     });
     lines.push("");
@@ -42,7 +42,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
           rec.VehicleObtainedDate
             ? rec.VehicleObtainedDate.split("T")[0]
             : "N/A"
-        }`
+        }`,
       );
     });
     lines.push("");
@@ -52,7 +52,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
     lines.push("**Brand Records:**");
     data.brandsInformation.forEach((brand) => {
       lines.push(
-        `- **${brand.name || brand.code}:** ${brand.description || ""}`
+        `- **${brand.name || brand.code}:** ${brand.description || ""}`,
       );
     });
     lines.push("");
@@ -70,7 +70,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
         }`,
         `  - **Odometer:** ${rec.VehicleOdometerReadingMeasure || "N/A"} ${
           rec.VehicleOdometerReadingUnitCode || ""
-        }`
+        }`,
       );
       if (rec.HistoricTitleAbstract?.length) {
         lines.push("  - **Historic Titles:**");
@@ -82,7 +82,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
                 : "N/A"
             }, **Odometer:** ${h.VehicleOdometerReadingMeasure || "N/A"} ${
               h.VehicleOdometerReadingUnitCode || ""
-            }`
+            }`,
           );
         });
       }
@@ -102,7 +102,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
         }`,
         `  - **Odometer:** ${rec.VehicleOdometerReadingMeasure || "N/A"} ${
           rec.VehicleOdometerReadingUnitCode || ""
-        }`
+        }`,
       );
     });
     lines.push("");
@@ -118,7 +118,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
 
   if (data.error) {
     lines.push(
-      `**Error:** ${data.error.code || ""} ${data.error.message || ""}`
+      `**Error:** ${data.error.code || ""} ${data.error.message || ""}`,
     );
   }
 

@@ -25,7 +25,7 @@ export default {
     if (!apiKey) {
       return new Response(
         "Missing API key. Provide via X-API-Key header, Authorization Bearer token, or 'key' query parameter",
-        { status: 401 }
+        { status: 401 },
       );
     }
 

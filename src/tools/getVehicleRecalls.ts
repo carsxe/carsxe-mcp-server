@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerGetVehicleRecallsTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "get-vehicle-recalls",
@@ -36,7 +36,7 @@ export function registerGetVehicleRecallsTool(
         {
           vin,
         },
-        apiKey
+        apiKey,
       );
       if (!data) {
         return {
@@ -56,6 +56,6 @@ export function registerGetVehicleRecallsTool(
           },
         ],
       };
-    }
+    },
   );
 }

@@ -1,5 +1,5 @@
 export function formatYearMakeModelResponse(
-  data: import("../types/carsxe.js").CarsXEYearMakeModelResponse
+  data: import("../types/carsxe.js").CarsXEYearMakeModelResponse,
 ): string {
   if (!data.success) {
     return `❌ Year/Make/Model lookup failed. ${
@@ -40,9 +40,9 @@ export function formatYearMakeModelResponse(
             (cat: any) =>
               `- **${cat.category}:**\n${cat.features
                 .map(
-                  (f: any) => `  - ${f.name}${f.value ? `: ${f.value}` : ""}`
+                  (f: any) => `  - ${f.name}${f.value ? `: ${f.value}` : ""}`,
                 )
-                .join("\n")}`
+                .join("\n")}`,
           )
           .join("\n")}`
       : undefined,
@@ -57,9 +57,9 @@ export function formatYearMakeModelResponse(
                       f.price !== undefined && f.price !== null
                         ? ` ($${f.price})`
                         : ""
-                    }`
+                    }`,
                 )
-                .join("\n")}`
+                .join("\n")}`,
           )
           .join("\n")}`
       : undefined,

@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerInternationalVinDecoderTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "international-vin-decoder",
@@ -35,7 +35,7 @@ export function registerInternationalVinDecoderTool(
         await carsxeApiRequest<CarsXEInternationalVinDecoderResponse>(
           "v1/international-vin-decoder",
           { vin },
-          apiKey
+          apiKey,
         );
       if (!data || !data.success) {
         return {
@@ -55,6 +55,6 @@ export function registerInternationalVinDecoderTool(
           },
         ],
       };
-    }
+    },
   );
 }

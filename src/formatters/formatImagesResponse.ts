@@ -34,7 +34,7 @@ export function formatImagesResponse(data: CarsXEImagesResponse): string {
             : null,
         ]
           .filter(Boolean)
-          .join("\n")
+          .join("\n"),
       ),
     data.images.length > 5
       ? `...and ${data.images.length - 5} more images.`

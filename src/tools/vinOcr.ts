@@ -13,7 +13,7 @@ import * as dotenv from "dotenv";
 
 export function registerVinOcrTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "vin-ocr",
@@ -93,6 +93,6 @@ export function registerVinOcrTool(
           },
         ],
       };
-    }
+    },
   );
 }

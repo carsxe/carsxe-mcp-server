@@ -332,3 +332,30 @@ export interface CarsXEPlateRecognitionResponse {
     };
   }>;
 }
+
+export interface CarsXELienTheftResponse {
+  success: boolean;
+  input: {
+    vin: string;
+  };
+  timestamp?: string;
+  year?: number;
+  make?: string;
+  model?: string;
+  type?: string;
+  events?: Array<{
+    event: string;
+    location?: string;
+    details_list?: string[];
+  }>;
+  trim_data?: {
+    General?: Record<string, string>;
+    "Passive Safety System"?: Record<string, string>;
+    Mechanical?: Record<string, string>;
+    Exterior?: Record<string, string>;
+    Engine?: Record<string, string>;
+    Interior?: Record<string, string>;
+    [key: string]: Record<string, string> | undefined;
+  };
+  error?: { code?: string; message?: string };
+}

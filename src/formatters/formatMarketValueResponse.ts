@@ -1,7 +1,7 @@
 import { CarsXEMarketValueResponse } from "../types/carsxe.js";
 
 export function formatMarketValueResponse(
-  data: CarsXEMarketValueResponse
+  data: CarsXEMarketValueResponse,
 ): string {
   // Helper to show value or fallback to JSON string for debugging
   function showValue(obj: any, key: string): string {
@@ -30,7 +30,7 @@ export function formatMarketValueResponse(
     ``,
     `Retail (Excellent): ${showValue(
       data.retail_xclean,
-      "adjusted_whole_xclean"
+      "adjusted_whole_xclean",
     )}`,
     `Retail (Good): ${showValue(data.retail_clean, "adjusted_whole_clean")}`,
     `Retail (Average): ${showValue(data.retail_avg, "adjusted_whole_avg")}`,
@@ -38,12 +38,12 @@ export function formatMarketValueResponse(
     ``,
     `Trade-In (Good): ${showValue(
       data.trade_in_clean,
-      "adjusted_whole_clean"
+      "adjusted_whole_clean",
     )}`,
     `Trade-In (Average): ${showValue(data.trade_in_avg, "adjusted_whole_avg")}`,
     `Trade-In (Rough): ${showValue(
       data.trade_in_rough,
-      "adjusted_whole_rough"
+      "adjusted_whole_rough",
     )}`,
     ``,
     `MSRP: ${data.msrp}`,

@@ -1,7 +1,7 @@
 import { CarsXEPlateDecoderResponse } from "../types/carsxe.js";
 
 export function formatPlateDecoderResponse(
-  data: CarsXEPlateDecoderResponse
+  data: CarsXEPlateDecoderResponse,
 ): string {
   const {
     year,

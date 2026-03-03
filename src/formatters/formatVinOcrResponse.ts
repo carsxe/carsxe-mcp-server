@@ -1,5 +1,5 @@
 export function formatVinOcrResponse(
-  data: import("../types/carsxe.js").CarsXEVinOcrResponse
+  data: import("../types/carsxe.js").CarsXEVinOcrResponse,
 ): string {
   if (!data.success) {
     return `❌ VIN OCR failed. ${data.message || "Unknown error."}`;
@@ -23,7 +23,7 @@ export function formatVinOcrResponse(
             (c: any) =>
               `- ${c.vin} (${(c.confidence * 100).toFixed(1)}%) [xmin: ${
                 c.box.xmin
-              }, xmax: ${c.box.xmax}, ymin: ${c.box.ymin}, ymax: ${c.box.ymax}]`
+              }, xmax: ${c.box.xmax}, ymin: ${c.box.ymin}, ymax: ${c.box.ymax}]`,
           )
           .join("\n")}`
       : "",

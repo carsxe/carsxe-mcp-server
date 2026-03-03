@@ -1,4 +1,3 @@
-
 # 🚗 CarsXE MCP Server
 
 A modular, extensible Model Context Protocol (MCP) server for querying and analyzing vehicle data from the [CarsXE API](https://api.carsxe.com/), with beautiful, chat-friendly Markdown output for LLMs and chatbots.
@@ -184,7 +183,7 @@ Below is a list of all available CarsXE tools, their parameters, expected output
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **⚡ Example Prompt:**
-   > get vehicle recalls for `1C4JJXR64PW696340`
+  > get vehicle recalls for `1C4JJXR64PW696340`
 - **Output:** Markdown with recall details (date, description, risk, remedy, status, etc.)
 
 ### 8. `recognize-plate-image` 🏷️
@@ -229,5 +228,14 @@ Below is a list of all available CarsXE tools, their parameters, expected output
 - **⚡ Example Prompt:**
   > obd code `P0115`
 - **Output:** Markdown with code, diagnosis, and date
+
+### 12. `get-lien-theft` 🔒
+
+- **Description:** Get lien and theft information for a vehicle by VIN
+- **Parameters:**
+  - `vin` (string, required): 17-character Vehicle Identification Number
+- **⚡ Example Prompt:**
+  > get lien-theft for `WBAFR7C57CC811956`
+- **Output:** Markdown with lien holder information, theft records, recovery dates, and status
 
 ---

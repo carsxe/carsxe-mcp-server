@@ -1,7 +1,7 @@
 import { CarsXESpecsResponse } from "../types/carsxe.js";
 
 export function formatVehicleSpecsResponse(
-  specsData: CarsXESpecsResponse
+  specsData: CarsXESpecsResponse,
 ): string {
   const { attributes, colors, equipment, warranties } = specsData;
   const header = (text: string, emoji: string) =>
@@ -19,7 +19,7 @@ export function formatVehicleSpecsResponse(
     `🚗 ${bold(
       `${attributes.year} ${attributes.make} ${attributes.model} ${
         attributes.trim || ""
-      }`.trim()
+      }`.trim(),
     )}`,
     `${item(`${bold("Style:")} ${attributes.style || "Unknown"}`)}`,
     `${item(`${bold("Manufactured in:")} ${attributes.made_in || "Unknown"}`)}`,
@@ -30,7 +30,7 @@ export function formatVehicleSpecsResponse(
     `${subHeader("Powertrain")}`,
     `${item(`${bold("Engine:")} ${attributes.engine || "Unknown"}`)}`,
     `${item(
-      `${bold("Transmission:")} ${attributes.transmission || "Unknown"}`
+      `${bold("Transmission:")} ${attributes.transmission || "Unknown"}`,
     )}`,
     `${item(`${bold("Drivetrain:")} ${attributes.drivetrain || "Unknown"}`)}`,
     ``,
@@ -38,20 +38,20 @@ export function formatVehicleSpecsResponse(
     `${item(
       `${bold("City:")} ${formatDimension(
         attributes.city_mileage,
-        "miles/gallon"
-      )}`
+        "miles/gallon",
+      )}`,
     )}`,
     `${item(
       `${bold("Highway:")} ${formatDimension(
         attributes.highway_mileage,
-        "miles/gallon"
-      )}`
+        "miles/gallon",
+      )}`,
     )}`,
     `${item(
       `${bold("Fuel Capacity:")} ${formatDimension(
         attributes.fuel_capacity,
-        "gallon"
-      )}`
+        "gallon",
+      )}`,
     )}`,
   ].join("\n");
 
@@ -61,52 +61,52 @@ export function formatVehicleSpecsResponse(
     `${item(
       `${bold("Length:")} ${formatDimension(
         attributes.overall_length,
-        "inches"
-      )}`
+        "inches",
+      )}`,
     )}`,
     `${item(
-      `${bold("Width:")} ${formatDimension(attributes.overall_width, "inches")}`
+      `${bold("Width:")} ${formatDimension(attributes.overall_width, "inches")}`,
     )}`,
     `${item(
       `${bold("Height:")} ${formatDimension(
         attributes.overall_height,
-        "inches"
-      )}`
+        "inches",
+      )}`,
     )}`,
     `${item(
       `${bold("Wheelbase:")} ${formatDimension(
         attributes.wheelbase_length,
-        "inches"
-      )}`
+        "inches",
+      )}`,
     )}`,
     `${item(
       `${bold("Turning Diameter:")} ${formatDimension(
         attributes.turning_diameter,
-        "inches"
-      )}`
+        "inches",
+      )}`,
     )}`,
     ...(attributes.curb_weight
       ? [
           `${item(
             `${bold("Curb Weight:")} ${formatDimension(
               attributes.curb_weight,
-              "lbs"
-            )}`
+              "lbs",
+            )}`,
           )}`,
         ]
       : []),
     ``,
     `${subHeader("Interior Capacity")}`,
     `${item(
-      `${bold("Seating:")} ${attributes.standard_seating || "Unknown"}`
+      `${bold("Seating:")} ${attributes.standard_seating || "Unknown"}`,
     )}`,
     ...(attributes.front_headroom
       ? [
           `${item(
             `${bold("Front Headroom:")} ${formatDimension(
               attributes.front_headroom,
-              "inches"
-            )}`
+              "inches",
+            )}`,
           )}`,
         ]
       : []),
@@ -115,8 +115,8 @@ export function formatVehicleSpecsResponse(
           `${item(
             `${bold("Rear Headroom:")} ${formatDimension(
               attributes.rear_headroom,
-              "inches"
-            )}`
+              "inches",
+            )}`,
           )}`,
         ]
       : []),
@@ -125,8 +125,8 @@ export function formatVehicleSpecsResponse(
           `${item(
             `${bold("Front Shoulder Room:")} ${formatDimension(
               attributes.front_shoulder_room,
-              "inches"
-            )}`
+              "inches",
+            )}`,
           )}`,
         ]
       : []),
@@ -135,8 +135,8 @@ export function formatVehicleSpecsResponse(
           `${item(
             `${bold("Rear Shoulder Room:")} ${formatDimension(
               attributes.rear_shoulder_room,
-              "inches"
-            )}`
+              "inches",
+            )}`,
           )}`,
         ]
       : []),
@@ -148,7 +148,7 @@ export function formatVehicleSpecsResponse(
           header("COLOR OPTIONS", "🎨"),
           ...colors.reduce((acc: string[], color) => {
             const existing = acc.find((c) =>
-              c.includes(`${bold(color.category)}:`)
+              c.includes(`${bold(color.category)}:`),
             );
             if (existing) {
               const index = acc.indexOf(existing);
@@ -156,8 +156,8 @@ export function formatVehicleSpecsResponse(
             } else {
               acc.push(
                 `${subHeader(`${bold(color.category)}:`)}\n  ${item(
-                  color.name
-                )}`
+                  color.name,
+                )}`,
               );
             }
             return acc;
@@ -170,13 +170,13 @@ export function formatVehicleSpecsResponse(
     `${item(
       `${bold("MSRP:")} ${
         attributes.manufacturer_suggested_retail_price || "Unknown"
-      }`
+      }`,
     )}`,
     `${item(
-      `${bold("Invoice Price:")} ${attributes.invoice_price || "Unknown"}`
+      `${bold("Invoice Price:")} ${attributes.invoice_price || "Unknown"}`,
     )}`,
     `${item(
-      `${bold("Delivery Charges:")} ${attributes.delivery_charges || "Unknown"}`
+      `${bold("Delivery Charges:")} ${attributes.delivery_charges || "Unknown"}`,
     )}`,
   ].join("\n");
 
@@ -204,8 +204,8 @@ export function formatVehicleSpecsResponse(
             key
               .split("_")
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")
-          )}`
+              .join(" "),
+          )}`,
       ),
   ].join("\n");
 

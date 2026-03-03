@@ -1,7 +1,7 @@
 import { CarsXEInternationalVinDecoderResponse } from "../types/carsxe.js";
 
 export function formatInternationalVinDecoderResponse(
-  data: CarsXEInternationalVinDecoderResponse
+  data: CarsXEInternationalVinDecoderResponse,
 ): string {
   const a = data.attributes;
   return [

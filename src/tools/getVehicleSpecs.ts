@@ -6,7 +6,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
 export function registerGetVehicleSpecsTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "get-vehicle-specs",
@@ -20,7 +20,10 @@ export function registerGetVehicleSpecsTool(
     },
     async ({ vin }) => {
       const apiKey = getApiKey();
-      console.log("apiKey getVehicleSpecs", apiKey ? `***${apiKey.slice(-4)}` : "null");
+      console.log(
+        "apiKey getVehicleSpecs",
+        apiKey ? `***${apiKey.slice(-4)}` : "null",
+      );
       if (!apiKey) {
         return {
           content: [
@@ -37,7 +40,7 @@ export function registerGetVehicleSpecsTool(
         {
           vin,
         },
-        apiKey
+        apiKey,
       );
       if (!specsData || !specsData.success) {
         return {
@@ -57,6 +60,6 @@ export function registerGetVehicleSpecsTool(
           },
         ],
       };
-    }
+    },
   );
 }

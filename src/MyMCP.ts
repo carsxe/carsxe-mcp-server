@@ -11,6 +11,7 @@ import { registerVinOcrTool } from "./tools/vinOcr.js";
 import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
+import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
 
 export class MyMCP extends McpAgent {
   server = new McpServer({
@@ -22,7 +23,10 @@ export class MyMCP extends McpAgent {
     // Function to get API key from execution context props
     const getApiKey = (): string | null => {
       const apiKey = (this.props as any)?.API_KEY;
-      console.log("Getting API key from props:", apiKey ? "***" + apiKey.slice(-4) : "null");
+      console.log(
+        "Getting API key from props:",
+        apiKey ? "***" + apiKey.slice(-4) : "null",
+      );
       return apiKey || null;
     };
 
@@ -37,5 +41,6 @@ export class MyMCP extends McpAgent {
     registerGetYearMakeModelTool(this.server, getApiKey);
     registerDecodeObdCodeTool(this.server, getApiKey);
     registerRecognizePlateImageTool(this.server, getApiKey);
+    registerGetLienTheftTool(this.server, getApiKey);
   }
 }

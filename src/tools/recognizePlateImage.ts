@@ -13,7 +13,7 @@ import * as dotenv from "dotenv";
 
 export function registerRecognizePlateImageTool(
   server: McpServer,
-  getApiKey: () => string | null
+  getApiKey: () => string | null,
 ) {
   server.tool(
     "recognize-plate-image",
@@ -39,7 +39,7 @@ export function registerRecognizePlateImageTool(
       const apiKey = getApiKey();
       console.log(
         "apiKey recognizePlateImage",
-        apiKey ? `***${apiKey.slice(-4)}` : "null"
+        apiKey ? `***${apiKey.slice(-4)}` : "null",
       );
       if (!apiKey) {
         return {
@@ -98,6 +98,6 @@ export function registerRecognizePlateImageTool(
           },
         ],
       };
-    }
+    },
   );
 }
