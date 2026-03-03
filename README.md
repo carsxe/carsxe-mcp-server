@@ -6,7 +6,7 @@ A modular, extensible Model Context Protocol (MCP) server for querying and analy
 
 ## 🌐 MCP Registry
 
-This server is published in the **official MCP Registry** as:
+This server is published in the [**official MCP Registry**](https://registry.modelcontextprotocol.io/) as:
 
 - **Server name:** `io.github.carsxe/carsxe-mcp`
 
