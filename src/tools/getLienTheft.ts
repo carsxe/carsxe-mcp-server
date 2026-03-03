@@ -33,7 +33,7 @@ export function registerGetLienTheftTool(
       }
 
       const data = await carsxeApiRequest<CarsXELienTheftResponse>(
-        "lien-theft",
+        "/v1/lien-theft",
         params,
         apiKey,
       );
