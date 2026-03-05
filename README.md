@@ -29,14 +29,14 @@ The CarsXE MCP server is a **Node.js/TypeScript** application that exposes a sui
 
 Connecting CarsXE to your AI editor or chat client via MCP gives you a supercharged vehicle data experience — directly inside the tools you already use:
 
-| Benefit | Description |
-|---|---|
-| **Ask in plain English** | No need to know API endpoints or parameters — just describe what you want |
-| **Context-aware answers** | The AI combines live vehicle data with your question for tailored, actionable responses |
-| **No tab switching** | Get VIN specs, history, recalls, and values without leaving your editor or chat |
-| **Chain requests effortlessly** | Decode a plate → get full specs → check recalls → get market value, all in one conversation |
-| **Always live data** | Every query hits the CarsXE API in real time — no stale cache or outdated results |
-| **Works in your favorite editor** | Claude Desktop, Cursor, VS Code, Windsurf, and any MCP-compatible client |
+| Benefit                           | Description                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Ask in plain English**          | No need to know API endpoints or parameters — just describe what you want                   |
+| **Context-aware answers**         | The AI combines live vehicle data with your question for tailored, actionable responses     |
+| **No tab switching**              | Get VIN specs, history, recalls, and values without leaving your editor or chat             |
+| **Chain requests effortlessly**   | Decode a plate → get full specs → check recalls → get market value, all in one conversation |
+| **Always live data**              | Every query hits the CarsXE API in real time — no stale cache or outdated results           |
+| **Works in your favorite editor** | Claude Desktop, Cursor, VS Code, Windsurf, and any MCP-compatible client                    |
 
 ---
 
@@ -132,12 +132,12 @@ Click the button below — Cursor will open with the MCP server pre-configured:
 
 The install dialog will open pre-filled with:
 
-| Field | Value |
-|---|---|
-| **Name** | CarsXE |
-| **Type** | streamableHttp |
-| **URL** | https://mcp.carsxe.com/mcp |
-| **Header** | `X-API-Key: YOUR_API_KEY` |
+| Field      | Value                      |
+| ---------- | -------------------------- |
+| **Name**   | CarsXE                     |
+| **Type**   | streamableHttp             |
+| **URL**    | https://mcp.carsxe.com/mcp |
+| **Header** | `X-API-Key: YOUR_API_KEY`  |
 
 Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/dashboard/developer), then click **Install**.
 
@@ -147,9 +147,25 @@ Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/
 
 Click the button below — VS Code will open with the MCP server pre-configured (requires [GitHub Copilot](https://github.com/features/copilot)):
 
-[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=CarsXE&config=%7B%22name%22%3A%22CarsXE%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.carsxe.com%2Fmcp%22%2C%22headers%22%3A%7B%22X-API-Key%22%3A%22%24%7Binput%3AapiKey%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22apiKey%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Enter%20your%20CarsXE%20API%20Key%22%2C%22password%22%3Atrue%7D%5D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=CarsXE&config=%7B%22name%22%3A%22CarsXE%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.carsxe.com%2Fmcp%22%2C%22headers%22%3A%7B%22X-API-Key%22%3A%22YOUR_API_KEY%22%7D%7D)
 
-VS Code will prompt you to enter your CarsXE API Key before completing the installation.
+After clicking install, you'll need to add your API key manually:
+
+1. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Run **"Open User Settings (JSON)"**
+3. Find the `CarsXE` entry under `"mcp"` → `"servers"`
+4. Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/dashboard/developer):
+```json
+   "CarsXE": {
+     "type": "http",
+     "url": "https://mcp.carsxe.com/mcp",
+     "headers": {
+       "X-API-Key": "YOUR_ACTUAL_KEY_HERE"
+     }
+   }
+```
+
+5. Save the file — VS Code will connect automatically.
 
 > **Note:** Make sure you have the **GitHub Copilot** extension installed and agent mode enabled (`chat.agent.enabled` in VS Code settings).
 
@@ -208,11 +224,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `vin` (string, required): 17-character Vehicle Identification Number
 - **Example Prompts:**
+
   > What are the full specs for VIN `WBAFR7C57CC811956`?
 
   > Is this a V6 or V8? VIN: `WBAFR7C57CC811956`
 
   > What trim level is `WBAFR7C57CC811956`?
+
 - **Output:** Markdown-formatted vehicle specs (year, make, model, engine, dimensions, colors, equipment, etc.)
 
 ---
@@ -225,11 +243,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `state` (string, optional): State abbreviation (e.g., CA)
   - `country` (string, required, default: US): Country code
 - **Example Prompts:**
+
   > What car has license plate `7XER187` in California?
 
   > Decode plate `7XER187` state `CA`
 
   > Look up the plate `ABC1234` in Texas
+
 - **Output:** Markdown summary of decoded vehicle info (VIN, make, model, year, etc.)
 
 ---
@@ -240,9 +260,11 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **Example Prompts:**
+
   > Decode this European VIN: `WF0MXXGBWM8R43240`
 
   > What car is `WAUZZZ8K9AA123456`? It's a German VIN.
+
 - **Output:** Markdown with international vehicle details (manufacturer, specs, emissions, etc.)
 
 ---
@@ -255,11 +277,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `state` (string, optional): US state abbreviation
   - `country` (string, optional): Country code
 - **Example Prompts:**
+
   > How much is `WBAFR7C57CC811956` worth?
 
   > I'm thinking of buying VIN `WBAFR7C57CC811956` — what's a fair price?
 
   > What's the trade-in value for `WBAFR7C57CC811956` in Florida?
+
 - **Output:** Markdown with market value breakdown (retail, trade-in, MSRP, etc.)
 
 ---
@@ -271,11 +295,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `vin` (string, required): 17-character VIN
   - `format` (string, optional): Response format (json or xml)
 - **Example Prompts:**
+
   > Has `WBAFR7C57CC811956` ever been in an accident?
 
   > Show me the full history for VIN `WBAFR7C57CC811956`
 
   > How many owners has `WBAFR7C57CC811956` had?
+
 - **Output:** Markdown with history records (junk/salvage, insurance, brands, titles, odometer, etc.)
 
 ---
@@ -288,11 +314,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `model` (string, required)
   - `year`, `trim`, `color`, `transparent`, `angle`, `photoType`, `size`, `license`, `format` (all optional)
 - **Example Prompts:**
+
   > Show me photos of a blue 2018 Toyota Tacoma
 
   > Get images of a red 2022 Ford Mustang GT
 
   > What does a white 2020 Tesla Model 3 look like?
+
 - **Output:** Markdown with up to 5 images (links, thumbnails, details)
 
 ---
@@ -303,11 +331,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **Example Prompts:**
+
   > Does `1C4JJXR64PW696340` have any open recalls?
 
   > I just bought VIN `1C4JJXR64PW696340` — should I be worried about recalls?
 
   > Check for safety recalls on `WBAFR7C57CC811956`
+
 - **Output:** Markdown with recall details (date, description, risk, remedy, status, etc.)
 
 ---
@@ -318,9 +348,11 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `imageUrl` (string, required): Direct URL to an image of a vehicle's license plate
 - **Example Prompts:**
+
   > What's the plate number in this image? `https://api.carsxe.com/img/apis/plate_recognition.JPG`
 
   > Read the license plate from this photo: `[image URL]`
+
 - **Output:** Markdown with detected plates, confidence scores, bounding boxes, vehicle type, etc.
 
 ---
@@ -331,9 +363,11 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `imageUrl` (string, required): Direct URL to an image of a vehicle's VIN
 - **Example Prompts:**
+
   > Extract the VIN from this image: `https://user-images.githubusercontent.com/5663423/30922082-64edb4fa-a3a8-11e7-873e-3fbcdce8ea3a.png`
 
   > What's the VIN in this photo? `https://res.cloudinary.com/carsxe/image/upload/q_auto/f_auto/v1713204144/base/images/vin-ocr/vin.jpg`
+
 - **Output:** Markdown with detected VIN, confidence, bounding box, and candidates
 
 ---
@@ -347,11 +381,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `model` (string, required)
   - `trim` (string, optional)
 - **Example Prompts:**
+
   > What are the specs for a 2020 Toyota Camry?
 
   > Tell me about the 2019 Honda Civic Sport trim
 
   > What colors were available on the 2021 Ford F-150?
+
 - **Output:** Markdown with vehicle details, colors, features, options, and packages
 
 ---
@@ -362,11 +398,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `code` (string, required): OBD code (e.g., P0115)
 - **Example Prompts:**
+
   > My check engine light is on with code `P0115` — what does it mean?
 
   > Decode OBD code `P0300`
 
   > I have a `C1234` code on my dashboard — is it serious?
+
 - **Output:** Markdown with code, diagnosis, and date
 
 ---
@@ -377,11 +415,13 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `vin` (string, required): 17-character Vehicle Identification Number
 - **Example Prompts:**
+
   > Is there a lien on `WBAFR7C57CC811956`?
 
   > I'm buying a used car with VIN `WBAFR7C57CC811956` — check if it's stolen
 
   > Verify the title is clean for `WBAFR7C57CC811956`
+
 - **Output:** Markdown with lien holder information, theft records, recovery dates, and status
 
 ---
@@ -391,17 +431,20 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 The real power of CarsXE MCP comes from chaining tools in a single conversation:
 
 **Scenario 1 — Pre-purchase due diligence:**
+
 1. > Decode plate `7XER187` in California
 2. > Now get its full history
 3. > Does it have any open recalls?
 4. > What's it worth if I buy it today?
 
 **Scenario 2 — Spotted a car on the street:**
+
 1. > Read the plate from this image: `[photo URL]`
 2. > Look up that plate in Texas
 3. > Show me photos of that car model
 
 **Scenario 3 — Mechanic / service shop:**
+
 1. > Decode this VIN from the dashboard photo: `[image URL]`
 2. > Get its full specs
 3. > My customer says the check engine code is P0300 — what does that mean for this vehicle?
