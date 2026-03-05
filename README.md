@@ -126,11 +126,11 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 
 ### Cursor
 
-Click the button below to open the CarsXE MCP installation dialog directly inside Cursor:
+Click the button below — Cursor will open with the MCP server pre-configured:
 
-[![Install in Cursor](https://img.shields.io/badge/Install_in_Cursor-000000?style=for-the-badge&logo=cursor&logoColor=white)](cursor://anysphere.cursor-deeplink/mcp/install?name=CarsXE&config=eyJuYW1lIjoiQ2Fyc1hFIiwidXJsIjoiaHR0cHM6Ly9tY3AuY2Fyc3hlLmNvbS9tY3AiLCJoZWFkZXJzIjp7IlgtQVBJLUtleSI6IllPVVJfQVBJX0tFWSJ9fQ==)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=CarsXE&config=eyJuYW1lIjoiQ2Fyc1hFIiwidXJsIjoiaHR0cHM6Ly9tY3AuY2Fyc3hlLmNvbS9tY3AiLCJoZWFkZXJzIjp7IlgtQVBJLUtleSI6IllPVVJfQVBJX0tFWSJ9fQ==)
 
-Cursor will open with a pre-filled dialog:
+The install dialog will open pre-filled with:
 
 | Field | Value |
 |---|---|
@@ -145,9 +145,9 @@ Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/
 
 ### Visual Studio Code (GitHub Copilot)
 
-Click the button below to install CarsXE MCP directly in VS Code (requires [GitHub Copilot](https://github.com/features/copilot)):
+Click the button below — VS Code will open with the MCP server pre-configured (requires [GitHub Copilot](https://github.com/features/copilot)):
 
-[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22CarsXE%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.carsxe.com%2Fmcp%22%2C%22headers%22%3A%7B%22X-API-Key%22%3A%22YOUR_API_KEY%22%7D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=CarsXE&config=%7B%22name%22%3A%22CarsXE%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.carsxe.com%2Fmcp%22%2C%22headers%22%3A%7B%22X-API-Key%22%3A%22YOUR_API_KEY%22%7D%7D)
 
 VS Code will open a pre-filled MCP configuration. Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/dashboard/developer), then confirm the installation.
 
