@@ -91,7 +91,7 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
   ```json
   {
     "mcpServers": {
-      "carsxe-remote": {
+      "carsxe": {
         "command": "npx",
         "args": [
           "mcp-remote@latest",
@@ -183,7 +183,7 @@ After clicking install, you'll need to add your API key manually:
 ```json
 {
   "mcpServers": {
-    "carsxe-remote": {
+    "carsxe": {
       "command": "npx",
       "args": [
         "mcp-remote@latest",
