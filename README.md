@@ -152,9 +152,11 @@ Click the button below — VS Code will open with the MCP server pre-configured 
 After clicking install, you'll need to add your API key manually:
 
 1. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-2. Run **"Open User Settings (JSON)"**
-3. Find the `CarsXE` entry under `"mcp"` → `"servers"`
-4. Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/dashboard/developer):
+2. Run **MCP: List Servers**
+3. Find **CarsXE** in the list and click on it
+4. Click **Show Configuration**
+5. Replace `YOUR_API_KEY` with your actual [CarsXE API key](https://api.carsxe.com/dashboard/developer):
+
 ```json
    "CarsXE": {
      "type": "http",
@@ -165,7 +167,7 @@ After clicking install, you'll need to add your API key manually:
    }
 ```
 
-5. Save the file — VS Code will connect automatically.
+6. Save the file — VS Code will connect automatically.
 
 > **Note:** Make sure you have the **GitHub Copilot** extension installed and agent mode enabled (`chat.agent.enabled` in VS Code settings).
 
