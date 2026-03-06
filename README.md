@@ -128,7 +128,7 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 
 Click the button below — Cursor will open with the MCP server pre-configured:
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=CarsXE&config=eyJuYW1lIjoiQ2Fyc1hFIiwidXJsIjoiaHR0cHM6Ly9tY3AuY2Fyc3hlLmNvbS9tY3AiLCJoZWFkZXJzIjp7IlgtQVBJLUtleSI6IllPVVJfQVBJX0tFWSJ9fQ==)
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=CarsXE&config=eyJuYW1lIjoiQ2Fyc1hFIiwidXJsIjoiaHR0cHM6Ly9tY3AuY2Fyc3hlLmNvbS9tY3AiLCJoZWFkZXJzIjp7IlgtQVBJLUtleSI6IllPVVJfQVBJX0tFWSJ9fQ==)
 
 The install dialog will open pre-filled with:
 
