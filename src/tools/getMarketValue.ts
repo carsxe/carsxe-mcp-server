@@ -18,15 +18,24 @@ export function registerGetMarketValueTool(
         .max(17)
         .describe("17-character Vehicle Identification Number"),
       state: z.string().optional().describe("US state abbreviation (optional)"),
-      country: z
-        .string()
+      mileage: z
+        .number()
         .optional()
-        .describe("Country code (optional, default: US)"),
+        .describe(
+          "Current mileage of the vehicle used to adjust the market value (optional)",
+        ),
+      condition: z
+        .enum(["excellent", "clean", "average", "rough"])
+        .optional()
+        .describe(
+          "Overall condition of the vehicle: excellent, clean, average, or rough (optional)",
+        ),
     },
-    async ({ vin, state, country }) => {
+    async ({ vin, state, mileage, condition }) => {
       const params: Record<string, string> = { vin };
       if (state) params.state = state;
-      if (country) params.country = country;
+      if (mileage !== undefined) params.mileage = String(mileage);
+      if (condition) params.condition = condition;
       const apiKey = getApiKey();
       if (!apiKey) {
         return {

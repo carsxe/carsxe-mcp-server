@@ -263,14 +263,15 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
   - `state` (string, optional): US state abbreviation
-  - `country` (string, optional): Country code
+  - `mileage` (number, optional): Current mileage of the vehicle to adjust the market value
+  - `condition` (string, optional): Overall condition of the vehicle — `excellent`, `clean`, `average`, or `rough`
 - **Example Prompts:**
 
   > How much is `WBAFR7C57CC811956` worth?
 
   > I'm thinking of buying VIN `WBAFR7C57CC811956` — what's a fair price?
 
-  > What's the trade-in value for `WBAFR7C57CC811956` in Florida?
+  > What's the trade-in value for `WBAFR7C57CC811956` in Florida with 45,000 miles in clean condition?
 
 - **Output:** Markdown with market value breakdown (retail, trade-in, MSRP, etc.)
 
