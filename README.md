@@ -89,7 +89,7 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
         "X-API-Key: YOUR_API_KEY"
       ]
     }
-  }
+  },
   ```
 
 - Replace `YOUR_API_KEY` with your actual CarsXE API Key
