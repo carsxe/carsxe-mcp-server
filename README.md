@@ -79,17 +79,15 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 - Add or update the following entry for CarsXE:
 
   ```json
-  {
-    "mcpServers": {
-      "carsxe": {
-        "command": "npx",
-        "args": [
-          "mcp-remote@latest",
-          "https://mcp.carsxe.com/mcp",
-          "--header",
-          "X-API-Key: YOUR_API_KEY"
-        ]
-      }
+  "mcpServers": {
+    "carsxe": {
+      "command": "npx",
+      "args": [
+        "mcp-remote@latest",
+        "https://mcp.carsxe.com/mcp",
+        "--header",
+        "X-API-Key: YOUR_API_KEY"
+      ]
     }
   }
   ```
