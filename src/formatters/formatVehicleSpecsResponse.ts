@@ -3,7 +3,7 @@ import { CarsXESpecsResponse } from "../types/carsxe.js";
 export function formatVehicleSpecsResponse(
   specsData: CarsXESpecsResponse,
 ): string {
-  const { attributes, colors, equipment, warranties } = specsData;
+  const { attributes, colors = [], equipment = {}, warranties = [] } = specsData;
   const header = (text: string, emoji: string) =>
     `\n${emoji} ${text.toUpperCase()}\n${"═".repeat(text.length + 2)}`;
   const subHeader = (text: string) => `\n• ${text}`;
@@ -186,9 +186,9 @@ export function formatVehicleSpecsResponse(
           header("WARRANTY COVERAGE", "🛡️"),
           ...warranties.map((w) => {
             const parts = [`${item(`${bold(w.type)}:`)}`];
-            if (w.months) parts.push(`${w.months.replace(" month", "-month")}`);
+            if (w.months) parts.push(`${String(w.months).replace(" month", "-month")}`);
             if (w.miles)
-              parts.push(`/${w.miles.replace(" mile", ",000 miles")}`);
+              parts.push(`/${String(w.miles).replace(" mile", ",000 miles")}`);
             return parts.join(" ");
           }),
         ].join("\n")
@@ -196,7 +196,7 @@ export function formatVehicleSpecsResponse(
 
   const equipmentInfo = [
     header("STANDARD EQUIPMENT", "🔧"),
-    ...Object.entries(equipment)
+    ...(equipment && typeof equipment === "object" ? Object.entries(equipment) : [])
       .filter(([_, value]) => value === "Std.")
       .map(
         ([key]) =>

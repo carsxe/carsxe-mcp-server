@@ -6,6 +6,11 @@ export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
 
+    // Handle keepalive ping from cron — no API key required
+    if (url.pathname === "/keepalive") {
+      return new Response("ok", { status: 200 });
+    }
+
     // Extract API key from X-API-Key header, Authorization Bearer token, or search params
     let apiKey = request.headers.get("X-API-Key");
 
@@ -44,5 +49,12 @@ export default {
     }
 
     return new Response("Not found", { status: 404 });
+  },
+
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    // Wake the Durable Object to prevent hibernation
+    const id = env.MCP_OBJECT.idFromName("keepalive");
+    const stub = env.MCP_OBJECT.get(id);
+    await stub.fetch(new Request("https://internal/keepalive"));
   },
 };
