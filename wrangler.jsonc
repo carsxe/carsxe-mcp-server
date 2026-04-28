@@ -1,4 +1,7 @@
 /**
+ * Cloudflare Workers deployment only — serves mcp.carsxe.com/mcp
+ * GCP Cloud Run deployments use deploy/staging.sh and deploy/prod.sh instead.
+ *
  * For more details on how to configure Wrangler, refer to:
  * https://developers.cloudflare.com/workers/wrangler/configuration/
  */
