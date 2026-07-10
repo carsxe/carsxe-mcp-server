@@ -437,3 +437,34 @@ The real power of CarsXE MCP comes from chaining tools in a single conversation:
 3. > My customer says the check engine code is P0300 — what does that mean for this vehicle?
 
 ---
+
+## 🔐 OAuth 2.1 (Claude.ai custom connector)
+
+The hosted server at `https://mcp.carsxe.com/mcp` supports two authentication methods:
+
+1. **API key** (unchanged) — `X-API-Key` header, `Authorization: Bearer <api-key>`, or `?key=` query parameter. Used by Claude Desktop / `mcp-remote` and local clients.
+2. **OAuth 2.1** — used by hosted MCP clients such as the Claude.ai custom connector. Clicking **Connect** in Claude.ai runs a standard Authorization Code + PKCE flow: dynamic client registration (RFC 7591), browser sign-in on the CarsXE consent page, then token exchange. Access tokens (`mcp_at_*`, 1 h) map to the user's CarsXE API key; refresh tokens (`mcp_rt_*`, 90 d) are rotated on every refresh.
+
+### How it is wired (GCP deployment only)
+
+`mcp.carsxe.com` is the OAuth issuer, but the authorization-server logic lives in the CarsXE web app next to the user/API-key data:
+
+| Route on mcp.carsxe.com | Behavior |
+| --- | --- |
+| `GET /.well-known/oauth-authorization-server` | RFC 8414 metadata, served locally |
+| `GET /.well-known/oauth-protected-resource` | MCP resource metadata, served locally |
+| `POST /oauth/register` | Proxied to `{OAUTH_WEB_BASE}/api/auth/mcp/register` |
+| `GET /oauth/authorize` | 302 to `{OAUTH_WEB_BASE}/mcp-auth` (consent page) |
+| `POST /oauth/token` | Proxied to `{OAUTH_WEB_BASE}/api/auth/mcp/token` |
+
+Incoming `Authorization: Bearer mcp_at_*` tokens on `/mcp` are resolved to the user's API key via the web app's internal introspection endpoint and cached in memory for 60 s. Requests with no credentials get `401` with a `WWW-Authenticate` challenge, which is what prompts Claude.ai to start the flow.
+
+### Environment variables
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `OAUTH_ISSUER` | `https://mcp.carsxe.com` | Issuer / endpoint base in the discovery metadata |
+| `OAUTH_WEB_BASE` | `https://api.carsxe.com` | CarsXE web app hosting the OAuth logic |
+| `MCP_OAUTH_INTERNAL_SECRET` | _(unset)_ | Shared secret for token introspection. Must match the web app's `MCP_OAUTH_INTERNAL_SECRET`. When unset, OAuth bearer tokens are rejected but API-key auth keeps working. |
+
+> The Cloudflare Workers deployment (`src/index.ts`) does not serve the OAuth surface — only the GCP Cloud Run deployment (`src/index.gcp.ts`) behind `mcp.carsxe.com` does.
