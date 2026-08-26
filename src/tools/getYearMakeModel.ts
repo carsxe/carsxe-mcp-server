@@ -8,19 +8,27 @@ export function registerGetYearMakeModelTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-year-make-model",
-    "Get comprehensive vehicle info by year, make, model, and optional trim",
+  server.registerTool(
+    "get_year_make_model",
     {
-      year: z
-        .string()
-        .describe("Manufacturing year of the vehicle (e.g., 2023)"),
-      make: z.string().describe("Vehicle make (e.g., Toyota)"),
-      model: z.string().describe("Vehicle model (e.g., Camry)"),
-      trim: z
-        .string()
-        .optional()
-        .describe("Vehicle trim (optional, e.g., XLE)"),
+      title: "Look Up Year Make Model",
+      description:
+        "Get comprehensive vehicle info by year, make, model, and optional trim",
+      inputSchema: {
+        year: z
+          .string()
+          .describe("Manufacturing year of the vehicle (e.g., 2023)"),
+        make: z.string().describe("Vehicle make (e.g., Toyota)"),
+        model: z.string().describe("Vehicle model (e.g., Camry)"),
+        trim: z
+          .string()
+          .optional()
+          .describe("Vehicle trim (optional, e.g., XLE)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ year, make, model, trim }) => {
       const params: Record<string, string> = { year, make, model };

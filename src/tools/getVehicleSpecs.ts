@@ -8,15 +8,22 @@ export function registerGetVehicleSpecsTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-vehicle-specs",
-    "Get comprehensive vehicle specifications by VIN",
+  server.registerTool(
+    "get_vehicle_specs",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
+      title: "Get Vehicle Specs",
+      description: "Get comprehensive vehicle specifications by VIN",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin }) => {
       const apiKey = getApiKey();

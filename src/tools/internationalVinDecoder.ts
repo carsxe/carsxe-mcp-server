@@ -8,15 +8,22 @@ export function registerInternationalVinDecoderTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "international-vin-decoder",
-    "Decode an international VIN and get detailed vehicle info",
+  server.registerTool(
+    "decode_international_vin",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
+      title: "Decode International VIN",
+      description: "Decode an international VIN and get detailed vehicle info",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin }) => {
       const apiKey = getApiKey();

@@ -8,15 +8,22 @@ export function registerGetVehicleRecallsTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-vehicle-recalls",
-    "Get vehicle recall information by VIN",
+  server.registerTool(
+    "get_vehicle_recalls",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
+      title: "Get Vehicle Recalls",
+      description: "Get vehicle recall information by VIN",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin }) => {
       const apiKey = getApiKey();

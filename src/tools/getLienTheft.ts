@@ -8,15 +8,22 @@ export function registerGetLienTheftTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-lien-theft",
-    "Get lien and theft information for a vehicle by VIN",
+  server.registerTool(
+    "check_lien_and_theft",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
+      title: "Check Lien and Theft",
+      description: "Get lien and theft information for a vehicle by VIN",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin }) => {
       const params: Record<string, string> = { vin };

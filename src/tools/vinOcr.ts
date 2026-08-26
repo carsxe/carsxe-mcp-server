@@ -15,14 +15,24 @@ export function registerVinOcrTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "vin-ocr",
-    "Recognize and extract the VIN from a vehicle image URL using OCR",
+  server.registerTool(
+    "extract_vin_from_image",
     {
-      imageUrl: z
-        .string()
-        .url()
-        .describe("Direct URL to an image of a vehicle's VIN (photo or scan)"),
+      title: "Extract VIN from Image",
+      description:
+        "Recognize and extract the VIN from a vehicle image URL using OCR",
+      inputSchema: {
+        imageUrl: z
+          .string()
+          .url()
+          .describe(
+            "Direct URL to an image of a vehicle's VIN (photo or scan)",
+          ),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ imageUrl }) => {
       if (!imageUrl) {

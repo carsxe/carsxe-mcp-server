@@ -8,41 +8,48 @@ export function registerGetVehicleImagesTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-vehicle-images",
-    "Get vehicle images by make, model, and optional filters",
+  server.registerTool(
+    "get_vehicle_images",
     {
-      make: z.string().describe("Vehicle make (required)"),
-      model: z.string().describe("Vehicle model (required)"),
-      year: z.string().optional().describe("Vehicle year (optional)"),
-      trim: z.string().optional().describe("Vehicle trim (optional)"),
-      color: z.string().optional().describe("Vehicle color (optional)"),
-      transparent: z
-        .boolean()
-        .optional()
-        .describe("Transparent background (optional)"),
-      angle: z
-        .string()
-        .optional()
-        .describe("Angle: front, side, back (optional)"),
-      photoType: z
-        .string()
-        .optional()
-        .describe("interior, exterior, engine (optional)"),
-      size: z
-        .string()
-        .optional()
-        .describe("Small, Medium, Large, Wallpaper, All (optional)"),
-      license: z
-        .string()
-        .optional()
-        .describe(
-          "Public, Share, ShareCommercially, Modify, ModifyCommercially (optional)",
-        ),
-      format: z
-        .string()
-        .optional()
-        .describe("json or xml (optional, default: json)"),
+      title: "Get Vehicle Images",
+      description: "Get vehicle images by make, model, and optional filters",
+      inputSchema: {
+        make: z.string().describe("Vehicle make (required)"),
+        model: z.string().describe("Vehicle model (required)"),
+        year: z.string().optional().describe("Vehicle year (optional)"),
+        trim: z.string().optional().describe("Vehicle trim (optional)"),
+        color: z.string().optional().describe("Vehicle color (optional)"),
+        transparent: z
+          .boolean()
+          .optional()
+          .describe("Transparent background (optional)"),
+        angle: z
+          .string()
+          .optional()
+          .describe("Angle: front, side, back (optional)"),
+        photoType: z
+          .string()
+          .optional()
+          .describe("interior, exterior, engine (optional)"),
+        size: z
+          .string()
+          .optional()
+          .describe("Small, Medium, Large, Wallpaper, All (optional)"),
+        license: z
+          .string()
+          .optional()
+          .describe(
+            "Public, Share, ShareCommercially, Modify, ModifyCommercially (optional)",
+          ),
+        format: z
+          .string()
+          .optional()
+          .describe("json or xml (optional, default: json)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async (params) => {
       // Convert all params to string for the API

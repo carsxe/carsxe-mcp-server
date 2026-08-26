@@ -8,28 +8,38 @@ export function registerGetMarketValueTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-market-value",
-    "Get the estimated market value for a vehicle by VIN",
+  server.registerTool(
+    "get_market_value",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
-      state: z.string().optional().describe("US state abbreviation (optional)"),
-      mileage: z
-        .number()
-        .optional()
-        .describe(
-          "Current mileage of the vehicle used to adjust the market value (optional)",
-        ),
-      condition: z
-        .enum(["excellent", "clean", "average", "rough"])
-        .optional()
-        .describe(
-          "Overall condition of the vehicle: excellent, clean, average, or rough (optional)",
-        ),
+      title: "Get Market Value",
+      description: "Get the estimated market value for a vehicle by VIN",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+        state: z
+          .string()
+          .optional()
+          .describe("US state abbreviation (optional)"),
+        mileage: z
+          .number()
+          .optional()
+          .describe(
+            "Current mileage of the vehicle used to adjust the market value (optional)",
+          ),
+        condition: z
+          .enum(["excellent", "clean", "average", "rough"])
+          .optional()
+          .describe(
+            "Overall condition of the vehicle: excellent, clean, average, or rough (optional)",
+          ),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin, state, mileage, condition }) => {
       const params: Record<string, string> = { vin };

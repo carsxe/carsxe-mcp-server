@@ -8,18 +8,30 @@ export function registerDecodeVehiclePlateTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "decode-vehicle-plate",
-    "Decode a vehicle's license plate to get VIN and basic vehicle info",
+  server.registerTool(
+    "decode_license_plate",
     {
-      plate: z.string().min(1).describe("License plate number"),
-      state: z.string().min(2).max(2).describe("State abbreviation (e.g., CA)"),
-      country: z
-        .string()
-        .min(2)
-        .max(2)
-        .default("US")
-        .describe("Country code (default: US)"),
+      title: "Decode License Plate",
+      description:
+        "Decode a vehicle's license plate to get VIN and basic vehicle info",
+      inputSchema: {
+        plate: z.string().min(1).describe("License plate number"),
+        state: z
+          .string()
+          .min(2)
+          .max(2)
+          .describe("State abbreviation (e.g., CA)"),
+        country: z
+          .string()
+          .min(2)
+          .max(2)
+          .default("US")
+          .describe("Country code (default: US)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ plate, state, country }) => {
       const apiKey = getApiKey();

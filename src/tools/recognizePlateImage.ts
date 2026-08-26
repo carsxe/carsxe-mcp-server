@@ -15,14 +15,22 @@ export function registerRecognizePlateImageTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "recognize-plate-image",
-    "Recognize and extract license plate(s) from a vehicle image URL",
+  server.registerTool(
+    "read_license_plate_from_image",
     {
-      imageUrl: z
-        .string()
-        .url()
-        .describe("Direct URL to an image of a vehicle's license plate"),
+      title: "Read License Plate from Image",
+      description:
+        "Recognize and extract license plate(s) from a vehicle image URL",
+      inputSchema: {
+        imageUrl: z
+          .string()
+          .url()
+          .describe("Direct URL to an image of a vehicle's license plate"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ imageUrl }) => {
       if (!imageUrl) {

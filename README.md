@@ -107,7 +107,7 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 - After restarting, open Claude Desktop.
 - Go to the tools or plugins section (usually in the search bar or under a tools menu).
 - You should see **CarsXE** listed as an available MCP server/tool.
-- Try running a CarsXE tool (e.g., get-vehicle-specs) to verify everything is working.
+- Try running a CarsXE tool (e.g., get_vehicle_specs) to verify everything is working.
   > This will only work if your API key is associated with an active subscription.
 
 ---
@@ -204,7 +204,7 @@ Consult your editor's MCP documentation for the exact configuration format.
 
 Below is a list of all available CarsXE tools, their parameters, and example prompts. These prompts work in any MCP-connected client.
 
-### 1. `get-vehicle-specs` 🚙
+### 1. `get_vehicle_specs` 🚙
 
 - **Description:** Get comprehensive vehicle specifications by VIN
 - **Parameters:**
@@ -221,7 +221,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 2. `decode-vehicle-plate` 🏷️
+### 2. `decode_license_plate` 🏷️
 
 - **Description:** Decode a vehicle's license plate to get VIN and basic info
 - **Parameters:**
@@ -240,7 +240,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 3. `international-vin-decoder` 🌍
+### 3. `decode_international_vin` 🌍
 
 - **Description:** Decode an international VIN for detailed info
 - **Parameters:**
@@ -255,7 +255,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 4. `get-market-value` 💰
+### 4. `get_market_value` 💰
 
 - **Description:** Get estimated market value for a vehicle by VIN
 - **Parameters:**
@@ -275,7 +275,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 5. `get-vehicle-history` 🕓
+### 5. `get_vehicle_history` 🕓
 
 - **Description:** Get a comprehensive vehicle history report by VIN
 - **Parameters:**
@@ -293,7 +293,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 6. `get-vehicle-images` 🖼️
+### 6. `get_vehicle_images` 🖼️
 
 - **Description:** Get vehicle images by make, model, and filters
 - **Parameters:**
@@ -312,7 +312,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 7. `get-vehicle-recalls` 🚨
+### 7. `get_vehicle_recalls` 🚨
 
 - **Description:** Get vehicle recall information by VIN
 - **Parameters:**
@@ -329,7 +329,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 8. `recognize-plate-image` 🏷️
+### 8. `read_license_plate_from_image` 🏷️
 
 - **Description:** Recognize and extract license plate(s) from a vehicle image URL
 - **Parameters:**
@@ -344,7 +344,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 9. `vin-ocr` 🔍
+### 9. `extract_vin_from_image` 🔍
 
 - **Description:** Extract the VIN from a vehicle image using OCR
 - **Parameters:**
@@ -359,7 +359,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 10. `get-year-make-model` 📅
+### 10. `get_year_make_model` 📅
 
 - **Description:** Get comprehensive vehicle info by year, make, model, and optional trim
 - **Parameters:**
@@ -379,7 +379,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 11. `decode-obd-code` 🛠️
+### 11. `decode_obd_code` 🛠️
 
 - **Description:** Decode an OBD code and get diagnosis information
 - **Parameters:**
@@ -396,7 +396,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 12. `get-lien-theft` 🔒
+### 12. `check_lien_and_theft` 🔒
 
 - **Description:** Get lien and theft information for a vehicle by VIN
 - **Parameters:**

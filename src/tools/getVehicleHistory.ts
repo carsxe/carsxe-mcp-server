@@ -8,19 +8,26 @@ export function registerGetVehicleHistoryTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "get-vehicle-history",
-    "Get a comprehensive vehicle history report by VIN",
+  server.registerTool(
+    "get_vehicle_history",
     {
-      vin: z
-        .string()
-        .min(17)
-        .max(17)
-        .describe("17-character Vehicle Identification Number"),
-      format: z
-        .string()
-        .optional()
-        .describe("Response format (json or xml, default: json)"),
+      title: "Get Vehicle History",
+      description: "Get a comprehensive vehicle history report by VIN",
+      inputSchema: {
+        vin: z
+          .string()
+          .min(17)
+          .max(17)
+          .describe("17-character Vehicle Identification Number"),
+        format: z
+          .string()
+          .optional()
+          .describe("Response format (json or xml, default: json)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ vin, format }) => {
       const params: Record<string, string> = { vin };

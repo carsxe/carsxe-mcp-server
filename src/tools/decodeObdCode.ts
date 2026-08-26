@@ -8,11 +8,19 @@ export function registerDecodeObdCodeTool(
   server: McpServer,
   getApiKey: () => string | null,
 ) {
-  server.tool(
-    "decode-obd-code",
-    "Decode an OBD code and get diagnosis information",
+  server.registerTool(
+    "decode_obd_code",
     {
-      code: z.string().describe("OBD code to decode (e.g., P0115)"),
+      title: "Decode OBD Code",
+      description:
+        "Decode an OBD-II diagnostic trouble code (DTC) such as P0115 and get diagnosis information",
+      inputSchema: {
+        code: z.string().describe("OBD code to decode (e.g., P0115)"),
+      },
+      annotations: {
+        readOnlyHint: true,
+        openWorldHint: true,
+      },
     },
     async ({ code }) => {
       if (!code) {
