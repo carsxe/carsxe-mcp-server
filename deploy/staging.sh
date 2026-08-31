@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT="carsxe-next"
-SERVICE="carsxe-mcp-staging"
+# GCP project, Cloud Run service, and image URI come from the environment.
+# Do not default these to a specific organization's IDs.
+if [[ -z "${PROJECT:-}" ]]; then
+  echo "error: PROJECT is required (GCP project ID). Set it in the environment; do not commit it." >&2
+  exit 1
+fi
+if [[ -z "${SERVICE:-}" ]]; then
+  echo "error: SERVICE is required (Cloud Run service name). Set it in the environment; do not commit it." >&2
+  exit 1
+fi
+if [[ -z "${IMAGE:-}" ]]; then
+  echo "error: IMAGE is required (container image URI). Set it in the environment; do not commit it." >&2
+  exit 1
+fi
+
 REGION="${REGION:-us-central1}"
-IMAGE="gcr.io/${PROJECT}/carsxe-mcp-server"
+CARSXE_AUTH_URL="${CARSXE_AUTH_URL:-https://api.carsxe.com/v1/auth/validate}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}/.."
@@ -22,6 +35,6 @@ gcloud run deploy "${SERVICE}" \
   --region "${REGION}" \
   --platform managed \
   --allow-unauthenticated \
-  --set-env-vars "STAGING=true,CARSXE_AUTH_URL=https://api.carsxe.com/v1/auth/validate"
+  --set-env-vars "STAGING=true,CARSXE_AUTH_URL=${CARSXE_AUTH_URL}"
 
 echo "Deploy complete."
