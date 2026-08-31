@@ -1,0 +1,224 @@
+{
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "CarsXE",
+    "subtitle": "Vehicle data and insights",
+    "description": "CarsXE helps users identify vehicles, inspect specifications and history, check recalls and lien or theft records, estimate market value, find vehicle images, and decode VINs, plates, and OBD-II codes through ChatGPT.",
+    "category": "SHOPPING"
+  },
+  "tools": {
+    "get_vehicle_specs": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves vehicle specifications from CarsXE by VIN without creating or modifying records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "decode_license_plate": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Looks up basic vehicle information for a plate, state, and country without modifying data.",
+        "open_world_justification": "Does not publish the plate lookup or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "decode_international_vin": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves decoded international vehicle details for a VIN without changing records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_market_value": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves an estimated vehicle value using the VIN and optional location, mileage, and condition inputs.",
+        "open_world_justification": "Does not list a vehicle for sale, submit an offer, or change any external system.",
+        "destructive_justification": "Does not execute transactions or delete, overwrite, or revoke anything."
+      }
+    },
+    "get_vehicle_history": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves a vehicle history report by VIN without creating or updating records.",
+        "open_world_justification": "Does not publish the report or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_vehicle_images": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Searches for vehicle images using make, model, and optional visual filters without modifying data.",
+        "open_world_justification": "Does not upload, publish, or alter images or any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_vehicle_recalls": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves recall information by VIN without modifying vehicle or recall records.",
+        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "extract_vin_from_image": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyzes the image at the supplied URL to extract a VIN without modifying the image or records.",
+        "open_world_justification": "Does not upload, publish, or alter the source image or any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_year_make_model": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves vehicle information using year, make, model, and optional trim without changing records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "decode_obd_code": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves diagnostic information for an OBD-II trouble code without changing vehicle data.",
+        "open_world_justification": "Does not operate a vehicle, schedule repairs, or change any external system.",
+        "destructive_justification": "Does not clear codes, modify a vehicle, or perform irreversible actions."
+      }
+    },
+    "read_license_plate_from_image": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Analyzes the image at the supplied URL to recognize plate text without modifying the image or records.",
+        "open_world_justification": "Does not upload, publish, or alter the source image or any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "check_lien_and_theft": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves lien and theft information by VIN without creating or changing records.",
+        "open_world_justification": "Does not report a vehicle, contact authorities, or change any external system.",
+        "destructive_justification": "Does not transfer ownership, clear records, or perform irreversible actions."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Inspect specifications for a vehicle identified by VIN.",
+      "user_prompt": "What are the full specifications for VIN WBAFR7C57CC811956?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_vehicle_specs",
+      "expected_output": "Returns available identification, engine, trim, dimensions, equipment, and other specification details for the VIN.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Estimate a used vehicle's value with condition adjustments.",
+      "user_prompt": "Estimate the market value of VIN WBAFR7C57CC811956 in California with 85000 miles in clean condition.",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_market_value",
+      "expected_output": "Returns the available market-value estimate and relevant valuation details for the supplied vehicle inputs.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Review vehicle history before a purchase decision.",
+      "user_prompt": "Get the vehicle history report for VIN WBAFR7C57CC811956.",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_vehicle_history",
+      "expected_output": "Returns available history information for the VIN and clearly reports when no matching report is available.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Check a VIN for safety recalls.",
+      "user_prompt": "Are there any recalls for VIN WBAFR7C57CC811956?",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_vehicle_recalls",
+      "expected_output": "Returns available recall records and their relevant safety details for the VIN.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Decode an OBD-II diagnostic trouble code.",
+      "user_prompt": "What does OBD-II code P0115 mean?",
+      "file_attachment_urls": null,
+      "tools_triggered": "decode_obd_code",
+      "expected_output": "Returns the code definition and available diagnostic information without claiming to diagnose or repair the vehicle.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger for mechanical repair instructions that do not require vehicle-data lookup.",
+      "user_prompt": "How do I replace brake pads on a bicycle?",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because the request is unrelated to supported vehicle-data workflows.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for vehicle purchasing transactions.",
+      "user_prompt": "Buy the cheapest used SUV near me and arrange financing.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because it cannot purchase vehicles, contact sellers, or arrange financing.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for navigation or live traffic requests.",
+      "user_prompt": "Find the fastest driving route to the airport with current traffic.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because routing and live traffic are outside its supported workflows.",
+      "expected_output_url": null
+    }
+  ]
+}

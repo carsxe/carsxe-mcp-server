@@ -27,7 +27,8 @@ export function registerGetYearMakeModelTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ year, make, model, trim }) => {

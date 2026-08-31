@@ -26,7 +26,8 @@ export function registerGetVehicleHistoryTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ vin, format }) => {

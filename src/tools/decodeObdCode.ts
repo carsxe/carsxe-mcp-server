@@ -19,7 +19,8 @@ export function registerDecodeObdCodeTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ code }) => {
