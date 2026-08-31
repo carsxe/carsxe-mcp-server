@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "carsxe": {
+      "type": "streamable-http",
+      "url": "https://mcp.carsxe.com/mcp"
+    }
+  }
+}

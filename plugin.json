@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "carsxe",
+  "version": "0.0.0",
+  "description": "MCP server for CarsXE vehicle data: VIN specs, plate decode, history, images, recalls, market value, and OBD codes.",
+  "author": {
+    "name": "CarsXE",
+    "email": "info@carsxe.com",
+    "url": "https://carsxe.com"
+  },
+  "homepage": "https://docs.carsxe.com/docs/integrations/mcp",
+  "repository": "https://github.com/carsxe/carsxe-mcp-server",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "carsxe",
+    "vehicle",
+    "vin",
+    "license-plate",
+    "recalls",
+    "market-value"
+  ]
+}
