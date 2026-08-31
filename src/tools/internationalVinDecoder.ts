@@ -22,7 +22,8 @@ export function registerInternationalVinDecoderTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ vin }) => {

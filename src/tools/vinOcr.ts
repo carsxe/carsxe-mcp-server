@@ -31,7 +31,8 @@ export function registerVinOcrTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ imageUrl }) => {

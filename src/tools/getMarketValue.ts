@@ -38,7 +38,8 @@ export function registerGetMarketValueTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ vin, state, mileage, condition }) => {

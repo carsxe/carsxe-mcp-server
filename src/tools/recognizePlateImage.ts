@@ -29,7 +29,8 @@ export function registerRecognizePlateImageTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: true,
+        openWorldHint: false,
+        destructiveHint: false,
       },
     },
     async ({ imageUrl }) => {
