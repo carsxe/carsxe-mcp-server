@@ -1,0 +1,82 @@
+# Deploy Cloud Run via deploy/*.sh.
+# Workers already ship through Wrangler git integration — do not add a Wrangler job here.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   GCP_SA_KEY_STAGING / GCP_SA_KEY_PROD  — credentials JSON for each environment
+#   GCP_PROJECT_STAGING / GCP_PROJECT_PROD
+#   GCP_SERVICE_STAGING / GCP_SERVICE_PROD
+#   GCP_IMAGE_STAGING / GCP_IMAGE_PROD
+# Optional:
+#   GCP_REGION
+#   CARSXE_AUTH_URL  — staging auth validate URL (script has a public default)
+
+name: Deploy Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cloud-run-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  staging:
+    name: Deploy staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PROJECT: ${{ secrets.GCP_PROJECT_STAGING }}
+      SERVICE: ${{ secrets.GCP_SERVICE_STAGING }}
+      IMAGE: ${{ secrets.GCP_IMAGE_STAGING }}
+      REGION: ${{ secrets.GCP_REGION }}
+      CARSXE_AUTH_URL: ${{ secrets.CARSXE_AUTH_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY_STAGING }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker "${IMAGE%%/*}" --quiet
+
+      - name: Deploy staging
+        run: bash deploy/staging.sh
+
+  prod:
+    name: Deploy prod
+    needs: staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PROJECT: ${{ secrets.GCP_PROJECT_PROD }}
+      SERVICE: ${{ secrets.GCP_SERVICE_PROD }}
+      IMAGE: ${{ secrets.GCP_IMAGE_PROD }}
+      REGION: ${{ secrets.GCP_REGION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY_PROD }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker "${IMAGE%%/*}" --quiet
+
+      - name: Deploy prod
+        run: bash deploy/prod.sh

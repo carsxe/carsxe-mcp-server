@@ -4,19 +4,10 @@ import type http from "node:http";
 /**
  * OAuth 2.1 surface for the hosted MCP server (GCP Cloud Run deployment).
  *
- * mcp.carsxe.com is the authorization-server *issuer*, but the actual OAuth
- * logic (dynamic client registration, consent, code + token issuance) lives
- * in the CarsXE web app, next to the user/API-key data it needs:
- *
- *   GET  /.well-known/oauth-authorization-server  → served here (RFC 8414)
- *   GET  /.well-known/oauth-protected-resource    → served here (MCP spec)
- *   POST /oauth/register  → proxied to  {WEB_BASE}/api/auth/mcp/register
- *   GET  /oauth/authorize → 302 to      {WEB_BASE}/mcp-auth?<query>
- *   POST /oauth/token     → proxied to  {WEB_BASE}/api/auth/mcp/token
- *
- * Incoming `Authorization: Bearer mcp_at_*` tokens on /mcp are resolved to
- * the user's CarsXE API key via the web app's internal introspection
- * endpoint (shared-secret protected), with a short in-memory cache.
+ * Public discovery and /oauth/* endpoints are served here. Authorization-server
+ * logic lives in the CarsXE web app. Incoming mcp_at_* bearer tokens are
+ * resolved to an API key using MCP_OAUTH_INTERNAL_SECRET from the environment,
+ * with a short in-memory cache.
  */
 
 const ISSUER = (process.env.OAUTH_ISSUER ?? "https://mcp.carsxe.com").replace(
