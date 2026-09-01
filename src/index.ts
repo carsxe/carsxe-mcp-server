@@ -2,9 +2,18 @@ import { MyMCP } from "./MyMCP";
 
 export { MyMCP };
 
+const OPENAI_APPS_CHALLENGE_TOKEN =
+  "-3tlD4Y2M-gfl0ViGmFQh1BkavSNU0HZxcqlvpWA6Fk";
+
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/.well-known/openai-apps-challenge") {
+      return new Response(OPENAI_APPS_CHALLENGE_TOKEN, {
+        headers: { "Content-Type": "text/plain" },
+      });
+    }
 
     // Extract API key from X-API-Key header, Authorization Bearer token, or search params
     let apiKey = request.headers.get("X-API-Key");
