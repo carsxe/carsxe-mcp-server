@@ -21,6 +21,8 @@ import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js"
 import { registerVinOcrTool } from "./tools/vinOcr.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
+const OPENAI_APPS_CHALLENGE_TOKEN =
+	"-3tlD4Y2M-gfl0ViGmFQh1BkavSNU0HZxcqlvpWA6Fk";
 
 const STAGING = process.env.STAGING === "true";
 const CARSXE_AUTH_URL =
@@ -85,6 +87,12 @@ const httpServer = http.createServer(async (req, res) => {
 	if (url.pathname === "/health") {
 		res.writeHead(200, { "Content-Type": "application/json" });
 		res.end(JSON.stringify({ status: "ok" }));
+		return;
+	}
+
+	if (url.pathname === "/.well-known/openai-apps-challenge") {
+		res.writeHead(200, { "Content-Type": "text/plain" });
+		res.end(OPENAI_APPS_CHALLENGE_TOKEN);
 		return;
 	}
 
