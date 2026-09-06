@@ -8,7 +8,7 @@ import {
   searchCarsxeDocs,
   searchDocsEntries,
   type DocsFetch,
-} from "./carsxeDocs.js";
+} from "./carsxeDocs.ts";
 
 const SAMPLE_INDEX = `# CarsXE Docs
 
@@ -26,6 +26,7 @@ const SAMPLE_INDEX = `# CarsXE Docs
 - [Get Started](https://docs.carsxe.com/docs/get-started.md): Everything you need to start building with the CarsXE Vehicle Data API.
 - [Specifications](https://docs.carsxe.com/docs/products/specifications.md): Decode any 17-character VIN and retrieve full vehicle specifications.
 - [Node.js](https://docs.carsxe.com/docs/sdks/node.md): Official CarsXE SDK for Node.js and TypeScript.
+- [Java](https://docs.carsxe.com/docs/sdks/java.md): Official CarsXE SDK for Java.
 - [Python](https://docs.carsxe.com/docs/sdks/python.md): Official CarsXE SDK for Python.
 - [Recall Availability Reason](https://docs.carsxe.com/docs/changelogs/2026-07-08.md): Changelog about recalls.
 `;
@@ -125,7 +126,7 @@ test("canonicalizeDocsLinks rewrites carsxe.com/docs to docs.carsxe.com", () => 
     rewritten,
     "See https://docs.carsxe.com/docs/sdks/node and [Specs](https://docs.carsxe.com/docs/products/specifications).",
   );
-  assert.doesNotMatch(rewritten, /carsxe\.com\/docs/);
+  assert.doesNotMatch(rewritten, /https?:\/\/(www\.)?carsxe\.com\/docs/);
 });
 
 test("parseLlmsIndex and searchDocsEntries find Node specs pages", () => {
@@ -139,7 +140,7 @@ test("parseLlmsIndex and searchDocsEntries find Node specs pages", () => {
   const matchTitles = matches.map((entry) => entry.title);
   assert.ok(matchTitles.includes("Specifications"));
   assert.ok(matchTitles.includes("Node.js"));
-  assert.ok(matches.findIndex((entry) => entry.title === "Node.js") < matches.length);
+  assert.ok(!matchTitles.includes("Java"));
 });
 
 test("search_carsxe_docs happy path uses the mocked llms.txt index", async () => {
@@ -157,7 +158,7 @@ test("search_carsxe_docs happy path uses the mocked llms.txt index", async () =>
   assert.match(markdown, /\[Node\.js\]\(https:\/\/docs\.carsxe\.com\/docs\/sdks\/node\)/);
   assert.match(markdown, /\[Specifications\]\(https:\/\/docs\.carsxe\.com\/docs\/products\/specifications\)/);
   assert.match(markdown, /get_carsxe_docs/);
-  assert.doesNotMatch(markdown, /carsxe\.com\/docs/);
+  assert.doesNotMatch(markdown, /https?:\/\/(www\.)?carsxe\.com\/docs/);
 });
 
 test("get_carsxe_docs happy path fetches Markdown from an allowlisted URL", async () => {

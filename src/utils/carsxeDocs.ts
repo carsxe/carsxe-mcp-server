@@ -548,10 +548,8 @@ function scoreEntry(entry: DocsPageRef, tokens: string[]): number {
 
 function includesToken(haystack: string, token: string): boolean {
   if (haystack.includes(token)) return true;
-  if (token.length < 3) return false;
-  return haystack
-    .split(/[^a-z0-9]+/i)
-    .some((word) => word.startsWith(token) || (token.startsWith(word) && word.length >= 4));
+  if (token.length < 4) return false;
+  return haystack.split(/[^a-z0-9]+/i).some((word) => word.startsWith(token));
 }
 
 function isChangelog(url: string): boolean {

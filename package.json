@@ -17,7 +17,7 @@
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
     "type-check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/utils/carsxeDocs.test.ts"
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test src/utils/carsxeDocs.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.40",
