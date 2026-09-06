@@ -36,6 +36,7 @@ Connecting CarsXE to your AI editor or chat client via MCP gives you a superchar
 - 🚙 Query vehicle specs, history, images, recalls, market value, and more
 - 🏷️ Decode license plates and VINs (including OCR from images)
 - 🛠️ Decode OBD (On-Board Diagnostics) codes
+- 📚 Search and read official [CarsXE docs](https://docs.carsxe.com) (`llms.txt`, Markdown pages, OpenAPI) so agents write correct API/SDK code
 - 🎨 All endpoints return elegant, grouped, emoji-rich Markdown
 - 🧑‍💻 Modular code: types, API logic, and formatters are separated for maintainability
 - 🧪 Simple to run, test, and extend
@@ -413,6 +414,41 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
+### 13. `search_carsxe_docs` 📚
+
+- **Description:** Search or list official CarsXE documentation from the public `llms.txt` index (and section indexes for products, guides, SDKs, and integrations). No API key required for the docs read itself.
+- **Parameters:**
+  - `query` (string, optional): Search terms (e.g., `specs from Node`). Omit to list the index.
+  - `section` (string, optional): `products`, `guides`, `sdks`, or `integrations`
+- **Example Prompts:**
+
+  > How do I call specs from Node?
+
+  > Search CarsXE docs for the plate decoder
+
+  > List the CarsXE SDK docs
+
+- **Output:** Markdown list of matching [docs.carsxe.com](https://docs.carsxe.com) pages (never `carsxe.com/docs`) with paths to fetch via `get_carsxe_docs`
+
+---
+
+### 14. `get_carsxe_docs` 📖
+
+- **Description:** Fetch a specific official docs page as Markdown from `docs.carsxe.com` only. Use this for get-started, SDK quickstarts, product references, or the OpenAPI schema before writing integration code. No API key required for the docs read itself.
+- **Parameters:**
+  - `path` (string, required): Docs path, shortcut (`openapi`, `get-started`, `agents`, `node`, `python`, `specs`), or a `https://docs.carsxe.com/...` URL
+- **Example Prompts:**
+
+  > Fetch the Node.js SDK docs
+
+  > Get the OpenAPI schema for CarsXE
+
+  > Show me https://docs.carsxe.com/docs/products/specifications.md
+
+- **Output:** Chat-friendly Markdown with a canonical `docs.carsxe.com` source link
+
+---
+
 ## 🔗 Chaining Tools — Power User Examples
 
 The real power of CarsXE MCP comes from chaining tools in a single conversation:
@@ -435,6 +471,12 @@ The real power of CarsXE MCP comes from chaining tools in a single conversation:
 1. > Decode this VIN from the dashboard photo: `[image URL]`
 2. > Get its full specs
 3. > My customer says the check engine code is P0300 — what does that mean for this vehicle?
+
+**Scenario 4 — Write integration code from official docs:**
+
+1. > How do I call specs from Node?
+2. > Fetch the Node.js SDK page and the specifications reference
+3. > Show me the OpenAPI schema for the specs endpoint
 
 ---
 

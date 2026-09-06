@@ -12,6 +12,8 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
+import { registerSearchCarsxeDocsTool } from "./tools/searchCarsxeDocs.js";
+import { registerGetCarsxeDocsTool } from "./tools/getCarsxeDocs.js";
 
 export class MyMCP extends McpAgent {
   server = new McpServer({
@@ -42,5 +44,7 @@ export class MyMCP extends McpAgent {
     registerDecodeObdCodeTool(this.server, getApiKey);
     registerRecognizePlateImageTool(this.server, getApiKey);
     registerGetLienTheftTool(this.server, getApiKey);
+    registerSearchCarsxeDocsTool(this.server);
+    registerGetCarsxeDocsTool(this.server);
   }
 }
