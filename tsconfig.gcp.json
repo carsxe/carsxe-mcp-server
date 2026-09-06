@@ -6,5 +6,5 @@
     "noEmit": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "src/index.ts", "src/MyMCP.ts"]
+  "exclude": ["node_modules", "src/index.ts", "src/MyMCP.ts", "src/**/*.test.ts"]
 }

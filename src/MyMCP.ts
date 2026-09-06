@@ -12,6 +12,7 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
+import { registerMonitorsTools } from "./tools/monitors.js";
 
 export class MyMCP extends McpAgent {
   server = new McpServer({
@@ -42,5 +43,6 @@ export class MyMCP extends McpAgent {
     registerDecodeObdCodeTool(this.server, getApiKey);
     registerRecognizePlateImageTool(this.server, getApiKey);
     registerGetLienTheftTool(this.server, getApiKey);
+    registerMonitorsTools(this.server, getApiKey);
   }
 }

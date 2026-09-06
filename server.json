@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.carsxe/carsxe-mcp",
-  "description": "MCP server for CarsXE vehicle data: VIN, specs, history, images, recalls, and OBD codes.",
+  "description": "MCP server for CarsXE vehicle data: VIN, specs, history, images, recalls, OBD codes, and Monitoring watchlists.",
   "repository": {
     "url": "https://github.com/carsxe/carsxe-mcp-server",
     "source": "github"

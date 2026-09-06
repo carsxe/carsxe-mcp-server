@@ -359,3 +359,74 @@ export interface CarsXELienTheftResponse {
   };
   error?: { code?: string; message?: string };
 }
+
+export type CarsXEMonitorVehicleType = "vin" | "plate";
+
+export interface CarsXEMonitorSchedule {
+  frequency?: string;
+  timezone?: string;
+  [key: string]: unknown;
+}
+
+export interface CarsXEMonitor {
+  id?: string;
+  name?: string;
+  vehicleType?: CarsXEMonitorVehicleType | string;
+  vehicles?: string[];
+  products?: string[];
+  schedule?: CarsXEMonitorSchedule;
+  delivery?: string[];
+  paused?: boolean;
+  status?: string;
+  vehicleCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  lastRunAt?: string;
+  nextRunAt?: string;
+  [key: string]: unknown;
+}
+
+export interface CarsXEMonitorAlert {
+  id?: string;
+  monitorId?: string;
+  monitorName?: string;
+  vehicle?: string;
+  vin?: string;
+  plate?: string;
+  product?: string;
+  title?: string;
+  summary?: string;
+  message?: string;
+  createdAt?: string;
+  timestamp?: string;
+  [key: string]: unknown;
+}
+
+export interface CarsXEMonitorsResponse {
+  success?: boolean;
+  message?: string;
+  monitor?: CarsXEMonitor;
+  monitors?: CarsXEMonitor[];
+  alerts?: CarsXEMonitorAlert[];
+  data?:
+    | CarsXEMonitor
+    | CarsXEMonitor[]
+    | CarsXEMonitorAlert[]
+    | {
+        monitor?: CarsXEMonitor;
+        monitors?: CarsXEMonitor[];
+        alerts?: CarsXEMonitorAlert[];
+        imported?: number;
+        skipped?: number;
+        added?: number;
+        runId?: string;
+        status?: string;
+      };
+  imported?: number;
+  skipped?: number;
+  added?: number;
+  runId?: string;
+  status?: string;
+  timestamp?: string;
+  [key: string]: unknown;
+}
