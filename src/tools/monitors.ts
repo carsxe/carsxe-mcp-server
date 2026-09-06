@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import type { CarsxeFetch } from "../utils/carsxeApi.js";
+import { carsxeApiJson, type CarsxeFetch } from "../utils/carsxeApi.js";
+import type { CarsXEMonitorsResponse } from "../types/carsxe.js";
 import {
   MISSING_API_KEY_MESSAGE,
   buildCreateMonitorBody,
@@ -11,7 +12,6 @@ import {
   monitorImportPath,
   monitorItemPath,
   monitorRunPath,
-  monitorsRequest,
   type CreateMonitorInput,
   type ImportMonitorInput,
   type UpdateMonitorInput,
@@ -60,7 +60,7 @@ export async function handleListMonitors(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorCollectionPath(),
     method: "GET",
@@ -79,7 +79,7 @@ export async function handleGetMonitor(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorItemPath(args.id),
     method: "GET",
@@ -97,7 +97,7 @@ export async function handleCreateMonitor(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorCollectionPath(),
     method: "POST",
@@ -126,7 +126,7 @@ export async function handleUpdateMonitor(
     );
   }
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorItemPath(id),
     method: "PATCH",
@@ -145,7 +145,7 @@ export async function handleDeleteMonitor(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorItemPath(args.id),
     method: "DELETE",
@@ -171,7 +171,7 @@ export async function handleImportMonitorVehicles(
     );
   }
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorImportPath(id),
     method: "POST",
@@ -190,7 +190,7 @@ export async function handleRunMonitor(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorRunPath(args.id),
     method: "POST",
@@ -209,7 +209,7 @@ export async function handleListMonitorAlerts(
   const apiKey = getApiKey();
   if (!apiKey) return missingApiKey();
 
-  const result = await monitorsRequest({
+  const result = await carsxeApiJson<CarsXEMonitorsResponse>({
     apiKey,
     endpoint: monitorAlertsPath(args.id),
     method: "GET",

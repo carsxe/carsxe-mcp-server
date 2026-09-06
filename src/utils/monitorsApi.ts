@@ -1,11 +1,3 @@
-import {
-  carsxeApiJson,
-  compactJsonBody,
-  type CarsxeApiResult,
-  type CarsxeFetch,
-} from "./carsxeApi.js";
-import type { CarsXEMonitorsResponse } from "../types/carsxe.js";
-
 export const MONITORS_DOCS_URL = "https://docs.carsxe.com/docs";
 
 export const MISSING_API_KEY_MESSAGE =
@@ -42,6 +34,16 @@ export interface ImportMonitorInput {
   csv?: string;
 }
 
+function omitUndefined(
+  body: Record<string, unknown>,
+): Record<string, unknown> | undefined {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(body)) {
+    if (value !== undefined) out[key] = value;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
 export function monitorCollectionPath(): string {
   return "v1/monitors";
 }
@@ -65,12 +67,12 @@ export function monitorAlertsPath(id?: string): string {
 export function buildCreateMonitorBody(
   input: CreateMonitorInput,
 ): Record<string, unknown> {
-  const body = compactJsonBody({
+  const body = omitUndefined({
     name: input.name,
     vehicleType: input.vehicleType,
     vehicles: input.vehicles,
     products: input.products,
-    schedule: compactJsonBody({
+    schedule: omitUndefined({
       frequency: input.schedule.frequency,
       timezone: input.schedule.timezone,
     }),
@@ -86,12 +88,12 @@ export function buildUpdateMonitorBody(
   input: UpdateMonitorInput,
 ): Record<string, unknown> | undefined {
   const schedule = input.schedule
-    ? compactJsonBody({
+    ? omitUndefined({
         frequency: input.schedule.frequency,
         timezone: input.schedule.timezone,
       })
     : undefined;
-  return compactJsonBody({
+  return omitUndefined({
     name: input.name,
     vehicleType: input.vehicleType,
     vehicles: input.vehicles,
@@ -105,21 +107,8 @@ export function buildUpdateMonitorBody(
 export function buildImportMonitorBody(
   input: ImportMonitorInput,
 ): Record<string, unknown> | undefined {
-  return compactJsonBody({
+  return omitUndefined({
     vehicles: input.vehicles,
     csv: input.csv,
   });
-}
-
-export async function monitorsRequest(
-  options: {
-    apiKey: string;
-    endpoint: string;
-    method?: string;
-    query?: Record<string, string | number | boolean | undefined | null>;
-    body?: unknown;
-    fetchFn?: CarsxeFetch;
-  },
-): Promise<CarsxeApiResult<CarsXEMonitorsResponse>> {
-  return carsxeApiJson<CarsXEMonitorsResponse>(options);
 }

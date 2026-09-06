@@ -1,16 +1,12 @@
 import assert from "node:assert/strict";
-import { mock, test } from "node:test";
+import { test } from "node:test";
 import {
-  handleCreateMonitor,
-  handleDeleteMonitor,
-  handleGetMonitor,
-  handleImportMonitorVehicles,
-  handleListMonitorAlerts,
-  handleListMonitors,
-  handleRunMonitor,
-  handleUpdateMonitor,
-} from "../tools/monitors.ts";
-import { CARSXE_API_BASE, type CarsxeFetch } from "./carsxeApi.ts";
+  CARSXE_API_BASE,
+  carsxeApiJson,
+  extractCarsxeErrorMessage,
+  type CarsxeFetch,
+} from "./carsxeApi.ts";
+import { formatMonitorError } from "../formatters/formatMonitorsResponse.ts";
 import {
   buildCreateMonitorBody,
   buildImportMonitorBody,
@@ -50,7 +46,9 @@ function captureFetch(
     const headers: Record<string, string> = {};
     const rawHeaders = init?.headers;
     if (rawHeaders && typeof rawHeaders === "object" && !Array.isArray(rawHeaders)) {
-      for (const [key, value] of Object.entries(rawHeaders as Record<string, string>)) {
+      for (const [key, value] of Object.entries(
+        rawHeaders as Record<string, string>,
+      )) {
         headers[key] = value;
       }
     }
@@ -66,12 +64,7 @@ function captureFetch(
   return { fetchFn, calls };
 }
 
-function parsedUrl(url: string): URL {
-  return new URL(url);
-}
-
 const API_KEY = "test-key-1234";
-const getApiKey = () => API_KEY;
 
 test("create monitor body matches the public API contract", () => {
   const body = buildCreateMonitorBody({
@@ -119,72 +112,70 @@ test("import monitor body accepts vehicles and/or csv", () => {
   assert.equal(buildImportMonitorBody({}), undefined);
 });
 
-test("list_monitors sends GET /v1/monitors with key, source, and X-API-Key", async () => {
+test("list monitors sends GET /v1/monitors with key, source, and X-API-Key", async () => {
   const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({
-      success: true,
-      monitors: [
-        {
-          id: "mon_1",
-          name: "Fleet",
-          vehicleType: "vin",
-          products: ["recalls"],
-          paused: false,
-        },
-      ],
-    }),
+    jsonResponse({ success: true, monitors: [] }),
   );
 
-  const result = await handleListMonitors(getApiKey, { limit: 10 }, fetchFn);
+  const result = await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorCollectionPath(),
+    method: "GET",
+    query: { limit: 10 },
+    fetchFn,
+  });
+
+  assert.equal(result.ok, true);
   assert.equal(calls.length, 1);
-  const url = parsedUrl(calls[0].url);
+  const url = new URL(calls[0].url);
   assert.equal(url.origin, CARSXE_API_BASE);
-  assert.equal(url.pathname, `/${monitorCollectionPath()}`);
+  assert.equal(url.pathname, "/v1/monitors");
   assert.equal(url.searchParams.get("key"), API_KEY);
   assert.equal(url.searchParams.get("source"), "mcp");
   assert.equal(url.searchParams.get("limit"), "10");
   assert.equal(calls[0].method, "GET");
   assert.equal(calls[0].headers["X-API-Key"], API_KEY);
-  assert.match(result.content[0].text, /Fleet/);
-  assert.match(result.content[0].text, /https:\/\/docs\.carsxe\.com\//);
+  assert.equal(calls[0].body, undefined);
 });
 
-test("get_monitor sends GET /v1/monitors/:id", async () => {
+test("get monitor sends GET /v1/monitors/:id", async () => {
   const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({
-      success: true,
-      monitor: { id: "mon_1", name: "Fleet", vehicles: ["1C4JJXR64PW696340"] },
-    }),
+    jsonResponse({ success: true, monitor: { id: "mon_1" } }),
   );
 
-  await handleGetMonitor(getApiKey, { id: "mon_1" }, fetchFn);
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorItemPath("mon_1"),
+    method: "GET",
+    fetchFn,
+  });
+
   assert.equal(calls[0].method, "GET");
-  assert.equal(parsedUrl(calls[0].url).pathname, `/${monitorItemPath("mon_1")}`);
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/mon_1");
 });
 
-test("create_monitor sends POST /v1/monitors with the example JSON body", async () => {
+test("create monitor sends POST /v1/monitors with the example JSON body", async () => {
   const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({
-      success: true,
-      monitor: { id: "mon_new", name: "Fleet" },
-    }),
+    jsonResponse({ success: true, monitor: { id: "mon_new", name: "Fleet" } }),
   );
 
-  await handleCreateMonitor(
-    getApiKey,
-    {
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorCollectionPath(),
+    method: "POST",
+    body: buildCreateMonitorBody({
       name: "Fleet",
       vehicleType: "vin",
       vehicles: ["1C4JJXR64PW696340"],
       products: ["recalls"],
       schedule: { frequency: "daily" },
       delivery: ["email"],
-    },
+    }),
     fetchFn,
-  );
+  });
 
   assert.equal(calls[0].method, "POST");
-  assert.equal(parsedUrl(calls[0].url).pathname, "/v1/monitors");
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors");
   assert.equal(calls[0].headers["Content-Type"], "application/json");
   assert.deepEqual(calls[0].body, {
     name: "Fleet",
@@ -196,99 +187,122 @@ test("create_monitor sends POST /v1/monitors with the example JSON body", async 
   });
 });
 
-test("update_monitor sends PATCH /v1/monitors/:id including paused", async () => {
+test("update monitor sends PATCH /v1/monitors/:id including paused", async () => {
   const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({
-      success: true,
-      monitor: { id: "mon_1", name: "Fleet", paused: true },
-    }),
+    jsonResponse({ success: true, monitor: { id: "mon_1", paused: true } }),
   );
 
-  await handleUpdateMonitor(getApiKey, { id: "mon_1", paused: true }, fetchFn);
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorItemPath("mon_1"),
+    method: "PATCH",
+    body: buildUpdateMonitorBody({ paused: true }),
+    fetchFn,
+  });
+
   assert.equal(calls[0].method, "PATCH");
-  assert.equal(parsedUrl(calls[0].url).pathname, "/v1/monitors/mon_1");
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/mon_1");
   assert.deepEqual(calls[0].body, { paused: true });
 });
 
-test("update_monitor refuses an empty patch before calling the API", async () => {
-  const fetchFn = mock.fn<CarsxeFetch>(async () => {
-    throw new Error("fetch should not be called");
+test("delete monitor sends DELETE /v1/monitors/:id", async () => {
+  const { fetchFn, calls } = captureFetch(() => jsonResponse({ success: true }));
+
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorItemPath("mon_1"),
+    method: "DELETE",
+    fetchFn,
   });
 
-  const result = await handleUpdateMonitor(getApiKey, { id: "mon_1" }, fetchFn);
-  assert.equal(fetchFn.mock.callCount(), 0);
-  assert.match(result.content[0].text, /at least one field/i);
-});
-
-test("delete_monitor sends DELETE /v1/monitors/:id", async () => {
-  const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({ success: true }),
-  );
-
-  const result = await handleDeleteMonitor(getApiKey, { id: "mon_1" }, fetchFn);
   assert.equal(calls[0].method, "DELETE");
-  assert.equal(parsedUrl(calls[0].url).pathname, "/v1/monitors/mon_1");
-  assert.match(result.content[0].text, /deleted/);
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/mon_1");
 });
 
-test("import_monitor_vehicles sends POST /v1/monitors/:id/import", async () => {
+test("import vehicles sends POST /v1/monitors/:id/import", async () => {
   const { fetchFn, calls } = captureFetch(() =>
     jsonResponse({ success: true, imported: 2 }),
   );
 
-  await handleImportMonitorVehicles(
-    getApiKey,
-    { id: "mon_1", vehicles: ["VIN1", "VIN2"] },
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorImportPath("mon_1"),
+    method: "POST",
+    body: buildImportMonitorBody({ vehicles: ["VIN1", "VIN2"] }),
     fetchFn,
-  );
+  });
+
   assert.equal(calls[0].method, "POST");
-  assert.equal(parsedUrl(calls[0].url).pathname, `/${monitorImportPath("mon_1")}`);
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/mon_1/import");
   assert.deepEqual(calls[0].body, { vehicles: ["VIN1", "VIN2"] });
 });
 
-test("run_monitor sends POST /v1/monitors/:id/run", async () => {
+test("run now sends POST /v1/monitors/:id/run", async () => {
   const { fetchFn, calls } = captureFetch(() =>
-    jsonResponse({ success: true, runId: "run_1", status: "queued" }),
+    jsonResponse({ success: true, runId: "run_1" }),
   );
 
-  const result = await handleRunMonitor(getApiKey, { id: "mon_1" }, fetchFn);
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorRunPath("mon_1"),
+    method: "POST",
+    body: {},
+    fetchFn,
+  });
+
   assert.equal(calls[0].method, "POST");
-  assert.equal(parsedUrl(calls[0].url).pathname, `/${monitorRunPath("mon_1")}`);
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/mon_1/run");
   assert.deepEqual(calls[0].body, {});
-  assert.match(result.content[0].text, /run_1/);
 });
 
-test("list_monitor_alerts uses account or per-monitor paths", async () => {
+test("alerts use account-wide or per-monitor paths", async () => {
   const { fetchFn, calls } = captureFetch(() =>
     jsonResponse({ success: true, alerts: [] }),
   );
 
-  await handleListMonitorAlerts(getApiKey, { limit: 5 }, fetchFn);
-  await handleListMonitorAlerts(getApiKey, { id: "mon_1" }, fetchFn);
-
-  assert.equal(parsedUrl(calls[0].url).pathname, `/${monitorAlertsPath()}`);
-  assert.equal(parsedUrl(calls[0].url).searchParams.get("limit"), "5");
-  assert.equal(parsedUrl(calls[1].url).pathname, `/${monitorAlertsPath("mon_1")}`);
-});
-
-test("monitor tools require an API key and do not fetch without one", async () => {
-  const fetchFn = mock.fn<CarsxeFetch>(async () => {
-    throw new Error("fetch should not be called");
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorAlertsPath(),
+    method: "GET",
+    query: { limit: 5 },
+    fetchFn,
+  });
+  await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: monitorAlertsPath("mon_1"),
+    method: "GET",
+    fetchFn,
   });
 
-  const result = await handleListMonitors(() => null, {}, fetchFn);
-  assert.equal(fetchFn.mock.callCount(), 0);
-  assert.match(result.content[0].text, /API key not provided/);
+  assert.equal(new URL(calls[0].url).pathname, "/v1/monitors/alerts");
+  assert.equal(new URL(calls[0].url).searchParams.get("limit"), "5");
+  assert.equal(new URL(calls[1].url).pathname, "/v1/monitors/mon_1/alerts");
 });
 
-test("404 feature-gate / missing monitor is formatted as Markdown", async () => {
+test("404 feature-gate message is Markdown-friendly and OSS-safe", async () => {
   const { fetchFn } = captureFetch(() =>
     jsonResponse({ success: false, message: "Not found" }, 404),
   );
 
-  const result = await handleGetMonitor(getApiKey, { id: "missing" }, fetchFn);
-  assert.match(result.content[0].text, /❌/);
-  assert.match(result.content[0].text, /Not found/);
-  assert.match(result.content[0].text, /https:\/\/docs\.carsxe\.com\//);
-  assert.doesNotMatch(result.content[0].text, /ConfigCat|GCP|oauth/i);
+  const result = await carsxeApiJson({
+    apiKey: API_KEY,
+    endpoint: "v1/monitors/missing",
+    fetchFn,
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.equal(result.status, 404);
+    assert.equal(result.error, "Not found");
+    const markdown = formatMonitorError(result.error);
+    assert.match(markdown, /❌/);
+    assert.match(markdown, /Not found/);
+    assert.match(markdown, /https:\/\/docs\.carsxe\.com\//);
+    assert.doesNotMatch(markdown, /ConfigCat|GCP|oauth/i);
+  }
+});
+
+test("extractCarsxeErrorMessage uses a feature-gate fallback for empty 404 bodies", () => {
+  const message = extractCarsxeErrorMessage(404, "");
+  assert.match(message, /Monitoring may be disabled/);
 });

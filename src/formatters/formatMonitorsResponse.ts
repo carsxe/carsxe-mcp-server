@@ -3,7 +3,8 @@ import type {
   CarsXEMonitorAlert,
   CarsXEMonitorsResponse,
 } from "../types/carsxe.js";
-import { MONITORS_DOCS_URL } from "../utils/monitorsApi.js";
+
+const MONITORS_DOCS_URL = "https://docs.carsxe.com/docs";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
