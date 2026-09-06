@@ -17,7 +17,9 @@ import { registerGetVehicleRecallsTool } from "./tools/getVehicleRecalls.js";
 import { registerGetVehicleSpecsTool } from "./tools/getVehicleSpecs.js";
 import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
+import { registerGetCarsxeDocsTool } from "./tools/getCarsxeDocs.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
+import { registerSearchCarsxeDocsTool } from "./tools/searchCarsxeDocs.js";
 import { registerVinOcrTool } from "./tools/vinOcr.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
@@ -79,6 +81,8 @@ function registerAllTools(
 	registerDecodeObdCodeTool(server, getApiKey);
 	registerRecognizePlateImageTool(server, getApiKey);
 	registerGetLienTheftTool(server, getApiKey);
+	registerSearchCarsxeDocsTool(server);
+	registerGetCarsxeDocsTool(server);
 }
 
 const httpServer = http.createServer(async (req, res) => {
