@@ -19,6 +19,7 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 import { registerVinOcrTool } from "./tools/vinOcr.js";
+import { registerMonitorsTools } from "./tools/monitors.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
 const OPENAI_APPS_CHALLENGE_TOKEN =
@@ -79,6 +80,7 @@ function registerAllTools(
 	registerDecodeObdCodeTool(server, getApiKey);
 	registerRecognizePlateImageTool(server, getApiKey);
 	registerGetLienTheftTool(server, getApiKey);
+	registerMonitorsTools(server, getApiKey);
 }
 
 const httpServer = http.createServer(async (req, res) => {

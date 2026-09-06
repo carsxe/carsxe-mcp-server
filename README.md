@@ -34,6 +34,7 @@ Connecting CarsXE to your AI editor or chat client via MCP gives you a superchar
 
 - 🤖 Uses Anthropic Claude to generate comprehensive, professional answers based on the API data and user query
 - 🚙 Query vehicle specs, history, images, recalls, market value, and more
+- 📡 Create and manage Monitoring watchlists (monitors, imports, run-now, alerts)
 - 🏷️ Decode license plates and VINs (including OCR from images)
 - 🛠️ Decode OBD (On-Board Diagnostics) codes
 - 🎨 All endpoints return elegant, grouped, emoji-rich Markdown
@@ -410,6 +411,79 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   > Verify the title is clean for `WBAFR7C57CC811956`
 
 - **Output:** Markdown with lien holder information, theft records, recovery dates, and status
+
+---
+
+### 13. Monitoring watchlists 📡
+
+Monitoring is a gated product. These tools call `https://api.carsxe.com/v1/monitors`. If the feature is off for the API key, the API returns 404. Docs: [https://docs.carsxe.com/docs](https://docs.carsxe.com/docs)
+
+#### `list_monitors`
+
+- **Description:** List Monitoring watchlists for this API key
+- **Parameters:** `limit` (number, optional)
+- **Example Prompts:**
+
+  > List my CarsXE monitors
+
+  > What watchlists do I have?
+
+#### `get_monitor`
+
+- **Description:** Get one watchlist by id
+- **Parameters:** `id` (string, required)
+- **Example Prompts:**
+
+  > Show monitor `mon_123`
+
+#### `create_monitor`
+
+- **Description:** Create a watchlist
+- **Parameters:**
+  - `name` (string, required)
+  - `vehicleType` (string, required): `vin` or `plate`
+  - `vehicles` (string[], required): VINs or plates
+  - `products` (string[], required): e.g. `recalls`
+  - `schedule` (object, required): `{ "frequency": "daily" }`
+  - `delivery` (string[], required): e.g. `email`
+- **Example Prompts:**
+
+  > Create a daily email monitor named Fleet for VIN `1C4JJXR64PW696340` watching recalls
+
+#### `update_monitor`
+
+- **Description:** Update a watchlist, including pause/resume
+- **Parameters:** `id` (required) plus any of `name`, `vehicleType`, `vehicles`, `products`, `schedule`, `delivery`, `paused`
+- **Example Prompts:**
+
+  > Pause monitor `mon_123`
+
+  > Resume monitor `mon_123` and rename it Fleet East
+
+#### `delete_monitor`
+
+- **Description:** Permanently delete a watchlist
+- **Parameters:** `id` (string, required)
+
+#### `import_monitor_vehicles`
+
+- **Description:** Import VINs or plates into a monitor
+- **Parameters:** `id` (required), `vehicles` (string[], optional), `csv` (string, optional)
+
+#### `run_monitor`
+
+- **Description:** Trigger an immediate check
+- **Parameters:** `id` (string, required)
+
+#### `list_monitor_alerts`
+
+- **Description:** List recent alerts for one monitor or the whole account
+- **Parameters:** `id` (string, optional), `limit` (number, optional)
+- **Example Prompts:**
+
+  > Any new recall alerts on my monitors?
+
+- **Output:** Markdown summary of monitors or alerts
 
 ---
 
