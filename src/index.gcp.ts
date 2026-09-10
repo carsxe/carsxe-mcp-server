@@ -10,6 +10,7 @@ import {
 import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
 import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
+import { registerGetRecallsByYmmTool } from "./tools/getRecallsByYmm.js";
 import { registerGetMarketValueTool } from "./tools/getMarketValue.js";
 import { registerGetVehicleHistoryTool } from "./tools/getVehicleHistory.js";
 import { registerGetVehicleImagesTool } from "./tools/getVehicleImages.js";
@@ -19,6 +20,9 @@ import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
 import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 import { registerVinOcrTool } from "./tools/vinOcr.js";
+import { registerGetYmmOptionsTool } from "./tools/getYmmOptions.js";
+import { registerOwnershipTools } from "./tools/ownership.js";
+import { registerRecallsBatchTools } from "./tools/recallsBatch.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
 const OPENAI_APPS_CHALLENGE_TOKEN =
@@ -79,6 +83,10 @@ function registerAllTools(
 	registerDecodeObdCodeTool(server, getApiKey);
 	registerRecognizePlateImageTool(server, getApiKey);
 	registerGetLienTheftTool(server, getApiKey);
+	registerGetRecallsByYmmTool(server, getApiKey);
+	registerRecallsBatchTools(server, getApiKey);
+	registerGetYmmOptionsTool(server, getApiKey);
+	registerOwnershipTools(server, getApiKey);
 }
 
 const httpServer = http.createServer(async (req, res) => {

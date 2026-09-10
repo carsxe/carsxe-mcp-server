@@ -359,3 +359,187 @@ export interface CarsXELienTheftResponse {
   };
   error?: { code?: string; message?: string };
 }
+
+export interface CarsXERecallsYmmResponse {
+  success: boolean;
+  input?: {
+    year?: string;
+    make?: string;
+    model?: string;
+  };
+  data?: {
+    make?: string;
+    model?: string;
+    model_year?: string;
+    recall_count?: number;
+    has_recalls?: boolean;
+    recalls?: Array<{
+      nhtsa_campaign_number?: string;
+      manufacturer?: string;
+      park_it?: boolean;
+      park_outside?: boolean;
+      over_the_air_update?: boolean;
+      report_received_date?: string;
+      component?: string;
+      summary?: string;
+      consequence?: string;
+      remedy?: string;
+      notes?: string | null;
+    }>;
+  };
+  timestamp?: string;
+  message?: string;
+}
+
+export interface CarsXERecallsBatchJob {
+  batchId?: string;
+  numericBatchId?: number;
+  status?: string;
+  totalVins?: number;
+  processedVins?: number;
+  hitCount?: number;
+  hitRate?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  completedAt?: string;
+  errorMessage?: string | null;
+}
+
+export interface CarsXERecallsBatchSubmitResponse {
+  success: boolean;
+  data?: CarsXERecallsBatchJob;
+  message?: string;
+}
+
+export interface CarsXERecallsBatchStatusResponse {
+  success: boolean;
+  data?: CarsXERecallsBatchJob;
+  message?: string;
+}
+
+export interface CarsXERecallsBatchResultRow {
+  vin: string;
+  hasRecalls: boolean;
+  recallCount: number;
+  recalls: Array<Record<string, any>>;
+}
+
+export interface CarsXERecallsBatchResultsResponse {
+  success: boolean;
+  data?: {
+    job?: CarsXERecallsBatchJob;
+    results?: CarsXERecallsBatchResultRow[];
+  };
+  message?: string;
+}
+
+export interface CarsXEYmmOptionsResponse {
+  success: boolean;
+  input?: Record<string, any>;
+  message?: string;
+  years?: Array<string | number>;
+  makes?: string[];
+  models?: string[];
+  variants?: string[];
+  trims?: string[];
+  modelCount?: number;
+}
+
+export interface CarsXEOwnershipAddress {
+  street?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+}
+
+export interface CarsXEOwnershipDemographics {
+  marital_status?: string;
+  home_owner?: string;
+  children_in_household?: string;
+  veteran_in_household?: string;
+  occupation?: string;
+  income_range?: string;
+  net_worth_range?: string;
+  credit_range?: string;
+}
+
+export interface CarsXEOwnershipPerson {
+  record_id?: string;
+  first_name?: string;
+  last_name?: string;
+  age?: string;
+  gender?: string;
+  address?: CarsXEOwnershipAddress;
+  first_observed?: string;
+  last_observed?: string;
+  source_count?: number | null;
+  vin?: string;
+  queried_phone?: string;
+  vehicle?: { make?: string; model?: string; year?: number } | null;
+  demographics?: CarsXEOwnershipDemographics;
+  emails?: Array<{ address?: string; last_seen?: string }>;
+  phones?: Array<{ number?: string; type?: string; dnc?: boolean }>;
+  vehicle_history?: Array<{
+    make?: string;
+    model?: string;
+    year?: number | string;
+    vin?: string;
+  }>;
+}
+
+export interface CarsXEOwnershipVinResponse {
+  success: boolean;
+  vin?: string;
+  include?: string;
+  vehicle?: {
+    make?: string;
+    model?: string;
+    year?: number | null;
+    manufacturer?: string;
+    fuel_type?: string;
+    drive_type?: string;
+    transmission_type?: string;
+    body_type?: string;
+    body_subtype?: string;
+    doors?: number | null;
+    engine_cylinders?: number | null;
+    vehicle_class?: string;
+    size?: string;
+    vehicle_type?: string;
+  };
+  owners?: CarsXEOwnershipPerson[];
+  error?: string;
+  message?: string;
+}
+
+export interface CarsXEOwnershipPersonResponse {
+  success: boolean;
+  input?: Record<string, any>;
+  count?: number;
+  matches?: CarsXEOwnershipPerson[];
+  error?: string;
+  message?: string;
+}
+
+export interface CarsXEOwnershipAddressResponse {
+  success: boolean;
+  input?: Record<string, any>;
+  count?: number;
+  matches?: CarsXEOwnershipPerson[];
+  error?: string;
+  message?: string;
+}
+
+export interface CarsXEOwnershipZipResponse {
+  success: boolean;
+  zip?: string;
+  filters?: Record<string, any>;
+  page?: number;
+  limit?: number;
+  count?: number;
+  records?: CarsXEOwnershipPerson[];
+  include?: string;
+  variant?: string;
+  error?: string;
+  message?: string;
+}
