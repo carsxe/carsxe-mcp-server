@@ -413,6 +413,158 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
+### 13. `get_recalls_by_ymm` 🚨
+
+- **Description:** Get safety recall information by year, make, and model (no VIN required)
+- **Parameters:**
+  - `year` (string, required): 4-digit model year
+  - `make` (string, required)
+  - `model` (string, required)
+- **Example Prompts:**
+
+  > Are there any recalls on a 2026 Toyota Corolla?
+
+  > Check safety recalls for a 2019 Honda Civic
+
+  > What recalls affect 2020 Ford F-150s?
+
+- **Output:** Markdown with NHTSA campaign numbers, components, risk, and remedies
+
+---
+
+### 14. `submit_recalls_batch` 📦
+
+- **Description:** Submit an async bulk recall check for up to 10,000 VINs
+- **Parameters:**
+  - `vins` (string[] or comma-separated string, optional)
+  - `csv` (string, optional): inline CSV of VINs
+  - `csvUrl` (string, optional): HTTPS URL to a CSV of VINs
+  - `webhookUrl` (string, optional): HTTPS webhook when the batch finishes
+- **Example Prompts:**
+
+  > Submit a recalls batch for VINs `1HGBH41JXMN109186`, `5YJSA1E26HF000001`, and `1C4JJXR64PW696340`
+
+  > Start a bulk recall check from this CSV URL: `https://example.com/vins.csv`
+
+- **Output:** Markdown with `batchId` and status. Poll `get_recalls_batch_status` next.
+
+---
+
+### 15. `get_recalls_batch_status` 📦
+
+- **Description:** Check the status of a previously submitted recalls batch
+- **Parameters:**
+  - `batchId` (string, required)
+- **Example Prompts:**
+
+  > What's the status of recalls batch `brb_mnablbn7_wvbaqv`?
+
+- **Output:** Markdown with status, processed VIN counts, and hit rate
+
+---
+
+### 16. `get_recalls_batch_results` 📦
+
+- **Description:** Fetch completed bulk recall results as JSON (after status is `completed` or `partial`)
+- **Parameters:**
+  - `batchId` (string, required)
+- **Example Prompts:**
+
+  > Get the recall results for batch `brb_mnablbn7_wvbaqv`
+
+- **Output:** Markdown summary per VIN (truncated for large batches)
+
+---
+
+### 17. `download_recalls_batch` 📦
+
+- **Description:** Download completed bulk recall results as CSV
+- **Parameters:**
+  - `batchId` (string, required)
+- **Example Prompts:**
+
+  > Download the CSV for recalls batch `brb_mnablbn7_wvbaqv`
+
+- **Output:** Markdown preview of the CSV
+
+---
+
+### 18. `get_ymm_options` 📋
+
+- **Description:** List cascading year, make, model, trim, or variant options for dropdowns
+- **Parameters:**
+  - `dimension` (string, optional): `years` | `makes` | `models` | `trims` | `variants`
+  - `year`, `make`, `model`, `trim` (all optional filters)
+- **Example Prompts:**
+
+  > What years does CarsXE have vehicle data for?
+
+  > List Toyota models
+
+  > What Tacoma variants were available in 2026?
+
+- **Output:** Markdown list of the inferred or requested dimension
+
+---
+
+### 19. `get_ownership_by_vin` 👤
+
+- **Description:** Enterprise — look up registered owner(s) for a VIN
+- **Parameters:**
+  - `vin` (string, required): 17-character VIN
+  - `include` (string, optional): `demographics,emails,phones,vehicle_history`
+- **Example Prompts:**
+
+  > Who is the registered owner of VIN `1FT8X3BT0BEA61538`?
+
+- **Output:** Markdown with owners, contact info, demographics, and vehicle history. Billed per owner record.
+
+---
+
+### 20. `get_ownership_by_person` 👤
+
+- **Description:** Enterprise — look up a person by name, street address, and ZIP
+- **Parameters:**
+  - `firstName`, `lastName`, `address`, `zip` (required)
+  - `include` (string, optional)
+- **Example Prompts:**
+
+  > Look up John Sample at 123 Example St, ZIP 90210
+
+- **Output:** Markdown with matched people, contact info, and linked vehicles
+
+---
+
+### 21. `get_ownership_by_address` 👤
+
+- **Description:** Enterprise — look up residents at a street address + ZIP
+- **Parameters:**
+  - `address`, `zip` (required)
+  - `include`, `variant` (optional; prefer `include`)
+- **Example Prompts:**
+
+  > Who lives at 123 Example St in ZIP 90210?
+
+- **Output:** Markdown with residents and linked vehicles
+
+---
+
+### 22. `get_ownership_by_zip` 👤
+
+- **Description:** Enterprise — search people in a 5-digit ZIP with optional filters
+- **Parameters:**
+  - `zip` (string, required)
+  - `gender`, `minAge`, `maxAge`, `income`, `page`, `limit`, `include`, `variant` (optional)
+- **Example Prompts:**
+
+  > Find people in ZIP 90210 aged 45+ 
+
+  > Search ZIP 49646 for women with income code F
+
+- **Output:** Markdown page of matching records. Billed per record returned (default limit 15, max 100).
+
+---
+
 ## 🔗 Chaining Tools — Power User Examples
 
 The real power of CarsXE MCP comes from chaining tools in a single conversation:
@@ -435,6 +587,13 @@ The real power of CarsXE MCP comes from chaining tools in a single conversation:
 1. > Decode this VIN from the dashboard photo: `[image URL]`
 2. > Get its full specs
 3. > My customer says the check engine code is P0300 — what does that mean for this vehicle?
+
+**Scenario 4 — Fleet recall scan without VINs:**
+
+1. > List Toyota models for 2020
+2. > Check recalls for a 2020 Toyota Camry
+3. > Submit a recalls batch for these inventory VINs: `[list]`
+4. > Check the batch status, then show results
 
 ---
 

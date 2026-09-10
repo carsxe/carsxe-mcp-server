@@ -151,6 +151,126 @@
         "open_world_justification": "Does not report a vehicle, contact authorities, or change any external system.",
         "destructive_justification": "Does not transfer ownership, clear records, or perform irreversible actions."
       }
+    },
+    "get_recalls_by_ymm": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves safety recall information by year, make, and model without modifying records.",
+        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "submit_recalls_batch": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Creates a bulk recall job on CarsXE so results can be polled later; it does not change vehicle records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete batches, overwrite results, or perform irreversible actions."
+      }
+    },
+    "get_recalls_batch_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Reads the status of an existing recalls batch without modifying it.",
+        "open_world_justification": "Does not publish content or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_recalls_batch_results": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves completed bulk recall results without modifying the batch.",
+        "open_world_justification": "Does not publish content or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "download_recalls_batch": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Downloads completed bulk recall results as CSV without modifying the batch.",
+        "open_world_justification": "Does not publish the CSV or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_ymm_options": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Lists year, make, model, trim, or variant options without changing records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_ownership_by_vin": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves registered-owner information for a VIN without creating or updating records.",
+        "open_world_justification": "Does not contact owners or change any external system.",
+        "destructive_justification": "Does not transfer ownership, clear records, or perform irreversible actions."
+      }
+    },
+    "get_ownership_by_person": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves contact and vehicle links for a named person without modifying records.",
+        "open_world_justification": "Does not contact the person or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_ownership_by_address": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves residents on file for a street address without modifying records.",
+        "open_world_justification": "Does not contact residents or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "get_ownership_by_zip": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves a filtered page of people in a ZIP code without modifying records.",
+        "open_world_justification": "Does not contact people or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
     }
   },
   "test_cases": [

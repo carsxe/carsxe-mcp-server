@@ -10,3 +10,17 @@ export { formatYearMakeModelResponse } from "./formatYearMakeModelResponse.js";
 export { formatObdCodeResponse } from "./formatObdCodeResponse.js";
 export { formatPlateRecognitionResponse } from "./formatPlateRecognitionResponse.js";
 export { formatLienTheftResponse } from "./formatLienTheftResponse.js";
+export { formatRecallsYmmResponse } from "./formatRecallsYmmResponse.js";
+export {
+  formatRecallsBatchDownload,
+  formatRecallsBatchResultsResponse,
+  formatRecallsBatchStatusResponse,
+  formatRecallsBatchSubmitResponse,
+} from "./formatRecallsBatchResponse.js";
+export { formatYmmOptionsResponse } from "./formatYmmOptionsResponse.js";
+export {
+  formatOwnershipAddressResponse,
+  formatOwnershipPersonResponse,
+  formatOwnershipVinResponse,
+  formatOwnershipZipResponse,
+} from "./formatOwnershipResponse.js";

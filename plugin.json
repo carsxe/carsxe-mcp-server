@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "carsxe",
   "version": "0.0.0",
-  "description": "MCP server for CarsXE vehicle data: VIN specs, plate decode, history, images, recalls, market value, and OBD codes.",
+  "description": "MCP server for CarsXE vehicle data: VIN specs, plate decode, history, images, recalls (VIN, YMM, batch), YMM options, ownership, market value, and OBD codes.",
   "author": {
     "name": "CarsXE",
     "email": "info@carsxe.com",
