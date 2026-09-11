@@ -3,6 +3,7 @@ import { carsxeApiRequest } from "../utils/carsxeApi.js";
 import { CarsXESpecsResponse } from "../types/carsxe.js";
 import { formatVehicleSpecsResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { toVehicleCard } from "../ui/cards.js";
 
 export function registerGetVehicleSpecsTool(
   server: McpServer,
@@ -12,7 +13,8 @@ export function registerGetVehicleSpecsTool(
     "get_vehicle_specs",
     {
       title: "Get Vehicle Specs",
-      description: "Get comprehensive vehicle specifications by VIN",
+      description:
+        "Get comprehensive vehicle specifications by VIN. Data tool only: returns Markdown plus structuredContent (vin, year, make, model, and key specs) for chaining. Do not expect UI from this tool. After fetching, call render_vehicle_card with the structured result when the user should see a vehicle card.",
       inputSchema: {
         vin: z
           .string()
@@ -34,6 +36,7 @@ export function registerGetVehicleSpecsTool(
       );
       if (!apiKey) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -52,6 +55,7 @@ export function registerGetVehicleSpecsTool(
       );
       if (!specsData || !specsData.success) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -60,7 +64,9 @@ export function registerGetVehicleSpecsTool(
           ],
         };
       }
+      const structuredContent = toVehicleCard(specsData);
       return {
+        structuredContent,
         content: [
           {
             type: "text",

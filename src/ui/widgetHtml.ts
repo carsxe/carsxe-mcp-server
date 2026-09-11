@@ -1,0 +1,444 @@
+import {
+  MarketValueCard,
+  PREVIEW_MARKET_VALUE,
+  PREVIEW_RECALLS,
+  PREVIEW_VEHICLE_CARD,
+  RecallsCard,
+  VehicleCard,
+} from "./cards.js";
+import { BRAND_LOGO_DARK, BRAND_LOGO_LIGHT } from "./constants.js";
+
+/**
+ * Semantic tokens copied from @carsxe/design-system 0.2.0
+ * (`globals.css` / https://ui.carsxe.com/docs/theming).
+ * MCP Apps HTML cannot import the React package; these CSS variables are the
+ * documented source of truth.
+ */
+const SHARED_CSS = `
+:root {
+  --brand-50: #e6f7fc;
+  --brand-100: #c7eef9;
+  --brand-200: #8cdef5;
+  --brand-300: #4dccee;
+  --brand-400: #387990;
+  --brand-500: #0082aa;
+  --brand-600: #065774;
+  --brand-700: #05506b;
+  --brand-800: #05465e;
+  --brand-900: #043244;
+  --brand-950: #031e2a;
+  --background: #f9f9f9;
+  --foreground: #3a3a3a;
+  --card: #ffffff;
+  --card-foreground: #3a3a3a;
+  --primary: #065774;
+  --primary-foreground: #ffffff;
+  --primary-hover: #387990;
+  --primary-disabled: #83bacc;
+  --muted: #f9f9f9;
+  --muted-foreground: #a8a8a8;
+  --accent: #eaf5ff;
+  --accent-foreground: #065774;
+  --destructive: #da373e;
+  --destructive-muted: #fdf0f1;
+  --success: #00a63e;
+  --success-muted: #e6f6ec;
+  --warning: #f79008;
+  --warning-muted: #fef7e6;
+  --border: #ebebeb;
+  --ring: #065774;
+  --chart-1: #065774;
+  --chart-2: #387990;
+  --radius: 0;
+  --radius-2xl: 1rem;
+  --font-sans: "Manrope", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "DM Sans", "DM Sans Variable", var(--font-sans);
+  --font-mono: "DM Mono", ui-monospace, monospace;
+}
+.dark {
+  --background: #121212;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --primary: #387990;
+  --primary-foreground: #031e2a;
+  --primary-hover: #4dccee;
+  --primary-disabled: #05506b;
+  --muted: #2a2a2a;
+  --muted-foreground: #a0a0a0;
+  --accent: #043244;
+  --accent-foreground: #8cdef5;
+  --destructive: #da373e;
+  --destructive-muted: #3a1517;
+  --success: #00a63e;
+  --success-muted: #0d2a18;
+  --warning: #f79008;
+  --warning-muted: #2a1f0a;
+  --border: #3a3a3a;
+  --ring: #387990;
+  --chart-1: #387990;
+  --chart-2: #4dccee;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.shell {
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  max-width: 560px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+}
+.brand { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lockup { line-height: 0; }
+.lockup img { height: 28px; width: auto; }
+.lockup img.logo-light { display: block; }
+.lockup img.logo-dark { display: none; }
+.dark .lockup img.logo-light { display: none; }
+.dark .lockup img.logo-dark { display: block; }
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.vin {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--muted-foreground);
+  word-break: break-all;
+}
+.badge {
+  flex-shrink: 0;
+  border-radius: var(--radius-2xl);
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border: 1px solid var(--border);
+}
+.body { padding: 16px 20px 8px; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 12px;
+}
+.row {
+  padding: 10px 12px;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+}
+.row.wide { grid-column: 1 / -1; }
+.k {
+  display: block;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+.v { font-size: 14px; font-weight: 650; color: var(--foreground); }
+.section { margin: 4px 0 12px; }
+.section h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.band {
+  display: grid;
+  grid-template-columns: 92px 1fr 84px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.band span { font-size: 12px; color: var(--muted-foreground); }
+.band strong { font-size: 13px; text-align: right; color: var(--foreground); }
+.track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+}
+.list { display: flex; flex-direction: column; gap: 10px; }
+.recall {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius-2xl);
+  padding: 12px;
+}
+.recall-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: baseline;
+}
+.recall h4 { margin: 0; font-family: var(--font-heading); font-size: 14px; }
+.meta { color: var(--muted-foreground); font-size: 12px; margin: 4px 0 8px; }
+.p { margin: 0 0 6px; font-size: 13px; line-height: 1.45; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pill {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--radius-2xl);
+  padding: 3px 8px;
+}
+.pill.warn { background: var(--warning-muted); color: var(--warning); }
+.pill.ok { background: var(--success-muted); color: var(--success); }
+.pill.accent { background: var(--accent); color: var(--accent-foreground); }
+.empty {
+  padding: 18px;
+  text-align: center;
+  background: var(--success-muted);
+  color: var(--success);
+  border-radius: var(--radius-2xl);
+  font-weight: 650;
+}
+.footer {
+  padding: 10px 20px 16px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+`;
+
+const BRIDGE_JS = `
+(function syncTheme() {
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  function apply() { document.documentElement.classList.toggle("dark", mq.matches); }
+  apply();
+  if (mq.addEventListener) mq.addEventListener("change", apply);
+})();
+function brandHeader(title, vin, badge) {
+  return '<div class="header"><div class="brand">' +
+    '<div class="lockup">' +
+      '<img class="logo-light" src="${BRAND_LOGO_LIGHT}" alt="CarsXE" />' +
+      '<img class="logo-dark" src="${BRAND_LOGO_DARK}" alt="CarsXE" />' +
+    '</div>' +
+    '<h1 class="title">' + esc(title) + '</h1>' +
+    '<div class="vin">' + esc(vin) + '</div>' +
+  '</div><div class="badge">' + esc(badge) + '</div></div>';
+}
+function unwrap(payload) {
+  if (!payload || typeof payload !== "object") return payload;
+  if (payload.structuredContent) return payload.structuredContent;
+  return payload;
+}
+function currentOutput() {
+  if (window.__CARSXE_PREVIEW__) return window.__CARSXE_PREVIEW__;
+  if (window.openai && window.openai.toolOutput) return unwrap(window.openai.toolOutput);
+  return null;
+}
+function subscribe(render) {
+  const first = currentOutput();
+  if (first) render(first);
+  window.addEventListener("message", function (event) {
+    if (event.source !== window.parent) return;
+    var message = event.data;
+    if (!message || message.jsonrpc !== "2.0") return;
+    if (message.method === "ui/notifications/tool-result") {
+      render(unwrap(message.params));
+    }
+    if (message.method === "ui/notifications/tool-input" && !currentOutput()) {
+      render(unwrap(message.params));
+    }
+  }, { passive: true });
+}
+function esc(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function money(value) {
+  if (value == null || value === "") return "—";
+  var n = Number(String(value).replace(/[^0-9.-]/g, ""));
+  if (!isFinite(n)) return esc(value);
+  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+}
+function vehicleTitle(d) {
+  return [d.year, d.make, d.model, d.trim].filter(Boolean).join(" ") || "Vehicle";
+}
+`;
+
+function htmlDocument(title: string, body: string, renderJs: string): string {
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${title}</title>
+  <style>${SHARED_CSS}</style>
+</head>
+<body>
+  <div id="root" class="shell"><div class="body">Loading…</div></div>
+  <script>
+${BRIDGE_JS}
+${renderJs}
+  </script>
+</body>
+</html>`;
+}
+
+export function vehicleCardHtml(): string {
+  return htmlDocument(
+    "CarsXE vehicle card",
+    "",
+    `
+function render(d) {
+  if (!d) return;
+  var mpg = d.cityMpg || d.highwayMpg
+    ? [d.cityMpg ? d.cityMpg + " city" : null, d.highwayMpg ? d.highwayMpg + " hwy" : null].filter(Boolean).join(" / ")
+    : "—";
+  document.getElementById("root").innerHTML =
+    brandHeader(vehicleTitle(d), d.vin || "VIN unavailable", "Specs") +
+    '<div class="body"><div class="grid">' +
+      cell("Style", d.style) +
+      cell("Engine", d.engine) +
+      cell("Transmission", d.transmission) +
+      cell("Drivetrain", d.drivetrain) +
+      cell("Fuel", d.fuelType) +
+      cell("Economy", mpg === "—" ? null : mpg) +
+      cell("Seating", d.seating) +
+      cell("MSRP", d.msrp ? money(d.msrp) : null) +
+      cell("Built", d.madeIn, true) +
+    '</div></div>' +
+    '<div class="footer">Vehicle identity via CarsXE</div>';
+}
+function cell(label, value, wide) {
+  if (!value) return "";
+  return '<div class="row' + (wide ? " wide" : "") + '"><span class="k">' + esc(label) + '</span><div class="v">' + esc(value) + '</div></div>';
+}
+subscribe(render);
+`,
+  );
+}
+
+export function marketValueHtml(): string {
+  return htmlDocument(
+    "CarsXE market value",
+    "",
+    `
+function num(value) {
+  var n = Number(String(value == null ? "" : value).replace(/[^0-9.-]/g, ""));
+  return isFinite(n) ? n : 0;
+}
+function band(label, value, max) {
+  var pct = max > 0 ? Math.max(8, Math.round((num(value) / max) * 100)) : 0;
+  return '<div class="band"><span>' + esc(label) + '</span><div class="track"><div class="fill" style="width:' + pct + '%"></div></div><strong>' + money(value) + '</strong></div>';
+}
+function render(d) {
+  if (!d) return;
+  var retail = [d.retailExcellent, d.retailClean, d.retailAverage, d.retailRough];
+  var trade = [d.tradeInClean, d.tradeInAverage, d.tradeInRough];
+  var max = Math.max.apply(null, retail.concat(trade).map(num).concat([1]));
+  document.getElementById("root").innerHTML =
+    brandHeader(vehicleTitle(d), (d.vin || "VIN unavailable") + (d.state ? " · " + d.state : ""), "Market value") +
+    '<div class="body">' +
+      '<div class="section"><h3>Retail</h3>' +
+        band("Excellent", d.retailExcellent, max) +
+        band("Clean", d.retailClean, max) +
+        band("Average", d.retailAverage, max) +
+        band("Rough", d.retailRough, max) +
+      '</div>' +
+      '<div class="section"><h3>Trade-in</h3>' +
+        band("Clean", d.tradeInClean, max) +
+        band("Average", d.tradeInAverage, max) +
+        band("Rough", d.tradeInRough, max) +
+      '</div>' +
+      (d.msrp ? '<div class="row wide"><span class="k">Original MSRP</span><div class="v">' + money(d.msrp) + '</div></div>' : '') +
+    '</div>' +
+    '<div class="footer">Market values via CarsXE · estimates only</div>';
+}
+subscribe(render);
+`,
+  );
+}
+
+export function recallsHtml(): string {
+  return htmlDocument(
+    "CarsXE recalls",
+    "",
+    `
+function render(d) {
+  if (!d) return;
+  var items = Array.isArray(d.recalls) ? d.recalls : [];
+  var count = d.recallCount != null ? d.recallCount : items.length;
+  var list;
+  if (!d.hasRecalls && items.length === 0) {
+    list = '<div class="empty">No open recalls for this vehicle.</div>';
+  } else {
+    list = '<div class="list">' + items.map(function (r) {
+      var pills = "";
+      if (r.dontDrive) pills += '<span class="pill warn">Do not drive</span>';
+      if (r.stopSale) pills += '<span class="pill warn">Stop sale</span>';
+      if (r.remedyAvailable) pills += '<span class="pill ok">Remedy available</span>';
+      if (r.status) pills += '<span class="pill accent">' + esc(r.status) + '</span>';
+      return '<article class="recall">' +
+        '<div class="recall-top"><h4>' + esc(r.component || r.name || "Recall") + '</h4><span class="meta">' + esc(r.nhtsaId || "") + '</span></div>' +
+        '<div class="meta">' + esc([r.date, r.name].filter(Boolean).join(" · ")) + '</div>' +
+        (r.description ? '<p class="p">' + esc(r.description) + '</p>' : '') +
+        (r.risk ? '<p class="p">' + esc(r.risk) + '</p>' : '') +
+        (r.remedy ? '<p class="p">' + esc(r.remedy) + '</p>' : '') +
+        (pills ? '<div class="pills">' + pills + '</div>' : '') +
+      '</article>';
+    }).join("") + '</div>';
+  }
+  document.getElementById("root").innerHTML =
+    brandHeader(vehicleTitle(d), d.vin || "VIN unavailable", count ? count + " recall" + (count === 1 ? "" : "s") : "Recalls") +
+    '<div class="body">' + list + '</div>' +
+    '<div class="footer">Recall data via CarsXE · confirm status with a dealer</div>';
+}
+subscribe(render);
+`,
+  );
+}
+
+export function previewHtml(
+  kind: "vehicle" | "marketValue" | "recalls",
+  data?: VehicleCard | MarketValueCard | RecallsCard,
+): string {
+  const templates = {
+    vehicle: vehicleCardHtml(),
+    marketValue: marketValueHtml(),
+    recalls: recallsHtml(),
+  };
+  const payload = {
+    vehicle: data ?? PREVIEW_VEHICLE_CARD,
+    marketValue: data ?? PREVIEW_MARKET_VALUE,
+    recalls: data ?? PREVIEW_RECALLS,
+  }[kind];
+  return templates[kind].replace(
+    "<script>",
+    `<script>window.__CARSXE_PREVIEW__ = ${JSON.stringify(payload)};`,
+  );
+}

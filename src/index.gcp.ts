@@ -7,22 +7,7 @@ import {
 	resolveAccessToken,
 	sendUnauthorized,
 } from "./oauth.js";
-import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
-import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
-import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
-import { registerGetRecallsByYmmTool } from "./tools/getRecallsByYmm.js";
-import { registerGetMarketValueTool } from "./tools/getMarketValue.js";
-import { registerGetVehicleHistoryTool } from "./tools/getVehicleHistory.js";
-import { registerGetVehicleImagesTool } from "./tools/getVehicleImages.js";
-import { registerGetVehicleRecallsTool } from "./tools/getVehicleRecalls.js";
-import { registerGetVehicleSpecsTool } from "./tools/getVehicleSpecs.js";
-import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
-import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
-import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
-import { registerVinOcrTool } from "./tools/vinOcr.js";
-import { registerGetYmmOptionsTool } from "./tools/getYmmOptions.js";
-import { registerOwnershipTools } from "./tools/ownership.js";
-import { registerRecallsBatchTools } from "./tools/recallsBatch.js";
+import { registerAllTools } from "./registerTools.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
 const OPENAI_APPS_CHALLENGE_TOKEN =
@@ -65,28 +50,6 @@ function extractApiKey(req: http.IncomingMessage, url: URL): string | null {
 	const auth = req.headers.authorization;
 	if (auth?.startsWith("Bearer ")) return auth.slice(7);
 	return url.searchParams.get("key");
-}
-
-function registerAllTools(
-	server: McpServer,
-	getApiKey: () => string | null,
-): void {
-	registerGetVehicleSpecsTool(server, getApiKey);
-	registerDecodeVehiclePlateTool(server, getApiKey);
-	registerInternationalVinDecoderTool(server, getApiKey);
-	registerGetMarketValueTool(server, getApiKey);
-	registerGetVehicleHistoryTool(server, getApiKey);
-	registerGetVehicleImagesTool(server, getApiKey);
-	registerGetVehicleRecallsTool(server, getApiKey);
-	registerVinOcrTool(server, getApiKey);
-	registerGetYearMakeModelTool(server, getApiKey);
-	registerDecodeObdCodeTool(server, getApiKey);
-	registerRecognizePlateImageTool(server, getApiKey);
-	registerGetLienTheftTool(server, getApiKey);
-	registerGetRecallsByYmmTool(server, getApiKey);
-	registerRecallsBatchTools(server, getApiKey);
-	registerGetYmmOptionsTool(server, getApiKey);
-	registerOwnershipTools(server, getApiKey);
 }
 
 const httpServer = http.createServer(async (req, res) => {

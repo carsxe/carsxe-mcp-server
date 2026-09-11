@@ -3,6 +3,7 @@ import { carsxeApiRequest } from "../utils/carsxeApi.js";
 import { CarsXERecallsResponse } from "../types/carsxe.js";
 import { formatRecallsResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { toRecallsCard } from "../ui/cards.js";
 
 export function registerGetVehicleRecallsTool(
   server: McpServer,
@@ -12,7 +13,8 @@ export function registerGetVehicleRecallsTool(
     "get_vehicle_recalls",
     {
       title: "Get Vehicle Recalls",
-      description: "Get vehicle recall information by VIN",
+      description:
+        "Get vehicle recall information by VIN. Data tool only: returns Markdown plus structuredContent (hasRecalls, recallCount, recalls[]) for chaining. Do not expect UI from this tool. After fetching, call render_recalls with the structured result when the user should see the recalls card.",
       inputSchema: {
         vin: z
           .string()
@@ -30,6 +32,7 @@ export function registerGetVehicleRecallsTool(
       const apiKey = getApiKey();
       if (!apiKey) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -48,6 +51,7 @@ export function registerGetVehicleRecallsTool(
       );
       if (!data) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -56,7 +60,9 @@ export function registerGetVehicleRecallsTool(
           ],
         };
       }
+      const structuredContent = toRecallsCard(data);
       return {
+        structuredContent,
         content: [
           {
             type: "text",

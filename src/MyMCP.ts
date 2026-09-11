@@ -1,21 +1,6 @@
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerGetVehicleSpecsTool } from "./tools/getVehicleSpecs.js";
-import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
-import { registerInternationalVinDecoderTool } from "./tools/internationalVinDecoder.js";
-import { registerGetMarketValueTool } from "./tools/getMarketValue.js";
-import { registerGetVehicleHistoryTool } from "./tools/getVehicleHistory.js";
-import { registerGetVehicleImagesTool } from "./tools/getVehicleImages.js";
-import { registerGetVehicleRecallsTool } from "./tools/getVehicleRecalls.js";
-import { registerVinOcrTool } from "./tools/vinOcr.js";
-import { registerGetYearMakeModelTool } from "./tools/getYearMakeModel.js";
-import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
-import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
-import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
-import { registerGetRecallsByYmmTool } from "./tools/getRecallsByYmm.js";
-import { registerRecallsBatchTools } from "./tools/recallsBatch.js";
-import { registerGetYmmOptionsTool } from "./tools/getYmmOptions.js";
-import { registerOwnershipTools } from "./tools/ownership.js";
+import { registerAllTools } from "./registerTools.js";
 
 export class MyMCP extends McpAgent {
   server = new McpServer({
@@ -34,21 +19,6 @@ export class MyMCP extends McpAgent {
       return apiKey || null;
     };
 
-    registerGetVehicleSpecsTool(this.server, getApiKey);
-    registerDecodeVehiclePlateTool(this.server, getApiKey);
-    registerInternationalVinDecoderTool(this.server, getApiKey);
-    registerGetMarketValueTool(this.server, getApiKey);
-    registerGetVehicleHistoryTool(this.server, getApiKey);
-    registerGetVehicleImagesTool(this.server, getApiKey);
-    registerGetVehicleRecallsTool(this.server, getApiKey);
-    registerVinOcrTool(this.server, getApiKey);
-    registerGetYearMakeModelTool(this.server, getApiKey);
-    registerDecodeObdCodeTool(this.server, getApiKey);
-    registerRecognizePlateImageTool(this.server, getApiKey);
-    registerGetLienTheftTool(this.server, getApiKey);
-    registerGetRecallsByYmmTool(this.server, getApiKey);
-    registerRecallsBatchTools(this.server, getApiKey);
-    registerGetYmmOptionsTool(this.server, getApiKey);
-    registerOwnershipTools(this.server, getApiKey);
+    registerAllTools(this.server, getApiKey);
   }
 }
