@@ -101,7 +101,13 @@ describe("MCP Apps UI tool registration", () => {
   it("cards use official design-system tokens and brand lockups", () => {
     for (const html of [vehicleCardHtml(), marketValueHtml(), recallsHtml()]) {
       assert.match(html, new RegExp(`--primary:\\s*${DESIGN_TOKENS.primary}`, "i"));
-      assert.match(html, /--radius:\s*0/);
+      assert.match(html, /--background:\s*#f9f9f9/i);
+      assert.match(html, /--foreground:\s*#3a3a3a/i);
+      assert.match(html, /--card:\s*#ffffff/i);
+      assert.match(html, /--border:\s*#ebebeb/i);
+      assert.match(html, /--radius-2xl:\s*1rem/);
+      assert.ok(html.includes("https://ui.carsxe.com/logo-light.png"));
+      assert.ok(html.includes("https://ui.carsxe.com/logo-dark.png"));
       assert.ok(html.includes(BRAND_LOGO_LIGHT));
       assert.ok(html.includes(BRAND_LOGO_DARK));
       assert.equal(html.includes(">CARSXE<"), false);
