@@ -3,6 +3,7 @@ import { carsxeApiRequest } from "../utils/carsxeApi.js";
 import { CarsXEMarketValueResponse } from "../types/carsxe.js";
 import { formatMarketValueResponse } from "../formatters/carsxe.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { toMarketValueCard } from "../ui/cards.js";
 
 export function registerGetMarketValueTool(
   server: McpServer,
@@ -12,7 +13,8 @@ export function registerGetMarketValueTool(
     "get_market_value",
     {
       title: "Get Market Value",
-      description: "Get the estimated market value for a vehicle by VIN",
+      description:
+        "Get the estimated market value for a vehicle by VIN. Data tool only: returns Markdown plus structuredContent (retail/trade-in bands) for chaining. Do not expect UI from this tool. After fetching, call render_market_value with the structured result when the user should see the value card.",
       inputSchema: {
         vin: z
           .string()
@@ -50,6 +52,7 @@ export function registerGetMarketValueTool(
       const apiKey = getApiKey();
       if (!apiKey) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -66,6 +69,7 @@ export function registerGetMarketValueTool(
       );
       if (!data) {
         return {
+          isError: true,
           content: [
             {
               type: "text",
@@ -74,7 +78,9 @@ export function registerGetMarketValueTool(
           ],
         };
       }
+      const structuredContent = toMarketValueCard(data);
       return {
+        structuredContent,
         content: [
           {
             type: "text",

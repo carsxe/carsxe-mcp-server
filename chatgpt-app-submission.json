@@ -260,6 +260,42 @@
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
+    "render_vehicle_card": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders a vehicle identity card from previously fetched specs without calling the CarsXE API or modifying records.",
+        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
+    "render_market_value": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders market-value bands from previously fetched valuation data without creating or updating records.",
+        "open_world_justification": "Does not list a vehicle for sale, submit an offer, or change any external system.",
+        "destructive_justification": "Does not execute transactions or delete, overwrite, or revoke anything."
+      }
+    },
+    "render_recalls": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Renders an open-recalls card from previously fetched recall data without modifying records.",
+        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
+      }
+    },
     "get_ownership_by_zip": {
       "annotations": {
         "readOnlyHint": true,
@@ -304,6 +340,14 @@
       "file_attachment_urls": null,
       "tools_triggered": "get_vehicle_recalls",
       "expected_output": "Returns available recall records and their relevant safety details for the VIN.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Fetch specs as data, then render a vehicle card.",
+      "user_prompt": "Look up VIN WBAFR7C57CC811956 and show me the vehicle card.",
+      "file_attachment_urls": null,
+      "tools_triggered": "get_vehicle_specs,render_vehicle_card",
+      "expected_output": "Calls get_vehicle_specs first, then render_vehicle_card with the structured specs. The data tool does not mount UI.",
       "expected_output_url": null
     },
     {

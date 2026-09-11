@@ -37,6 +37,7 @@ Connecting CarsXE to your AI editor or chat client via MCP gives you a superchar
 - 🏷️ Decode license plates and VINs (including OCR from images)
 - 🛠️ Decode OBD (On-Board Diagnostics) codes
 - 🎨 All endpoints return elegant, grouped, emoji-rich Markdown
+- 🧩 ChatGPT / MCP Apps hosts can render vehicle, market-value, and recall cards via dedicated render tools
 - 🧑‍💻 Modular code: types, API logic, and formatters are separated for maintainability
 - 🧪 Simple to run, test, and extend
 
@@ -197,6 +198,29 @@ For any other MCP-compatible client, register a remote MCP server using:
 - **Auth header:** `X-API-Key: YOUR_API_KEY`
 
 Consult your editor's MCP documentation for the exact configuration format.
+
+---
+
+## 🖼️ ChatGPT / MCP Apps UI (data → render)
+
+Hosts that implement [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview) (including [ChatGPT](https://developers.openai.com/apps-sdk/mcp-apps-in-chatgpt)) can show inline vehicle cards. CarsXE keeps **fetch tools as data tools** and mounts UI only from dedicated **render tools**, so ChatGPT does not remount an iframe on every lookup.
+
+Recommended call flow:
+
+1. Call a data tool (`get_vehicle_specs`, `get_market_value`, or `get_vehicle_recalls`). It returns Markdown plus `structuredContent` — no `_meta.ui.resourceUri`.
+2. The model may refine that structured result.
+3. Call the matching render tool (`render_vehicle_card`, `render_market_value`, or `render_recalls`) with those fields.
+4. The host loads the `ui://carsxe/…` HTML resource (`text/html;profile=mcp-app`) and renders the card once.
+
+Auth is unchanged: MCP still requires an API key or OAuth. x402 remains REST-only.
+
+**Preview the cards locally** (no API key, mock data):
+
+```bash
+npm run preview:ui
+```
+
+Then open `previews/vehicle-card.html`, `previews/market-value.html`, and `previews/recalls.html` in a browser.
 
 ---
 
@@ -562,6 +586,40 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   > Search ZIP 49646 for women with income code F
 
 - **Output:** Markdown page of matching records. Billed per record returned (default limit 15, max 100).
+
+---
+
+### 23. `render_vehicle_card` 🖼️
+
+- **Description:** Render a visual VIN identity + key-specs card. Always call `get_vehicle_specs` first and pass its `structuredContent`.
+- **Parameters:** `vin` (required) plus optional year, make, model, trim, style, engine, transmission, drivetrain, fuel, MPG, seating, MSRP, built-in country
+- **Example Prompts:**
+
+  > Get specs for VIN `WBAFR7C57CC811956`, then show the vehicle card.
+
+- **Output:** MCP Apps / ChatGPT iframe card. Text fallback summarizes the vehicle.
+
+---
+
+### 24. `render_market_value` 🖼️
+
+- **Description:** Render retail and trade-in value bands. Always call `get_market_value` first and pass its `structuredContent`.
+- **Example Prompts:**
+
+  > What's VIN `WBAFR7C57CC811956` worth in California? Then show the market value card.
+
+- **Output:** MCP Apps / ChatGPT iframe card. Text fallback summarizes the valuation.
+
+---
+
+### 25. `render_recalls` 🖼️
+
+- **Description:** Render an open-recalls list. Always call `get_vehicle_recalls` first and pass its `structuredContent`.
+- **Example Prompts:**
+
+  > Check recalls for VIN `1C4JJXR64PW696340` and show the recalls card.
+
+- **Output:** MCP Apps / ChatGPT iframe card. Text fallback reports recall count.
 
 ---
 
