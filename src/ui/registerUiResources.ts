@@ -1,5 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { RESOURCE_MIME_TYPE, UI_URIS } from "./constants.js";
+import { RESOURCE_MIME_TYPE, UI_RESOURCE_DOMAINS, UI_URIS } from "./constants.js";
 import { marketValueHtml, recallsHtml, vehicleCardHtml } from "./widgetHtml.js";
 
 function registerHtmlResource(
@@ -23,7 +23,12 @@ function registerHtmlResource(
           mimeType: RESOURCE_MIME_TYPE,
           text: html(),
           _meta: {
-            ui: { prefersBorder: true },
+            ui: {
+              prefersBorder: true,
+              csp: {
+                resourceDomains: [...UI_RESOURCE_DOMAINS],
+              },
+            },
           },
         },
       ],

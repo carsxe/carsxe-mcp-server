@@ -6,36 +6,91 @@ import {
   RecallsCard,
   VehicleCard,
 } from "./cards.js";
+import { BRAND_LOGO_DARK, BRAND_LOGO_LIGHT } from "./constants.js";
 
+/**
+ * Semantic tokens copied from @carsxe/design-system 0.2.0
+ * (`globals.css` / https://ui.carsxe.com/docs/theming).
+ * MCP Apps HTML cannot import the React package; these CSS variables are the
+ * documented source of truth.
+ */
 const SHARED_CSS = `
 :root {
-  --ink: #12202f;
-  --muted: #5b6b7c;
-  --line: #d7dee7;
-  --bg: #f4f7fb;
+  --brand-50: #e6f7fc;
+  --brand-100: #c7eef9;
+  --brand-200: #8cdef5;
+  --brand-300: #4dccee;
+  --brand-400: #387990;
+  --brand-500: #0082aa;
+  --brand-600: #065774;
+  --brand-700: #05506b;
+  --brand-800: #05465e;
+  --brand-900: #043244;
+  --brand-950: #031e2a;
+  --background: #f9f9f9;
+  --foreground: #3a3a3a;
   --card: #ffffff;
-  --navy: #0b1f3a;
-  --navy-2: #16345c;
-  --accent: #1f8a8a;
-  --accent-soft: #d7f1f0;
-  --warn: #c2410c;
-  --warn-soft: #ffedd5;
-  --ok: #047857;
-  --ok-soft: #d1fae5;
-  --bar: #1f8a8a;
+  --card-foreground: #3a3a3a;
+  --primary: #065774;
+  --primary-foreground: #ffffff;
+  --primary-hover: #387990;
+  --primary-disabled: #83bacc;
+  --muted: #f9f9f9;
+  --muted-foreground: #a8a8a8;
+  --accent: #eaf5ff;
+  --accent-foreground: #065774;
+  --destructive: #da373e;
+  --destructive-muted: #fdf0f1;
+  --success: #00a63e;
+  --success-muted: #e6f6ec;
+  --warning: #f79008;
+  --warning-muted: #fef7e6;
+  --border: #ebebeb;
+  --ring: #065774;
+  --chart-1: #065774;
+  --chart-2: #387990;
+  --radius: 0;
+  --font-sans: "Manrope", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "DM Sans", "DM Sans Variable", var(--font-sans);
+  --font-mono: "DM Mono", ui-monospace, monospace;
+}
+.dark {
+  --background: #121212;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --primary: #387990;
+  --primary-foreground: #031e2a;
+  --primary-hover: #4dccee;
+  --primary-disabled: #05506b;
+  --muted: #2a2a2a;
+  --muted-foreground: #a0a0a0;
+  --accent: #043244;
+  --accent-foreground: #8cdef5;
+  --destructive: #da373e;
+  --destructive-muted: #3a1517;
+  --success: #00a63e;
+  --success-muted: #0d2a18;
+  --warning: #f79008;
+  --warning-muted: #2a1f0a;
+  --border: #3a3a3a;
+  --ring: #387990;
+  --chart-1: #387990;
+  --chart-2: #4dccee;
 }
 * { box-sizing: border-box; }
 html, body {
   margin: 0;
   padding: 0;
   background: transparent;
-  color: var(--ink);
-  font-family: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
 .shell {
-  background: linear-gradient(180deg, var(--card) 0%, var(--bg) 140px);
-  border: 1px solid var(--line);
-  border-radius: 16px;
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow: hidden;
   max-width: 560px;
 }
@@ -43,77 +98,75 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  padding: 16px 18px 14px;
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
-  color: #fff;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
 }
-.brand {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.logo {
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  font-weight: 700;
-  color: #9ad8d4;
-}
+.brand { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lockup { line-height: 0; }
+.lockup img { height: 22px; width: auto; }
+.lockup img.logo-light { display: block; }
+.lockup img.logo-dark { display: none; }
+.dark .lockup img.logo-light { display: none; }
+.dark .lockup img.logo-dark { display: block; }
 .title {
   margin: 0;
+  font-family: var(--font-heading);
   font-size: 20px;
-  line-height: 1.2;
+  line-height: 1.25;
   font-weight: 700;
+  color: var(--foreground);
 }
 .vin {
-  margin-top: 6px;
+  font-family: var(--font-mono);
   font-size: 12px;
-  letter-spacing: 0.04em;
-  color: #c9d6e6;
+  letter-spacing: 0.02em;
+  color: var(--muted-foreground);
   word-break: break-all;
 }
 .badge {
   flex-shrink: 0;
-  border-radius: 999px;
-  padding: 5px 10px;
+  border-radius: var(--radius);
+  padding: 6px 10px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border: 1px solid var(--border);
 }
-.body { padding: 16px 18px 8px; }
+.body { padding: 16px 20px 8px; }
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 12px;
 }
 .row {
-  padding: 10px 11px;
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 .row.wide { grid-column: 1 / -1; }
 .k {
   display: block;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-foreground);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 3px;
 }
-.v { font-size: 14px; font-weight: 650; }
-.section {
-  margin: 4px 0 12px;
-}
+.v { font-size: 14px; font-weight: 650; color: var(--foreground); }
+.section { margin: 4px 0 12px; }
 .section h3 {
   margin: 0 0 8px;
+  font-family: var(--font-heading);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 .band {
   display: grid;
@@ -122,24 +175,24 @@ html, body {
   align-items: center;
   margin-bottom: 8px;
 }
-.band span { font-size: 12px; color: var(--muted); }
-.band strong { font-size: 13px; text-align: right; }
+.band span { font-size: 12px; color: var(--muted-foreground); }
+.band strong { font-size: 13px; text-align: right; color: var(--foreground); }
 .track {
   height: 8px;
-  background: #e6edf5;
-  border-radius: 99px;
+  background: var(--border);
+  border-radius: 999px;
   overflow: hidden;
 }
 .fill {
   height: 100%;
-  background: linear-gradient(90deg, #1f8a8a, #2aa8a0);
-  border-radius: 99px;
+  background: var(--primary);
+  border-radius: 999px;
 }
 .list { display: flex; flex-direction: column; gap: 10px; }
 .recall {
-  border: 1px solid var(--line);
-  background: #fff;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius);
   padding: 12px;
 }
 .recall-top {
@@ -148,35 +201,51 @@ html, body {
   gap: 8px;
   align-items: baseline;
 }
-.recall h4 { margin: 0; font-size: 14px; }
-.meta { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+.recall h4 { margin: 0; font-family: var(--font-heading); font-size: 14px; }
+.meta { color: var(--muted-foreground); font-size: 12px; margin: 4px 0 8px; }
 .p { margin: 0 0 6px; font-size: 13px; line-height: 1.45; }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .pill {
   font-size: 11px;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius);
   padding: 3px 8px;
 }
-.pill.warn { background: var(--warn-soft); color: var(--warn); }
-.pill.ok { background: var(--ok-soft); color: var(--ok); }
-.pill.accent { background: var(--accent-soft); color: var(--accent); }
+.pill.warn { background: var(--warning-muted); color: var(--warning); }
+.pill.ok { background: var(--success-muted); color: var(--success); }
+.pill.accent { background: var(--accent); color: var(--accent-foreground); }
 .empty {
   padding: 18px;
   text-align: center;
-  background: var(--ok-soft);
-  color: var(--ok);
-  border-radius: 12px;
+  background: var(--success-muted);
+  color: var(--success);
+  border-radius: var(--radius);
   font-weight: 650;
 }
 .footer {
-  padding: 10px 18px 14px;
+  padding: 10px 20px 16px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--muted-foreground);
 }
 `;
 
 const BRIDGE_JS = `
+(function syncTheme() {
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  function apply() { document.documentElement.classList.toggle("dark", mq.matches); }
+  apply();
+  if (mq.addEventListener) mq.addEventListener("change", apply);
+})();
+function brandHeader(title, vin, badge) {
+  return '<div class="header"><div class="brand">' +
+    '<div class="lockup">' +
+      '<img class="logo-light" src="${BRAND_LOGO_LIGHT}" alt="CarsXE" />' +
+      '<img class="logo-dark" src="${BRAND_LOGO_DARK}" alt="CarsXE" />' +
+    '</div>' +
+    '<h1 class="title">' + esc(title) + '</h1>' +
+    '<div class="vin">' + esc(vin) + '</div>' +
+  '</div><div class="badge">' + esc(badge) + '</div></div>';
+}
 function unwrap(payload) {
   if (!payload || typeof payload !== "object") return payload;
   if (payload.structuredContent) return payload.structuredContent;
@@ -250,10 +319,7 @@ function render(d) {
     ? [d.cityMpg ? d.cityMpg + " city" : null, d.highwayMpg ? d.highwayMpg + " hwy" : null].filter(Boolean).join(" / ")
     : "—";
   document.getElementById("root").innerHTML =
-    '<div class="header">' +
-      '<div class="brand"><div class="logo">CARSXE</div><h1 class="title">' + esc(vehicleTitle(d)) + '</h1><div class="vin">' + esc(d.vin || "VIN unavailable") + '</div></div>' +
-      '<div class="badge">Specs</div>' +
-    '</div>' +
+    brandHeader(vehicleTitle(d), d.vin || "VIN unavailable", "Specs") +
     '<div class="body"><div class="grid">' +
       cell("Style", d.style) +
       cell("Engine", d.engine) +
@@ -295,10 +361,7 @@ function render(d) {
   var trade = [d.tradeInClean, d.tradeInAverage, d.tradeInRough];
   var max = Math.max.apply(null, retail.concat(trade).map(num).concat([1]));
   document.getElementById("root").innerHTML =
-    '<div class="header">' +
-      '<div class="brand"><div class="logo">CARSXE</div><h1 class="title">' + esc(vehicleTitle(d)) + '</h1><div class="vin">' + esc(d.vin || "VIN unavailable") + (d.state ? " · " + esc(d.state) : "") + '</div></div>' +
-      '<div class="badge">Market value</div>' +
-    '</div>' +
+    brandHeader(vehicleTitle(d), (d.vin || "VIN unavailable") + (d.state ? " · " + d.state : ""), "Market value") +
     '<div class="body">' +
       '<div class="section"><h3>Retail</h3>' +
         band("Excellent", d.retailExcellent, max) +
@@ -350,10 +413,7 @@ function render(d) {
     }).join("") + '</div>';
   }
   document.getElementById("root").innerHTML =
-    '<div class="header">' +
-      '<div class="brand"><div class="logo">CARSXE</div><h1 class="title">' + esc(vehicleTitle(d)) + '</h1><div class="vin">' + esc(d.vin || "VIN unavailable") + '</div></div>' +
-      '<div class="badge">' + (count ? count + " recall" + (count === 1 ? "" : "s") : "Recalls") + '</div>' +
-    '</div>' +
+    brandHeader(vehicleTitle(d), d.vin || "VIN unavailable", count ? count + " recall" + (count === 1 ? "" : "s") : "Recalls") +
     '<div class="body">' + list + '</div>' +
     '<div class="footer">Recall data via CarsXE · confirm status with a dealer</div>';
 }

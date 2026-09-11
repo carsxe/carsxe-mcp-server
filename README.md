@@ -212,6 +212,8 @@ Recommended call flow:
 3. Call the matching render tool (`render_vehicle_card`, `render_market_value`, or `render_recalls`) with those fields.
 4. The host loads the `ui://carsxe/…` HTML resource (`text/html;profile=mcp-app`) and renders the card once.
 
+Cards use published tokens from [`@carsxe/design-system`](https://ui.carsxe.com/docs/theming) (`--primary` `#065774`, `--radius` `0`, Manrope / DM Sans) and official lockups from [Brand assets](https://ui.carsxe.com/docs/brand).
+
 Auth is unchanged: MCP still requires an API key or OAuth. x402 remains REST-only.
 
 **Preview the cards locally** (no API key, mock data):

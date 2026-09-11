@@ -9,6 +9,23 @@ export const UI_URIS = {
 
 export type UiUri = (typeof UI_URIS)[keyof typeof UI_URIS];
 
+/** Official lockups from https://ui.carsxe.com/docs/brand */
+export const BRAND_LOGO_LIGHT =
+  "https://ui.carsxe.com/brand/carsxe-horizontal.svg";
+export const BRAND_LOGO_DARK =
+  "https://ui.carsxe.com/brand/carsxe-horizontal-on-dark.svg";
+
+/** CSP allowlist so the iframe can load official brand assets. */
+export const UI_RESOURCE_DOMAINS = ["https://ui.carsxe.com"] as const;
+
+/** Published light tokens from @carsxe/design-system / ui.carsxe.com/docs/theming */
+export const DESIGN_TOKENS = {
+  primary: "#065774",
+  foreground: "#3A3A3A",
+  background: "#F9F9F9",
+  radius: "0",
+} as const;
+
 /** Tool _meta for MCP Apps + ChatGPT outputTemplate alias. */
 export function uiToolMeta(resourceUri: UiUri): Record<string, unknown> {
   return {

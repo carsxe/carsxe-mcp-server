@@ -6,7 +6,16 @@ import {
   getRegisteredTools,
   registerAllTools,
 } from "../registerTools.js";
-import { RESOURCE_MIME_TYPE, UI_URIS, toolHasUiResourceUri } from "./constants.js";
+import {
+  BRAND_LOGO_DARK,
+  BRAND_LOGO_LIGHT,
+  DESIGN_TOKENS,
+  RESOURCE_MIME_TYPE,
+  UI_RESOURCE_DOMAINS,
+  UI_URIS,
+  toolHasUiResourceUri,
+} from "./constants.js";
+import { marketValueHtml, recallsHtml, vehicleCardHtml } from "./widgetHtml.js";
 
 const DATA_TOOLS = [
   "get_vehicle_specs",
@@ -87,5 +96,35 @@ describe("MCP Apps UI tool registration", () => {
       assert.ok(resource, `expected resource ${uri}`);
       assert.equal(resource.metadata?.mimeType, RESOURCE_MIME_TYPE);
     }
+  });
+
+  it("cards use official design-system tokens and brand lockups", () => {
+    for (const html of [vehicleCardHtml(), marketValueHtml(), recallsHtml()]) {
+      assert.match(html, new RegExp(`--primary:\\s*${DESIGN_TOKENS.primary}`, "i"));
+      assert.match(html, /--radius:\s*0/);
+      assert.ok(html.includes(BRAND_LOGO_LIGHT));
+      assert.ok(html.includes(BRAND_LOGO_DARK));
+      assert.equal(html.includes(">CARSXE<"), false);
+    }
+  });
+
+  it("UI resources allow ui.carsxe.com for official logo assets", async () => {
+    const resources = getRegisteredResources(createServer()) as Record<
+      string,
+      {
+        readCallback: (
+          uri: URL,
+          extra: unknown,
+        ) => Promise<{ contents: Array<{ _meta?: { ui?: { csp?: { resourceDomains?: string[] } } } }> }>;
+      }
+    >;
+    const result = await resources[UI_URIS.vehicleCard].readCallback(
+      new URL(UI_URIS.vehicleCard),
+      {},
+    );
+    assert.deepEqual(
+      result.contents[0]?._meta?.ui?.csp?.resourceDomains,
+      [...UI_RESOURCE_DOMAINS],
+    );
   });
 });
