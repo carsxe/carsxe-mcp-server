@@ -3,7 +3,10 @@
   "mcpServers": {
     "carsxe": {
       "type": "streamable-http",
-      "url": "https://mcp.carsxe.com/mcp"
+      "url": "https://mcp.carsxe.com/mcp",
+      "headers": {
+        "X-API-Key": "${CARSXE_API_KEY}"
+      }
     }
   }
 }

@@ -1,12 +1,10 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "carsxe",
   "version": "1.2.0",
   "description": "MCP server for CarsXE vehicle data: VIN specs, plate decode, history, images, recalls (VIN, YMM, batch), YMM options, ownership, market value, and OBD codes.",
   "author": {
     "name": "CarsXE",
-    "email": "info@carsxe.com",
-    "url": "https://carsxe.com"
+    "email": "info@carsxe.com"
   },
   "homepage": "https://docs.carsxe.com/docs/integrations/mcp",
   "repository": "https://github.com/carsxe/carsxe-mcp-server",
@@ -20,5 +18,16 @@
     "recalls",
     "market-value"
   ],
-  "logo": "assets/logo.png"
+  "logo": "assets/logo.png",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "CARSXE_API_KEY": {
+        "type": "string",
+        "title": "CarsXE API key",
+        "description": "Your CarsXE API key. Create or copy it at https://api.carsxe.com/dashboard/developer"
+      }
+    },
+    "required": ["CARSXE_API_KEY"]
+  }
 }
