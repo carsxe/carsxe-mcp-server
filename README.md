@@ -55,6 +55,14 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 
 ---
 
+### Cursor Marketplace / Grok Bot
+
+After listing, install **CarsXE** from the [Cursor Marketplace](https://cursor.com/marketplace) (Grok Bot uses the same catalog). Then open **Plugins → Configure** and set `CARSXE_API_KEY` from the [CarsXE developer dashboard](https://api.carsxe.com/dashboard/developer). Do not commit or paste a real key into the repo.
+
+The Cursor deeplink below remains available as a fallback.
+
+---
+
 ### Claude Desktop
 
 #### 1️⃣ Download and Install Claude Desktop
@@ -114,6 +122,8 @@ All editors use the same remote MCP endpoint. Replace `YOUR_API_KEY` with your a
 ---
 
 ### Cursor
+
+Fallback if the marketplace listing is not available yet:
 
 [Install CarsXE MCP for Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=CarsXE&config=eyJuYW1lIjoiQ2Fyc1hFIiwidXJsIjoiaHR0cHM6Ly9tY3AuY2Fyc3hlLmNvbS9tY3AiLCJoZWFkZXJzIjp7IlgtQVBJLUtleSI6IllPVVJfQVBJX0tFWSJ9fQ==)
 
