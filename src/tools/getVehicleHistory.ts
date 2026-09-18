@@ -26,7 +26,7 @@ export function registerGetVehicleHistoryTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

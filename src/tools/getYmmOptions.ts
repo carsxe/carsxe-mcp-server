@@ -37,7 +37,7 @@ export function registerGetYmmOptionsTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

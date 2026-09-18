@@ -11,252 +11,252 @@
     "get_vehicle_specs": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves vehicle specifications from CarsXE by VIN without creating or modifying records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "open_world_justification": "Queries CarsXE's internet-hosted specs API (api.carsxe.com) for an open-ended VIN lookup.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "decode_license_plate": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Looks up basic vehicle information for a plate, state, and country without modifying data.",
-        "open_world_justification": "Does not publish the plate lookup or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted plate-decoder API for open-ended plate, state, and country lookups.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "decode_international_vin": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves decoded international vehicle details for a VIN without changing records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "open_world_justification": "Queries CarsXE's internet-hosted international VIN decoder API for open-ended VIN lookups.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_market_value": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves an estimated vehicle value using the VIN and optional location, mileage, and condition inputs.",
-        "open_world_justification": "Does not list a vehicle for sale, submit an offer, or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted market-value API for an open-ended VIN valuation.",
         "destructive_justification": "Does not execute transactions or delete, overwrite, or revoke anything."
       }
     },
     "get_vehicle_history": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves a vehicle history report by VIN without creating or updating records.",
-        "open_world_justification": "Does not publish the report or change publicly visible internet or third-party state.",
+        "open_world_justification": "Queries CarsXE's internet-hosted vehicle-history API for an open-ended VIN.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_vehicle_images": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Searches for vehicle images using make, model, and optional visual filters without modifying data.",
-        "open_world_justification": "Does not upload, publish, or alter images or any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted vehicle-image search API (open-ended make/model lookup).",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_vehicle_recalls": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves recall information by VIN without modifying vehicle or recall records.",
-        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted recalls API for an open-ended VIN.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "extract_vin_from_image": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Analyzes the image at the supplied URL to extract a VIN without modifying the image or records.",
-        "open_world_justification": "Does not upload, publish, or alter the source image or any external system.",
+        "open_world_justification": "Accesses the public internet / an open-ended external entity by retrieving the user-supplied image URL through CarsXE's VIN OCR API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_year_make_model": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves vehicle information using year, make, model, and optional trim without changing records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "open_world_justification": "Queries CarsXE's internet-hosted year/make/model lookup API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "decode_obd_code": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves diagnostic information for an OBD-II trouble code without changing vehicle data.",
-        "open_world_justification": "Does not operate a vehicle, schedule repairs, or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted OBD-II decoder API for an open-ended diagnostic code.",
         "destructive_justification": "Does not clear codes, modify a vehicle, or perform irreversible actions."
       }
     },
     "read_license_plate_from_image": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Analyzes the image at the supplied URL to recognize plate text without modifying the image or records.",
-        "open_world_justification": "Does not upload, publish, or alter the source image or any external system.",
+        "open_world_justification": "Accesses the public internet / an open-ended external entity by retrieving the user-supplied image URL through CarsXE's plate-recognition API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "check_lien_and_theft": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves lien and theft information by VIN without creating or changing records.",
-        "open_world_justification": "Does not report a vehicle, contact authorities, or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted lien and theft API for an open-ended VIN.",
         "destructive_justification": "Does not transfer ownership, clear records, or perform irreversible actions."
       }
     },
     "get_recalls_by_ymm": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves safety recall information by year, make, and model without modifying records.",
-        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted YMM recalls API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "submit_recalls_batch": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
-        "read_only_justification": "Creates a bulk recall job on CarsXE so results can be polled later; it does not change vehicle records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
-        "destructive_justification": "Does not delete batches, overwrite results, or perform irreversible actions."
+        "read_only_justification": "Creates an asynchronous bulk-recall job on CarsXE (stateful); not safe to treat as side-effect-free.",
+        "open_world_justification": "May fetch a user-supplied CSV URL and may POST a completion webhook to a user-supplied HTTPS URL outside ChatGPT, via CarsXE's internet-hosted batch API.",
+        "destructive_justification": "Does not delete prior batches or overwrite unrelated account data; each submit creates a new job."
       }
     },
     "get_recalls_batch_status": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Reads the status of an existing recalls batch without modifying it.",
-        "open_world_justification": "Does not publish content or change any external system.",
+        "open_world_justification": "Reads batch job status from CarsXE's internet-hosted recalls-batch API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_recalls_batch_results": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves completed bulk recall results without modifying the batch.",
-        "open_world_justification": "Does not publish content or change any external system.",
+        "open_world_justification": "Reads batch job results from CarsXE's internet-hosted recalls-batch API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "download_recalls_batch": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Downloads completed bulk recall results as CSV without modifying the batch.",
-        "open_world_justification": "Does not publish the CSV or change any external system.",
+        "open_world_justification": "Downloads batch CSV results from CarsXE's internet-hosted recalls-batch API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_ymm_options": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Lists year, make, model, trim, or variant options without changing records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "open_world_justification": "Queries CarsXE's internet-hosted YMM options enumeration API.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_ownership_by_vin": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves registered-owner information for a VIN without creating or updating records.",
-        "open_world_justification": "Does not contact owners or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted ownership APIs (open-ended vehicle/ownership data).",
         "destructive_justification": "Does not transfer ownership, clear records, or perform irreversible actions."
       }
     },
     "get_ownership_by_person": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves contact and vehicle links for a named person without modifying records.",
-        "open_world_justification": "Does not contact the person or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted vehicle/ownership data APIs (open-ended external data).",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_ownership_by_address": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves residents on file for a street address without modifying records.",
-        "open_world_justification": "Does not contact residents or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted ownership APIs using an open-ended street address.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
@@ -268,7 +268,7 @@
       },
       "justifications": {
         "read_only_justification": "Renders a vehicle identity card from previously fetched specs without calling the CarsXE API or modifying records.",
-        "open_world_justification": "Does not publish content or change publicly visible internet or third-party state.",
+        "open_world_justification": "Runs entirely within the ChatGPT/MCP UI path; formats already-fetched fields and does not call external APIs.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
@@ -280,7 +280,7 @@
       },
       "justifications": {
         "read_only_justification": "Renders market-value bands from previously fetched valuation data without creating or updating records.",
-        "open_world_justification": "Does not list a vehicle for sale, submit an offer, or change any external system.",
+        "open_world_justification": "Runs entirely within the ChatGPT/MCP UI path; formats already-fetched valuation fields and does not call external APIs.",
         "destructive_justification": "Does not execute transactions or delete, overwrite, or revoke anything."
       }
     },
@@ -292,19 +292,19 @@
       },
       "justifications": {
         "read_only_justification": "Renders an open-recalls card from previously fetched recall data without modifying records.",
-        "open_world_justification": "Does not file a claim, schedule service, or change any external system.",
+        "open_world_justification": "Runs entirely within the ChatGPT/MCP UI path; formats already-fetched recall fields and does not call external APIs.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     },
     "get_ownership_by_zip": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
+        "openWorldHint": true,
         "destructiveHint": false
       },
       "justifications": {
         "read_only_justification": "Retrieves a filtered page of people in a ZIP code without modifying records.",
-        "open_world_justification": "Does not contact people or change any external system.",
+        "open_world_justification": "Queries CarsXE's internet-hosted ownership APIs using an open-ended ZIP search.",
         "destructive_justification": "Does not delete, overwrite, revoke access, or perform irreversible actions."
       }
     }
