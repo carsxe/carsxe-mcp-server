@@ -40,12 +40,28 @@ export function registerAllTools(
   registerAppsUi(server);
 }
 
-export function getRegisteredTools(
-  server: McpServer,
-): Record<string, { _meta?: Record<string, unknown> }> {
+export type RegisteredToolAnnotations = {
+  readOnlyHint?: boolean | null;
+  openWorldHint?: boolean | null;
+  destructiveHint?: boolean | null;
+};
+
+export function getRegisteredTools(server: McpServer): Record<
+  string,
+  {
+    annotations?: RegisteredToolAnnotations;
+    _meta?: Record<string, unknown>;
+  }
+> {
   return (
     server as unknown as {
-      _registeredTools: Record<string, { _meta?: Record<string, unknown> }>;
+      _registeredTools: Record<
+        string,
+        {
+          annotations?: RegisteredToolAnnotations;
+          _meta?: Record<string, unknown>;
+        }
+      >;
     }
   )._registeredTools;
 }

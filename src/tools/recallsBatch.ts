@@ -74,7 +74,7 @@ export function registerRecallsBatchTools(
       },
       annotations: {
         readOnlyHint: false,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },
@@ -135,7 +135,7 @@ export function registerRecallsBatchTools(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },
@@ -181,7 +181,7 @@ export function registerRecallsBatchTools(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },
@@ -227,7 +227,7 @@ export function registerRecallsBatchTools(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

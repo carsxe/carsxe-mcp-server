@@ -29,7 +29,7 @@ export function registerRecognizePlateImageTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

@@ -30,7 +30,7 @@ export function registerDecodeVehiclePlateTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

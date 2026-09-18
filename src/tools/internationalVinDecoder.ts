@@ -22,7 +22,7 @@ export function registerInternationalVinDecoderTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

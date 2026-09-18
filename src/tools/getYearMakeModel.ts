@@ -27,7 +27,7 @@ export function registerGetYearMakeModelTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },

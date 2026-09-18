@@ -17,7 +17,7 @@
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
     "type-check": "tsc --noEmit",
-    "test": "tsx --test src/ui/appsUiMeta.test.ts src/ui/cards.test.ts",
+    "test": "tsx --test src/ui/appsUiMeta.test.ts src/ui/cards.test.ts src/tools/annotations.test.ts",
     "preview:ui": "tsx src/ui/writePreviews.ts"
   },
   "dependencies": {

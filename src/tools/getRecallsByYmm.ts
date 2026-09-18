@@ -23,7 +23,7 @@ export function registerGetRecallsByYmmTool(
       },
       annotations: {
         readOnlyHint: true,
-        openWorldHint: false,
+        openWorldHint: true,
         destructiveHint: false,
       },
     },
