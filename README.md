@@ -1,12 +1,22 @@
 # 🚗 CarsXE MCP Server
 
-A modular, extensible Model Context Protocol (MCP) server for querying and analyzing vehicle data from the [CarsXE API](https://api.carsxe.com/), with beautiful, chat-friendly Markdown output for LLMs and chatbots.
+A modular, extensible Model Context Protocol (MCP) server for querying and analyzing vehicle data from [CarsXE](https://carsxe.com), with beautiful, chat-friendly Markdown output for LLMs and chatbots.
+
+### Products
+
+- [Vehicle History](https://carsxe.com/vehicle-history)
+- [Vehicle Plate Decoder](https://carsxe.com/vehicle-plate-decoder)
+- [Vehicle Specifications](https://carsxe.com/vehicle-specifications)
+- [International VIN Decoder](https://carsxe.com/international-vin-decoder)
+- [Vehicle Images](https://carsxe.com/vehicle-images)
+- [Vehicle Recalls](https://carsxe.com/vehicle-recalls)
+- [Vehicle Market Value](https://carsxe.com/vehicle-market-value)
 
 ---
 
 ## ℹ️ What is CarsXE MCP Server?
 
-The CarsXE MCP server is a **Node.js/TypeScript** application that exposes a suite of tools for querying comprehensive vehicle data from the CarsXE API. It is designed for seamless integration with LLMs (like Anthropic Claude, OpenAI GPT, etc.), chatbots, and developer tools, providing:
+The CarsXE MCP server is a **Node.js/TypeScript** application that exposes a suite of tools for querying comprehensive vehicle data from [CarsXE](https://carsxe.com). It is designed for seamless integration with LLMs (like Anthropic Claude, OpenAI GPT, etc.), chatbots, and developer tools, providing:
 
 - 🧩 **Clean, modular code** for each CarsXE endpoint
 - 📝 **Consistent, Markdown-rich output** for chat/LLM environments
@@ -23,7 +33,7 @@ Connecting CarsXE to your AI editor or chat client via MCP gives you a superchar
 | --------------------------------- | ------------------------------------------------------------------------------------------- |
 | **Ask in plain English**          | No need to know API endpoints or parameters — just describe what you want                   |
 | **Context-aware answers**         | The AI combines live vehicle data with your question for tailored, actionable responses     |
-| **No tab switching**              | Get VIN specs, history, recalls, and values without leaving your editor or chat             |
+| **No tab switching**              | Get VIN [specs](https://carsxe.com/vehicle-specifications), [history](https://carsxe.com/vehicle-history), [recalls](https://carsxe.com/vehicle-recalls), and [values](https://carsxe.com/vehicle-market-value) without leaving your editor or chat             |
 | **Chain requests effortlessly**   | Decode a plate → get full specs → check recalls → get market value, all in one conversation |
 | **Always live data**              | Every query hits the CarsXE API in real time — no stale cache or outdated results           |
 | **Works in your favorite editor** | Claude Desktop, Cursor, VS Code, Windsurf, and any MCP-compatible client                    |
@@ -33,8 +43,8 @@ Connecting CarsXE to your AI editor or chat client via MCP gives you a superchar
 ## ✨ Features
 
 - 🤖 Uses Anthropic Claude to generate comprehensive, professional answers based on the API data and user query
-- 🚙 Query vehicle specs, history, images, recalls, market value, and more
-- 🏷️ Decode license plates and VINs (including OCR from images)
+- 🚙 Query [vehicle specs](https://carsxe.com/vehicle-specifications), [history](https://carsxe.com/vehicle-history), [images](https://carsxe.com/vehicle-images), [recalls](https://carsxe.com/vehicle-recalls), [market value](https://carsxe.com/vehicle-market-value), and more
+- 🏷️ Decode [license plates](https://carsxe.com/vehicle-plate-decoder) and [international VINs](https://carsxe.com/international-vin-decoder) (including OCR from images)
 - 🛠️ Decode OBD (On-Board Diagnostics) codes
 - 🎨 All endpoints return elegant, grouped, emoji-rich Markdown
 - 🧩 ChatGPT / MCP Apps hosts can render vehicle, market-value, and recall cards via dedicated render tools
@@ -242,7 +252,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 1. `get_vehicle_specs` 🚙
 
-- **Description:** Get comprehensive vehicle specifications by VIN
+- **Description:** Get comprehensive vehicle specifications by VIN ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:**
   - `vin` (string, required): 17-character Vehicle Identification Number
 - **Example Prompts:**
@@ -259,7 +269,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 2. `decode_license_plate` 🏷️
 
-- **Description:** Decode a vehicle's license plate to get VIN and basic info
+- **Description:** Decode a vehicle's license plate to get VIN and basic info ([Vehicle Plate Decoder](https://carsxe.com/vehicle-plate-decoder))
 - **Parameters:**
   - `plate` (string, required): License plate number
   - `state` (string, optional): State abbreviation (e.g., CA)
@@ -278,7 +288,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 3. `decode_international_vin` 🌍
 
-- **Description:** Decode an international VIN for detailed info
+- **Description:** Decode an international VIN for detailed info ([International VIN Decoder](https://carsxe.com/international-vin-decoder))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **Example Prompts:**
@@ -293,7 +303,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 4. `get_market_value` 💰
 
-- **Description:** Get estimated market value for a vehicle by VIN
+- **Description:** Get estimated market value for a vehicle by VIN ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
   - `state` (string, optional): US state abbreviation
@@ -313,7 +323,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 5. `get_vehicle_history` 🕓
 
-- **Description:** Get a comprehensive vehicle history report by VIN
+- **Description:** Get a comprehensive vehicle history report by VIN ([Vehicle History](https://carsxe.com/vehicle-history))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
   - `format` (string, optional): Response format (json or xml)
@@ -331,7 +341,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 6. `get_vehicle_images` 🖼️
 
-- **Description:** Get vehicle images by make, model, and filters
+- **Description:** Get vehicle images by make, model, and filters ([Vehicle Images](https://carsxe.com/vehicle-images))
 - **Parameters:**
   - `make` (string, required)
   - `model` (string, required)
@@ -350,7 +360,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 7. `get_vehicle_recalls` 🚨
 
-- **Description:** Get vehicle recall information by VIN
+- **Description:** Get vehicle recall information by VIN ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **Example Prompts:**
@@ -367,12 +377,12 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 8. `read_license_plate_from_image` 🏷️
 
-- **Description:** Recognize and extract license plate(s) from a vehicle image URL
+- **Description:** Recognize and extract license plate(s) from a vehicle image URL ([Vehicle Plate Decoder](https://carsxe.com/vehicle-plate-decoder))
 - **Parameters:**
   - `imageUrl` (string, required): Direct URL to an image of a vehicle's license plate
 - **Example Prompts:**
 
-  > What's the plate number in this image? `https://api.carsxe.com/img/apis/plate_recognition.JPG`
+  > What's the plate number in this image? `https://imagedelivery.net/moyiiSImjJPI_EZVxNMBBw/f49aed53-d736-4370-f3f4-97418841c800/public`
 
   > Read the license plate from this photo: `[image URL]`
 
@@ -397,7 +407,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 10. `get_year_make_model` 📅
 
-- **Description:** Get comprehensive vehicle info by year, make, model, and optional trim
+- **Description:** Get comprehensive vehicle info by year, make, model, and optional trim ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:**
   - `year` (string, required)
   - `make` (string, required)
@@ -451,7 +461,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 13. `get_recalls_by_ymm` 🚨
 
-- **Description:** Get safety recall information by year, make, and model (no VIN required)
+- **Description:** Get safety recall information by year, make, and model (no VIN required) ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `year` (string, required): 4-digit model year
   - `make` (string, required)
@@ -470,7 +480,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 14. `submit_recalls_batch` 📦
 
-- **Description:** Submit an async bulk recall check for up to 10,000 VINs
+- **Description:** Submit an async bulk recall check for up to 10,000 VINs ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `vins` (string[] or comma-separated string, optional)
   - `csv` (string, optional): inline CSV of VINs
@@ -488,7 +498,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 15. `get_recalls_batch_status` 📦
 
-- **Description:** Check the status of a previously submitted recalls batch
+- **Description:** Check the status of a previously submitted recalls batch ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `batchId` (string, required)
 - **Example Prompts:**
@@ -501,7 +511,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 16. `get_recalls_batch_results` 📦
 
-- **Description:** Fetch completed bulk recall results as JSON (after status is `completed` or `partial`)
+- **Description:** Fetch completed bulk recall results as JSON (after status is `completed` or `partial`) ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `batchId` (string, required)
 - **Example Prompts:**
@@ -514,7 +524,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 17. `download_recalls_batch` 📦
 
-- **Description:** Download completed bulk recall results as CSV
+- **Description:** Download completed bulk recall results as CSV ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `batchId` (string, required)
 - **Example Prompts:**
@@ -527,7 +537,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 18. `get_ymm_options` 📋
 
-- **Description:** List cascading year, make, model, trim, or variant options for dropdowns
+- **Description:** List cascading year, make, model, trim, or variant options for dropdowns ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:**
   - `dimension` (string, optional): `years` | `makes` | `models` | `trims` | `variants`
   - `year`, `make`, `model`, `trim` (all optional filters)
@@ -603,7 +613,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 23. `render_vehicle_card` 🖼️
 
-- **Description:** Render a visual VIN identity + key-specs card. Always call `get_vehicle_specs` first and pass its `structuredContent`.
+- **Description:** Render a visual VIN identity + key-specs card. Always call `get_vehicle_specs` first and pass its `structuredContent`. ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:** `vin` (required) plus optional year, make, model, trim, style, engine, transmission, drivetrain, fuel, MPG, seating, MSRP, built-in country
 - **Example Prompts:**
 
@@ -615,7 +625,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 24. `render_market_value` 🖼️
 
-- **Description:** Render retail and trade-in value bands. Always call `get_market_value` first and pass its `structuredContent`.
+- **Description:** Render retail and trade-in value bands. Always call `get_market_value` first and pass its `structuredContent`. ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
 - **Example Prompts:**
 
   > What's VIN `WBAFR7C57CC811956` worth in California? Then show the market value card.
@@ -626,7 +636,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 25. `render_recalls` 🖼️
 
-- **Description:** Render an open-recalls list. Always call `get_vehicle_recalls` first and pass its `structuredContent`.
+- **Description:** Render an open-recalls list. Always call `get_vehicle_recalls` first and pass its `structuredContent`. ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Example Prompts:**
 
   > Check recalls for VIN `1C4JJXR64PW696340` and show the recalls card.
