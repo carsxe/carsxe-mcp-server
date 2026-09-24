@@ -382,7 +382,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
   - `imageUrl` (string, required): Direct URL to an image of a vehicle's license plate
 - **Example Prompts:**
 
-  > What's the plate number in this image? `https://api.carsxe.com/img/apis/plate_recognition.JPG`
+  > What's the plate number in this image? `https://imagedelivery.net/moyiiSImjJPI_EZVxNMBBw/f49aed53-d736-4370-f3f4-97418841c800/public`
 
   > Read the license plate from this photo: `[image URL]`
 
