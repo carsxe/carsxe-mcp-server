@@ -478,7 +478,25 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 14. `submit_recalls_batch` 📦
+### 14. `get_recall_campaign` 🔎
+
+- **Description:** Look up a manufacturer recall campaign code and get the recall campaign behind it, no VIN required ([Recall Campaign API](https://carsxe.com/recalls-campaigns))
+- **Parameters:**
+  - `make` (string, required): vehicle make, e.g. `Volkswagen`
+  - `code` (string, required): manufacturer campaign code as printed on a repair order or owner letter, e.g. `37M2`
+- **Example Prompts:**
+
+  > What is Volkswagen recall campaign 37M2?
+
+  > My repair order lists Chevrolet campaign 000A. What does it fix?
+
+  > Which models does Porsche campaign A102 cover?
+
+- **Output:** Markdown with the NHTSA campaign number, recall or bulletin type, component, affected models and model years, and the description. A code that is not found returns "No campaign found for this make and campaign code" and is not billed.
+
+---
+
+### 15. `submit_recalls_batch` 📦
 
 - **Description:** Submit an async bulk recall check for up to 10,000 VINs ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
@@ -496,7 +514,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 15. `get_recalls_batch_status` 📦
+### 16. `get_recalls_batch_status` 📦
 
 - **Description:** Check the status of a previously submitted recalls batch ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
@@ -509,7 +527,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 16. `get_recalls_batch_results` 📦
+### 17. `get_recalls_batch_results` 📦
 
 - **Description:** Fetch completed bulk recall results as JSON (after status is `completed` or `partial`) ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
@@ -522,7 +540,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 17. `download_recalls_batch` 📦
+### 18. `download_recalls_batch` 📦
 
 - **Description:** Download completed bulk recall results as CSV ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
@@ -535,7 +553,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 18. `get_ymm_options` 📋
+### 19. `get_ymm_options` 📋
 
 - **Description:** List cascading year, make, model, trim, or variant options for dropdowns ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:**
@@ -553,7 +571,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 19. `get_ownership_by_vin` 👤
+### 20. `get_ownership_by_vin` 👤
 
 - **Description:** Enterprise — look up registered owner(s) for a VIN
 - **Parameters:**
@@ -567,7 +585,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 20. `get_ownership_by_person` 👤
+### 21. `get_ownership_by_person` 👤
 
 - **Description:** Enterprise — look up a person by name, street address, and ZIP
 - **Parameters:**
@@ -581,7 +599,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 21. `get_ownership_by_address` 👤
+### 22. `get_ownership_by_address` 👤
 
 - **Description:** Enterprise — look up residents at a street address + ZIP
 - **Parameters:**
@@ -595,7 +613,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 22. `get_ownership_by_zip` 👤
+### 23. `get_ownership_by_zip` 👤
 
 - **Description:** Enterprise — search people in a 5-digit ZIP with optional filters
 - **Parameters:**
@@ -611,7 +629,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 23. `render_vehicle_card` 🖼️
+### 24. `render_vehicle_card` 🖼️
 
 - **Description:** Render a visual VIN identity + key-specs card. Always call `get_vehicle_specs` first and pass its `structuredContent`. ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:** `vin` (required) plus optional year, make, model, trim, style, engine, transmission, drivetrain, fuel, MPG, seating, MSRP, built-in country
@@ -623,7 +641,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 24. `render_market_value` 🖼️
+### 25. `render_market_value` 🖼️
 
 - **Description:** Render retail and trade-in value bands. Always call `get_market_value` first and pass its `structuredContent`. ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
 - **Example Prompts:**
@@ -634,7 +652,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ---
 
-### 25. `render_recalls` 🖼️
+### 26. `render_recalls` 🖼️
 
 - **Description:** Render an open-recalls list. Always call `get_vehicle_recalls` first and pass its `structuredContent`. ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Example Prompts:**

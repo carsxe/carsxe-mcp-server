@@ -391,6 +391,32 @@ export interface CarsXERecallsYmmResponse {
   message?: string;
 }
 
+/** GET /v1/recalls-campaigns. A code that is not in the dictionary is a 404 `{ success: false, message }`. */
+export interface CarsXERecallCampaignResponse {
+  success: boolean;
+  input?: {
+    make?: string;
+    code?: string;
+  };
+  data?: {
+    campaign_code?: string;
+    recall_class?: string;
+    description?: string;
+    /** One or more numbers separated by `;`. Empty for a service-bulletin-only code. */
+    nhtsa_campaign_number?: string;
+    component?: string;
+    /** Separated by `;`. */
+    models?: string;
+    /** Separated by `;`. */
+    model_years?: string;
+    confidence?: "high" | "medium (prose reference)" | "";
+    matched?: boolean;
+    dictionary_version?: number;
+  };
+  timestamp?: string;
+  message?: string;
+}
+
 export interface CarsXERecallsBatchJob {
   batchId?: string;
   numericBatchId?: number;

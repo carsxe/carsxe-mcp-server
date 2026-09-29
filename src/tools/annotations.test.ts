@@ -28,6 +28,7 @@ const EXPECTED_TOOLS = [
   "read_license_plate_from_image",
   "check_lien_and_theft",
   "get_recalls_by_ymm",
+  "get_recall_campaign",
   "submit_recalls_batch",
   "get_recalls_batch_status",
   "get_recalls_batch_results",
@@ -56,11 +57,11 @@ function assertExplicitBoolean(
 }
 
 describe("OpenAI tool annotation matrix", () => {
-  it("registers 25 tools with explicit true/false hints matching the remediation matrix", () => {
+  it("registers 26 tools with explicit true/false hints matching the remediation matrix", () => {
     const tools = getRegisteredTools(createServer());
     const names = Object.keys(tools).sort();
     assert.deepEqual(names, [...EXPECTED_TOOLS].sort());
-    assert.equal(names.length, 25);
+    assert.equal(names.length, 26);
 
     for (const name of EXPECTED_TOOLS) {
       const annotations = tools[name]?.annotations;
