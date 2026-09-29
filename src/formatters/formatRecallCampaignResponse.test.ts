@@ -27,6 +27,34 @@ describe("formatRecallCampaignResponse", () => {
     assert.match(text, /\*\*Models:\*\* BEETLE, GOLF, GTI, JETTA/);
     assert.match(text, /\*\*Model Years:\*\* 2011, 2012, 2019/);
     assert.doesNotMatch(text, /bulletin text/);
+    assert.match(text, /use get_vehicle_recalls with a VIN/);
+  });
+
+  it("does not send a service campaign to get_vehicle_recalls", () => {
+    const text = formatRecallCampaignResponse({
+      success: true,
+      input: { make: "volkswagen", code: "24TT" },
+      data: {
+        campaign_code: "24TT",
+        recall_class: "Service Campaign",
+        nhtsa_campaign_number: "",
+        confidence: "high",
+        matched: true,
+      },
+    });
+    assert.match(text, /\*\*NHTSA Campaign:\*\* None \(not an NHTSA safety recall\)/);
+    assert.match(text, /get_vehicle_recalls will not list it/);
+    assert.doesNotMatch(text, /use get_vehicle_recalls with a VIN/);
+  });
+
+  it("shows the make as the caller typed it, not the API's lowercased echo", () => {
+    const response = {
+      success: true,
+      input: { make: "volkswagen", code: "37M2" },
+      data: { campaign_code: "37M2", nhtsa_campaign_number: "19V615000", matched: true },
+    };
+    assert.match(formatRecallCampaignResponse(response, "Volkswagen"), /\*\*Make:\*\* Volkswagen/);
+    assert.match(formatRecallCampaignResponse(response), /\*\*Make:\*\* volkswagen/);
   });
 
   it("flags a prose-reference match", () => {

@@ -21,4 +21,5 @@ Use the CarsXE MCP tool `get_recall_campaign`. Auth is client-managed (API key o
 ## Notes
 
 - A code that is not found returns "No campaign found for this make and campaign code". It is not billed; suggest checking the make spelling and sending the code as printed.
-- A campaign covers a range of vehicles. Use `get_vehicle_recalls` with a VIN to confirm a specific vehicle is affected, or `get_recalls_by_ymm` for a model line.
+- A campaign covers a range of vehicles. For a safety recall (it has an NHTSA campaign number), use `get_vehicle_recalls` with a VIN to confirm a specific vehicle is affected, or `get_recalls_by_ymm` for a model line.
+- A service campaign or bulletin has no NHTSA campaign number and never appears in `get_vehicle_recalls`. Do not treat a VIN check there as "not affected"; a dealer confirms whether a specific VIN is covered.

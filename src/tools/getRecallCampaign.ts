@@ -13,7 +13,7 @@ export function registerGetRecallCampaignTool(
     {
       title: "Get Recall Campaign",
       description:
-        "Look up a manufacturer recall campaign code (e.g. Volkswagen 37M2) and get the recall campaign behind it: NHTSA campaign number, recall or bulletin type, description, component, and affected models and model years. No VIN required. Use get_vehicle_recalls to check a specific VIN.",
+        "Look up a manufacturer recall campaign code (e.g. Volkswagen 37M2) and get the recall campaign behind it: NHTSA campaign number, recall or bulletin type, description, component, and affected models and model years. No VIN required. For an NHTSA safety recall, use get_vehicle_recalls to check a specific VIN; service campaigns and bulletins have no NHTSA campaign number and do not appear there, so a dealer confirms VIN coverage for those.",
       inputSchema: {
         make: z
           .string()
@@ -66,7 +66,7 @@ export function registerGetRecallCampaignTool(
         content: [
           {
             type: "text",
-            text: formatRecallCampaignResponse(data),
+            text: formatRecallCampaignResponse(data, make),
           },
         ],
       };
