@@ -31,6 +31,7 @@ const DATA_TOOLS = [
   "read_license_plate_from_image",
   "check_lien_and_theft",
   "get_recalls_by_ymm",
+  "get_recall_campaign",
   "get_ymm_options",
 ] as const;
 

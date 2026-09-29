@@ -3,6 +3,7 @@ import { registerDecodeObdCodeTool } from "./tools/decodeObdCode.js";
 import { registerDecodeVehiclePlateTool } from "./tools/decodeVehiclePlate.js";
 import { registerGetLienTheftTool } from "./tools/getLienTheft.js";
 import { registerGetRecallsByYmmTool } from "./tools/getRecallsByYmm.js";
+import { registerGetRecallCampaignTool } from "./tools/getRecallCampaign.js";
 import { registerGetMarketValueTool } from "./tools/getMarketValue.js";
 import { registerGetVehicleHistoryTool } from "./tools/getVehicleHistory.js";
 import { registerGetVehicleImagesTool } from "./tools/getVehicleImages.js";
@@ -34,6 +35,7 @@ export function registerAllTools(
   registerRecognizePlateImageTool(server, getApiKey);
   registerGetLienTheftTool(server, getApiKey);
   registerGetRecallsByYmmTool(server, getApiKey);
+  registerGetRecallCampaignTool(server, getApiKey);
   registerRecallsBatchTools(server, getApiKey);
   registerGetYmmOptionsTool(server, getApiKey);
   registerOwnershipTools(server, getApiKey);

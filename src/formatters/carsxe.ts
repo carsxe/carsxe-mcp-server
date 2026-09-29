@@ -11,6 +11,7 @@ export { formatObdCodeResponse } from "./formatObdCodeResponse.js";
 export { formatPlateRecognitionResponse } from "./formatPlateRecognitionResponse.js";
 export { formatLienTheftResponse } from "./formatLienTheftResponse.js";
 export { formatRecallsYmmResponse } from "./formatRecallsYmmResponse.js";
+export { formatRecallCampaignResponse } from "./formatRecallCampaignResponse.js";
 export {
   formatRecallsBatchDownload,
   formatRecallsBatchResultsResponse,
