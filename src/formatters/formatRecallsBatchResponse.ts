@@ -4,8 +4,12 @@ import type {
   CarsXERecallsBatchStatusResponse,
   CarsXERecallsBatchSubmitResponse,
 } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 function formatJob(job: CarsXERecallsBatchJob): string[] {
+  const created = formatTimestampDate(job.createdAt);
+  const updated = formatTimestampDate(job.updatedAt);
+  const completed = formatTimestampDate(job.completedAt);
   return [
     job.batchId ? `**Batch ID:** ${job.batchId}` : null,
     job.status ? `**Status:** ${job.status}` : null,
@@ -15,9 +19,9 @@ function formatJob(job: CarsXERecallsBatchJob): string[] {
       : null,
     job.hitCount !== undefined ? `**Recall Hits:** ${job.hitCount}` : null,
     job.hitRate !== undefined ? `**Hit Rate:** ${job.hitRate}%` : null,
-    job.createdAt ? `**Created:** ${job.createdAt}` : null,
-    job.updatedAt ? `**Updated:** ${job.updatedAt}` : null,
-    job.completedAt ? `**Completed:** ${job.completedAt}` : null,
+    created ? `**Created:** ${created}` : null,
+    updated ? `**Updated:** ${updated}` : null,
+    completed ? `**Completed:** ${completed}` : null,
     job.errorMessage ? `**Error:** ${job.errorMessage}` : null,
   ].filter((line): line is string => Boolean(line));
 }

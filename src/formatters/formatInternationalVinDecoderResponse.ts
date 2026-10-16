@@ -1,9 +1,11 @@
 import { CarsXEInternationalVinDecoderResponse } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 export function formatInternationalVinDecoderResponse(
   data: CarsXEInternationalVinDecoderResponse,
 ): string {
   const a = data.attributes;
+  const timestamp = formatTimestampDate(data.timestamp);
   return [
     `🌍 International VIN Decode`,
     `VIN: ${a.vin}`,
@@ -44,7 +46,7 @@ export function formatInternationalVinDecoderResponse(
     `ABS: ${a.abs === "1" ? "Yes" : "No"}`,
     `Check Digit: ${a.check_digit}`,
     `Sequential Number: ${a.sequential_number}`,
-    `Timestamp: ${data.timestamp}`,
+    timestamp ? `Timestamp: ${timestamp}` : undefined,
   ]
     .filter(Boolean)
     .join("\n");
