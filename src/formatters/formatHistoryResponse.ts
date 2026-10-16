@@ -1,4 +1,5 @@
 import { CarsXEHistoryResponse } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
   const lines = [
@@ -17,9 +18,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
           ent.LocationCityName || ""
         }, ${ent.LocationStateUSPostalServiceCode || ""})`,
         `  - **Obtained Date:** ${
-          rec.VehicleObtainedDate
-            ? rec.VehicleObtainedDate.split("T")[0]
-            : "N/A"
+          formatTimestampDate(rec.VehicleObtainedDate) || "N/A"
         }`,
         `  - **Disposition:** ${rec.VehicleDispositionText || "N/A"}`,
         `  - **Intended for Export:** ${
@@ -39,9 +38,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
           ent.LocationCityName || ""
         }, ${ent.LocationStateUSPostalServiceCode || ""})`,
         `  - **Obtained Date:** ${
-          rec.VehicleObtainedDate
-            ? rec.VehicleObtainedDate.split("T")[0]
-            : "N/A"
+          formatTimestampDate(rec.VehicleObtainedDate) || "N/A"
         }`,
       );
     });
@@ -64,9 +61,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
       lines.push(
         `- **Authority:** ${rec.TitleIssuingAuthorityName || "N/A"}`,
         `  - **Issue Date:** ${
-          rec.TitleIssueDate?.Date
-            ? rec.TitleIssueDate.Date.split("T")[0]
-            : "N/A"
+          formatTimestampDate(rec.TitleIssueDate?.Date) || "N/A"
         }`,
         `  - **Odometer:** ${rec.VehicleOdometerReadingMeasure || "N/A"} ${
           rec.VehicleOdometerReadingUnitCode || ""
@@ -77,9 +72,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
         rec.HistoricTitleAbstract.forEach((h: any) => {
           lines.push(
             `    - **Date:** ${
-              h.TitleIssueDate?.Date
-                ? h.TitleIssueDate.Date.split("T")[0]
-                : "N/A"
+              formatTimestampDate(h.TitleIssueDate?.Date) || "N/A"
             }, **Odometer:** ${h.VehicleOdometerReadingMeasure || "N/A"} ${
               h.VehicleOdometerReadingUnitCode || ""
             }`,
@@ -96,9 +89,7 @@ export function formatHistoryResponse(data: CarsXEHistoryResponse): string {
       lines.push(
         `- **Authority:** ${rec.TitleIssuingAuthorityName || "N/A"}`,
         `  - **Date:** ${
-          rec.TitleIssueDate?.Date
-            ? rec.TitleIssueDate.Date.split("T")[0]
-            : "N/A"
+          formatTimestampDate(rec.TitleIssueDate?.Date) || "N/A"
         }`,
         `  - **Odometer:** ${rec.VehicleOdometerReadingMeasure || "N/A"} ${
           rec.VehicleOdometerReadingUnitCode || ""

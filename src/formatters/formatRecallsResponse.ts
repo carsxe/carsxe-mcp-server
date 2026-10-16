@@ -1,4 +1,5 @@
 import { CarsXERecallsResponse } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 export function formatRecallsResponse(data: CarsXERecallsResponse): string {
   if (!data.success || !data.data) {
@@ -77,8 +78,9 @@ export function formatRecallsResponse(data: CarsXERecallsResponse): string {
     });
   }
 
-  if (data.timestamp) {
-    lines.push(`**Report Generated:** ${data.timestamp.split("T")[0]}`);
+  const reportGenerated = formatTimestampDate(data.timestamp);
+  if (reportGenerated) {
+    lines.push(`**Report Generated:** ${reportGenerated}`);
   }
 
   return lines.filter(Boolean).join("\n");

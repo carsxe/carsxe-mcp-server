@@ -1,4 +1,5 @@
 import { CarsXEImagesResponse } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 export function formatImagesResponse(data: CarsXEImagesResponse): string {
   if (!data.success) {
@@ -17,8 +18,9 @@ export function formatImagesResponse(data: CarsXEImagesResponse): string {
     "",
     ...data.images
       .slice(0, 5)
-      .map((img, i) =>
-        [
+      .map((img, i) => {
+        const published = formatTimestampDate(img.datePublished);
+        return [
           `**Image ${i + 1}:**`,
           `- [Full Image Link](${img.link})`,
           img.thumbnailLink ? `- [Thumbnail](${img.thumbnailLink})` : null,
@@ -29,13 +31,11 @@ export function formatImagesResponse(data: CarsXEImagesResponse): string {
             : null,
           img.byteSize ? `- **Size:** ${img.byteSize} bytes` : null,
           img.accentColor ? `- **Accent Color:** #${img.accentColor}` : null,
-          img.datePublished
-            ? `- **Published:** ${img.datePublished.split("T")[0]}`
-            : null,
+          published ? `- **Published:** ${published}` : null,
         ]
           .filter(Boolean)
-          .join("\n"),
-      ),
+          .join("\n");
+      }),
     data.images.length > 5
       ? `...and ${data.images.length - 5} more images.`
       : "",

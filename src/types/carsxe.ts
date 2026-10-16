@@ -1,3 +1,9 @@
+/**
+ * Live CarsXE payloads do not always send ISO strings. Formatters must accept
+ * strings, epoch numbers, Date-like objects, and missing values.
+ */
+export type CarsXETimestamp = string | number | Date | Record<string, unknown>;
+
 export interface CarsXESpecsResponse {
   success: boolean;
   input: {
@@ -119,7 +125,7 @@ export interface CarsXEInternationalVinDecoderResponse {
     check_digit: string;
     sequential_number: string;
   };
-  timestamp: string;
+  timestamp?: CarsXETimestamp;
 }
 
 export interface CarsXEMarketValueResponse {
@@ -190,7 +196,7 @@ export interface CarsXEImagesResponse {
     thumbnailWidth?: number;
     hostPageDomainFriendlyName?: string;
     accentColor?: string;
-    datePublished?: string;
+    datePublished?: CarsXETimestamp;
   }>;
   query?: Record<string, any>;
 }
@@ -230,7 +236,7 @@ export interface CarsXERecallsResponse {
       recall_status?: string;
     }>;
   };
-  timestamp?: string;
+  timestamp?: CarsXETimestamp;
 }
 
 export interface CarsXEVinOcrResponse {
@@ -291,14 +297,14 @@ export interface CarsXEYearMakeModelResponse {
     model: string;
     trim?: string;
   };
-  timestamp?: string;
+  timestamp?: CarsXETimestamp;
   message?: string;
 }
 
 export interface CarsXEObdCodeResponse {
   success: boolean;
   diagnosis?: string;
-  date?: string;
+  date?: CarsXETimestamp;
   code?: string;
 }
 
@@ -338,7 +344,7 @@ export interface CarsXELienTheftResponse {
   input: {
     vin: string;
   };
-  timestamp?: string;
+  timestamp?: CarsXETimestamp;
   year?: number;
   make?: string;
   model?: string;
@@ -387,7 +393,7 @@ export interface CarsXERecallsYmmResponse {
       notes?: string | null;
     }>;
   };
-  timestamp?: string;
+  timestamp?: CarsXETimestamp;
   message?: string;
 }
 
@@ -399,9 +405,9 @@ export interface CarsXERecallsBatchJob {
   processedVins?: number;
   hitCount?: number;
   hitRate?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  completedAt?: string;
+  createdAt?: CarsXETimestamp;
+  updatedAt?: CarsXETimestamp;
+  completedAt?: CarsXETimestamp;
   errorMessage?: string | null;
 }
 

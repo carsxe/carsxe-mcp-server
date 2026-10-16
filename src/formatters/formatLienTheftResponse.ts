@@ -1,4 +1,5 @@
 import { CarsXELienTheftResponse } from "../types/carsxe.js";
+import { formatTimestampDate } from "../utils/formatTimestamp.js";
 
 export function formatLienTheftResponse(data: CarsXELienTheftResponse): string {
   const lines = [
@@ -98,11 +99,9 @@ export function formatLienTheftResponse(data: CarsXELienTheftResponse): string {
     }
   }
 
-  if (data.timestamp) {
-    lines.push(
-      "",
-      `**Timestamp:** ${new Date(data.timestamp).toLocaleString()}`,
-    );
+  const timestamp = formatTimestampDate(data.timestamp);
+  if (timestamp) {
+    lines.push("", `**Timestamp:** ${timestamp}`);
   }
 
   if (data.error) {
