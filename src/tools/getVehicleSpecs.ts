@@ -14,7 +14,7 @@ export function registerGetVehicleSpecsTool(
     {
       title: "Get Vehicle Specs",
       description:
-        "Get comprehensive vehicle specifications by VIN. Data tool only: returns Markdown plus structuredContent (vin, year, make, model, and key specs) for chaining. Do not expect UI from this tool. After fetching, call render_vehicle_card with the structured result when the user should see a vehicle card.",
+        "Get comprehensive vehicle specifications by VIN. Returns Markdown plus structuredContent (vin, year, make, model, and key specs).",
       inputSchema: {
         vin: z
           .string()
@@ -26,6 +26,7 @@ export function registerGetVehicleSpecsTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ vin }) => {

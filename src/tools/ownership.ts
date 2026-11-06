@@ -60,6 +60,7 @@ export function registerOwnershipTools(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ vin, include }) => {
@@ -114,6 +115,7 @@ export function registerOwnershipTools(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ firstName, lastName, address, zip, include }) => {
@@ -175,6 +177,7 @@ export function registerOwnershipTools(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ address, zip, include, variant }) => {
@@ -239,6 +242,7 @@ export function registerOwnershipTools(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({

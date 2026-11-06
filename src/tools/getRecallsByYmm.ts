@@ -25,6 +25,7 @@ export function registerGetRecallsByYmmTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ year, make, model }) => {

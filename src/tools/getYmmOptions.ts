@@ -39,6 +39,7 @@ export function registerGetYmmOptionsTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ dimension, year, make, model, trim }) => {
