@@ -8,16 +8,42 @@ import type http from "node:http";
  * logic lives in the CarsXE web app. Incoming mcp_at_* bearer tokens are
  * resolved to an API key using MCP_OAUTH_INTERNAL_SECRET from the environment,
  * with a short in-memory cache.
+ *
+ * This server uses Node's `http` module (not Express). Register/token bodies
+ * are read as raw Buffers and forwarded unchanged — no body-parser — so
+ * `application/x-www-form-urlencoded` token requests and JSON error bodies
+ * such as `{"error":"invalid_grant"}` are not mangled.
+ *
+ * Upstream (default OAUTH_WEB_BASE=https://api.carsxe.com):
+ *   POST /oauth/register  → POST /api/auth/mcp/register
+ *   GET  /oauth/authorize → 302  /mcp-auth?...
+ *   POST /oauth/token     → POST /api/auth/mcp/token
  */
 
-const ISSUER = (process.env.OAUTH_ISSUER ?? "https://mcp.carsxe.com").replace(
-	/\/$/,
-	"",
-);
-const WEB_BASE = (
-	process.env.OAUTH_WEB_BASE ?? "https://api.carsxe.com"
-).replace(/\/$/, "");
-const INTERNAL_SECRET = process.env.MCP_OAUTH_INTERNAL_SECRET ?? "";
+export const OAUTH_UPSTREAM_PATHS = {
+  register: "/api/auth/mcp/register",
+  token: "/api/auth/mcp/token",
+  authorize: "/mcp-auth",
+  introspect: "/api/auth/mcp/introspect",
+} as const;
+
+function issuer(): string {
+	return (process.env.OAUTH_ISSUER ?? "https://mcp.carsxe.com").replace(
+		/\/$/,
+		"",
+	);
+}
+
+function webBase(): string {
+	return (process.env.OAUTH_WEB_BASE ?? "https://api.carsxe.com").replace(
+		/\/$/,
+		"",
+	);
+}
+
+function internalSecret(): string {
+	return process.env.MCP_OAUTH_INTERNAL_SECRET ?? "";
+}
 
 const CORS_HEADERS: Record<string, string> = {
 	"Access-Control-Allow-Origin": "*",
@@ -41,11 +67,12 @@ function sendJson(
 }
 
 function authorizationServerMetadata() {
+	const base = issuer();
 	return {
-		issuer: ISSUER,
-		authorization_endpoint: `${ISSUER}/oauth/authorize`,
-		token_endpoint: `${ISSUER}/oauth/token`,
-		registration_endpoint: `${ISSUER}/oauth/register`,
+		issuer: base,
+		authorization_endpoint: `${base}/oauth/authorize`,
+		token_endpoint: `${base}/oauth/token`,
+		registration_endpoint: `${base}/oauth/register`,
 		response_types_supported: ["code"],
 		grant_types_supported: ["authorization_code", "refresh_token"],
 		code_challenge_methods_supported: ["S256"],
@@ -55,9 +82,10 @@ function authorizationServerMetadata() {
 }
 
 function protectedResourceMetadata() {
+	const base = issuer();
 	return {
-		resource: `${ISSUER}/mcp`,
-		authorization_servers: [ISSUER],
+		resource: `${base}/mcp`,
+		authorization_servers: [base],
 		bearer_methods_supported: ["header"],
 		scopes_supported: ["mcp"],
 	};
@@ -81,11 +109,21 @@ function readBody(req: http.IncomingMessage): Promise<Buffer> {
 	});
 }
 
+function incomingContentType(
+	req: http.IncomingMessage,
+	fallback: string,
+): string {
+	const header = req.headers["content-type"];
+	if (Array.isArray(header)) return header[0] ?? fallback;
+	return header && header.trim() !== "" ? header : fallback;
+}
+
 /** Forwards register/token requests to the web app, preserving status + body. */
 async function proxyToWeb(
 	req: http.IncomingMessage,
 	res: http.ServerResponse,
 	targetPath: string,
+	defaultContentType: string,
 ): Promise<void> {
 	let body: Buffer;
 	try {
@@ -99,10 +137,10 @@ async function proxyToWeb(
 	}
 
 	try {
-		const upstream = await fetch(`${WEB_BASE}${targetPath}`, {
+		const upstream = await fetch(`${webBase()}${targetPath}`, {
 			method: "POST",
 			headers: {
-				"Content-Type": req.headers["content-type"] ?? "application/json",
+				"Content-Type": incomingContentType(req, defaultContentType),
 				// Preserve the caller's IP so the web app's rate limiting keys on
 				// the real client rather than this proxy.
 				"X-Forwarded-For":
@@ -182,7 +220,7 @@ export async function handleOAuthRequest(
 		}
 		// The consent page re-validates every parameter server-side.
 		res.writeHead(302, {
-			Location: `${WEB_BASE}/mcp-auth${url.search}`,
+			Location: `${webBase()}${OAUTH_UPSTREAM_PATHS.authorize}${url.search}`,
 			"Cache-Control": "no-store",
 		});
 		res.end();
@@ -197,10 +235,20 @@ export async function handleOAuthRequest(
 		return true;
 	}
 	if (path === "/oauth/register") {
-		await proxyToWeb(req, res, "/api/auth/mcp/register");
+		await proxyToWeb(
+			req,
+			res,
+			OAUTH_UPSTREAM_PATHS.register,
+			"application/json",
+		);
 		return true;
 	}
-	await proxyToWeb(req, res, "/api/auth/mcp/token");
+	await proxyToWeb(
+		req,
+		res,
+		OAUTH_UPSTREAM_PATHS.token,
+		"application/x-www-form-urlencoded",
+	);
 	return true;
 }
 
@@ -224,7 +272,7 @@ export function isOAuthAccessToken(token: string): boolean {
 export async function resolveAccessToken(
 	token: string,
 ): Promise<string | null> {
-	if (!INTERNAL_SECRET) {
+	if (!internalSecret()) {
 		console.error(
 			"MCP_OAUTH_INTERNAL_SECRET is not set; rejecting OAuth bearer token",
 		);
@@ -238,11 +286,11 @@ export async function resolveAccessToken(
 	}
 
 	try {
-		const res = await fetch(`${WEB_BASE}/api/auth/mcp/introspect`, {
+		const res = await fetch(`${webBase()}${OAUTH_UPSTREAM_PATHS.introspect}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"X-Internal-Secret": INTERNAL_SECRET,
+				"X-Internal-Secret": internalSecret(),
 			},
 			body: JSON.stringify({ token }),
 		});
@@ -268,9 +316,10 @@ export async function resolveAccessToken(
 }
 
 /**
- * 401 challenge per the MCP authorization spec — the WWW-Authenticate
- * header pointing at the protected-resource metadata is what triggers
- * OAuth-capable clients (Claude.ai) to start the flow.
+ * 401 challenge per RFC 9728 §5.1 and the MCP authorization spec — the
+ * WWW-Authenticate header pointing at the protected-resource metadata is
+ * what triggers OAuth-capable clients (Claude, ChatGPT, Google Connected
+ * Apps) to start the flow after an unauthenticated POST /mcp.
  */
 export function sendUnauthorized(
 	res: http.ServerResponse,
@@ -278,7 +327,7 @@ export function sendUnauthorized(
 ): void {
 	res.writeHead(401, {
 		"Content-Type": "application/json",
-		"WWW-Authenticate": `Bearer realm="CarsXE MCP", resource_metadata="${ISSUER}/.well-known/oauth-protected-resource", error="invalid_token", error_description="${description}"`,
+		"WWW-Authenticate": `Bearer realm="CarsXE MCP", resource_metadata="${issuer()}/.well-known/oauth-protected-resource", error="invalid_token", error_description="${description}"`,
 		...CORS_HEADERS,
 	});
 	res.end(
