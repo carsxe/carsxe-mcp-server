@@ -10,6 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { CHATGPT_EXCLUDED_OWNERSHIP_TOOLS } from "../chatgptSurface.js";
 import { loadSanitizedSkills } from "./skills.js";
 import { validateZip } from "./validate.js";
 import { createZip, type ZipEntry } from "./zip.js";
@@ -35,6 +36,7 @@ export function stagePackage(destination: string, root = repoRoot()): void {
   mkdirSync(destination, { recursive: true });
   copyTree(join(root, "chatgpt"), destination);
   for (const skill of loadSanitizedSkills(join(root, "skills"))) {
+    if (isOwnershipSkill(skill.name, skill.markdown)) continue;
     const dir = join(destination, "skills", skill.name);
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, "SKILL.md"), skill.markdown);
@@ -58,6 +60,11 @@ export function listPackageFiles(root: string): ZipEntry[] {
   walk(root);
   files.sort((a, b) => a.path.localeCompare(b.path));
   return files;
+}
+
+function isOwnershipSkill(name: string, markdown: string): boolean {
+  if (name === "ownership") return true;
+  return CHATGPT_EXCLUDED_OWNERSHIP_TOOLS.some((tool) => markdown.includes(tool));
 }
 
 export function buildChatgptPlugin(outputPath?: string): { zipPath: string; warnings: string[] } {

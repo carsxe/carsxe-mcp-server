@@ -11,6 +11,7 @@ import {
   REGISTRATION_URL,
 } from "./constants.js";
 import { skillAsksForApiKey } from "./skills.js";
+import { CHATGPT_EXCLUDED_OWNERSHIP_TOOLS } from "../chatgptSurface.js";
 import { readZip, type ZipEntry } from "./zip.js";
 
 export type PackageReport = {
@@ -610,7 +611,38 @@ export function validatePackage(root: string): PackageReport {
   validateMcp(root, errors, warnings);
   validateSkills(root, PLUGIN_NAME, errors);
   scanTextFiles(root, errors);
+  rejectOwnershipTools(root, errors);
   return { errors: unique(errors), warnings: unique(warnings) };
+}
+
+function rejectOwnershipTools(root: string, errors: string[]): void {
+  const stack = [root];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current) break;
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      const full = join(current, entry.name);
+      const rel = relative(root, full).split(sep).join("/");
+      if (entry.isDirectory()) {
+        if (rel === "skills/ownership" || entry.name === "ownership") {
+          errors.push(
+            "chatgpt_ownership_tool_forbidden: skills/ownership is not part of the ChatGPT package",
+          );
+        }
+        stack.push(full);
+        continue;
+      }
+      if (!/\.(json|md|txt)$/i.test(entry.name)) continue;
+      const text = readFileSync(full, "utf8");
+      for (const tool of CHATGPT_EXCLUDED_OWNERSHIP_TOOLS) {
+        if (text.includes(tool)) {
+          errors.push(
+            `chatgpt_ownership_tool_forbidden: ${rel} mentions ${tool}. Owner lookups stay off the ChatGPT package.`,
+          );
+        }
+      }
+    }
+  }
 }
 
 function exists(file: string): boolean {

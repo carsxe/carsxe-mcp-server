@@ -38,6 +38,12 @@ function optionalParams(
   return params;
 }
 
+/**
+ * Enterprise owner and resident lookups. These return another person's name,
+ * address, phone, email, and demographics. `registerAllTools` leaves them off
+ * the ChatGPT OAuth surface. API-key clients and other OAuth clients still
+ * register them.
+ */
 export function registerOwnershipTools(
   server: McpServer,
   getApiKey: () => string | null,
@@ -91,9 +97,6 @@ export function registerOwnershipTools(
     },
   );
 
-  // FLAG: returns third-party personal data (name, age, gender, street
-  // address, email, phone, demographics). The privacy policy must disclose
-  // those categories before this tool is submitted for ChatGPT review.
   server.registerTool(
     "get_ownership_by_person",
     {
@@ -154,9 +157,6 @@ export function registerOwnershipTools(
     },
   );
 
-  // FLAG: returns third-party personal data (name, age, gender, street
-  // address, email, phone, demographics). The privacy policy must disclose
-  // those categories before this tool is submitted for ChatGPT review.
   server.registerTool(
     "get_ownership_by_address",
     {

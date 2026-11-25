@@ -2,8 +2,11 @@ import http from "node:http";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import {
+	classifyIncomingCredential,
+	isChatgptOauthSurface,
+} from "./chatgptSurface.js";
+import {
 	handleOAuthRequest,
-	isOAuthAccessToken,
 	resolveAccessToken,
 	sendUnauthorized,
 } from "./oauth.js";
@@ -44,12 +47,9 @@ async function isAllowedOnStaging(apiKey: string): Promise<boolean> {
 	}
 }
 
-function extractApiKey(req: http.IncomingMessage, url: URL): string | null {
-	const xApiKey = req.headers["x-api-key"];
-	if (xApiKey) return Array.isArray(xApiKey) ? xApiKey[0] : xApiKey;
-	const auth = req.headers.authorization;
-	if (auth?.startsWith("Bearer ")) return auth.slice(7);
-	return url.searchParams.get("key");
+function headerValue(value: string | string[] | undefined): string | null {
+	if (Array.isArray(value)) return value[0] ?? null;
+	return value ?? null;
 }
 
 const httpServer = http.createServer(async (req, res) => {
@@ -76,14 +76,28 @@ const httpServer = http.createServer(async (req, res) => {
 		return;
 	}
 
-	let apiKey = extractApiKey(req, url);
-	if (apiKey && isOAuthAccessToken(apiKey)) {
-		// OAuth bearer token — resolve to the user's CarsXE API key.
-		apiKey = await resolveAccessToken(apiKey);
-		if (!apiKey) {
+	const credential = classifyIncomingCredential({
+		xApiKey: headerValue(req.headers["x-api-key"]),
+		authorization: headerValue(req.headers.authorization),
+		queryKey: url.searchParams.get("key"),
+		userAgent: headerValue(req.headers["user-agent"]),
+	});
+	let apiKey: string | null = null;
+	let chatgptSurface = false;
+	if (credential.kind === "oauth") {
+		const resolved = await resolveAccessToken(credential.secret);
+		if (!resolved) {
 			sendUnauthorized(res, "Access token is invalid, expired, or revoked");
 			return;
 		}
+		apiKey = resolved.apiKey;
+		chatgptSurface = isChatgptOauthSurface({
+			oauthAccessToken: true,
+			userAgent: credential.userAgent,
+			audience: resolved.audience,
+		});
+	} else if (credential.kind === "api-key") {
+		apiKey = credential.secret;
 	}
 	if (!apiKey) {
 		// 401 + WWW-Authenticate triggers OAuth-capable MCP clients to start
@@ -107,7 +121,7 @@ const httpServer = http.createServer(async (req, res) => {
 	const mcpServer = new McpServer({ name: "carsxe", version: "1.0.1" });
 	const getApiKey = () => apiKey;
 
-	registerAllTools(mcpServer, getApiKey);
+	registerAllTools(mcpServer, getApiKey, { chatgptSurface });
 
 	const transport = new StreamableHTTPServerTransport({
 		sessionIdGenerator: undefined, // stateless — no session affinity required

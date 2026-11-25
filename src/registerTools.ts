@@ -13,13 +13,20 @@ import { registerInternationalVinDecoderTool } from "./tools/internationalVinDec
 import { registerRecognizePlateImageTool } from "./tools/recognizePlateImage.js";
 import { registerVinOcrTool } from "./tools/vinOcr.js";
 import { registerGetYmmOptionsTool } from "./tools/getYmmOptions.js";
+import { CHATGPT_EXCLUDED_OWNERSHIP_TOOLS } from "./chatgptSurface.js";
 import { registerOwnershipTools } from "./tools/ownership.js";
 import { registerRecallsBatchTools } from "./tools/recallsBatch.js";
 import { registerAppsUi } from "./tools/renderApps.js";
 
+export type RegisterToolsOptions = {
+  /** Omit owner/resident tools. Set for the ChatGPT OAuth connector only. */
+  chatgptSurface?: boolean;
+};
+
 export function registerAllTools(
   server: McpServer,
   getApiKey: () => string | null,
+  options?: RegisterToolsOptions,
 ): void {
   registerGetVehicleSpecsTool(server, getApiKey);
   registerDecodeVehiclePlateTool(server, getApiKey);
@@ -36,9 +43,13 @@ export function registerAllTools(
   registerGetRecallsByYmmTool(server, getApiKey);
   registerRecallsBatchTools(server, getApiKey);
   registerGetYmmOptionsTool(server, getApiKey);
-  registerOwnershipTools(server, getApiKey);
+  if (!options?.chatgptSurface) {
+    registerOwnershipTools(server, getApiKey);
+  }
   registerAppsUi(server);
 }
+
+export { CHATGPT_EXCLUDED_OWNERSHIP_TOOLS };
 
 export type RegisteredToolAnnotations = {
   readOnlyHint?: boolean | null;

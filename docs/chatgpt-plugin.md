@@ -22,7 +22,7 @@ The command writes `dist/carsxe-chatgpt-plugin-1.3.0.zip` and checks the archive
 
 `npm test` runs the same checks, including cases that insert forbidden content and expect a failure.
 
-The build copies `skills/` into the ZIP and rewrites the auth line. ChatGPT signs the user in with OAuth. Packaged skills must not ask for an API key. The source skills used by Claude and Cursor are unchanged.
+The build copies `skills/` into the ZIP, except `skills/ownership`, and rewrites the auth line. ChatGPT signs the user in with OAuth. Packaged skills must not ask for an API key. The source skills used by Claude and Cursor are unchanged, including the ownership skill.
 
 The demo recording URL in `chatgpt/plugin.json` is still a TODO placeholder. The build warns about it and still writes the ZIP. Replace that URL and rebuild before you submit for review.
 
@@ -58,9 +58,19 @@ Show sign-in and the five positive cases: specifications, market value, history,
 
 The older submission file had a sixth positive case for an OBD-II code. The current format allows exactly five, so that case is not in this package.
 
+## How ChatGPT is recognized
+
+The hosted server at `https://mcp.carsxe.com/mcp` registers the four ownership tools for API-key clients (`X-API-Key`, `?key=`, or a bearer token that is not an `mcp_at_` access token). That is Claude Desktop and Cursor.
+
+It omits those tools, and refuses a call to them, only for the ChatGPT OAuth surface. A request is that surface when it authenticated with an `mcp_at_` access token and either:
+
+- `User-Agent` identifies OpenAI's MCP connector (`openai-mcp/…`, including Codex and the daily tool rescan), or
+- token introspection returns `aud` `https://mcp.carsxe.com/mcp`. ChatGPT sends that value as the OAuth `resource` parameter. Current Claude.ai and Cursor OAuth clients omit `resource`, so their tokens have no audience.
+
+An API key still gets the tools even if the User-Agent says `openai-mcp`.
+
 ## Before you submit
 
 - Wait until the metadata and skill scans finish, and clear required findings.
 - If the tool scan asks about `ui.carsxe.com`, explain that the vehicle, market-value, and recalls cards load the official CarsXE logo from that host.
-- Confirm <https://carsxe.com/privacy-policy> discloses the personal data returned by owner and resident lookups. `get_ownership_by_person` and `get_ownership_by_address` are still in the server. They are flagged in code, not removed.
 - Save review details, accept the policy attestations, and submit the draft. Only one review can be open. If a review is already in progress, cancel it before uploading a replacement.

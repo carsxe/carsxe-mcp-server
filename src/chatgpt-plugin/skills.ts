@@ -5,20 +5,13 @@ const PROHIBITION =
   "ChatGPT signs the user in with OAuth. Never ask the user for an API key, token, or password.";
 
 /** Rewrite Claude/Cursor skill copy so the ChatGPT package never asks for an API key. */
-export function sanitizeSkillMarkdown(markdown: string, skillName: string): string {
-  let text = markdown
+export function sanitizeSkillMarkdown(markdown: string): string {
+  return markdown
     .replaceAll(
       "Auth is client-managed (API key or OAuth); do not embed secrets in plugin config.",
       PROHIBITION,
     )
     .replaceAll("Auth stays API key / OAuth. ", `${PROHIBITION} `);
-
-  if (skillName === "ownership") {
-    text +=
-      "\n\n## Privacy\n\n" +
-      "`get_ownership_by_person` and `get_ownership_by_address` return personal data about other people, including name, age, gender, street address, email, phone, and demographics. Call them only when the user asks for that lookup.\n";
-  }
-  return text;
 }
 
 /**
@@ -43,9 +36,6 @@ export function loadSanitizedSkills(skillsRoot: string): { name: string; markdow
     .sort();
   return names.map((name) => ({
     name,
-    markdown: sanitizeSkillMarkdown(
-      readFileSync(join(skillsRoot, name, "SKILL.md"), "utf8"),
-      name,
-    ),
+    markdown: sanitizeSkillMarkdown(readFileSync(join(skillsRoot, name, "SKILL.md"), "utf8")),
   }));
 }

@@ -62,6 +62,8 @@ describe("ChatGPT plugin package", () => {
       assert.ok(paths.includes("mcp.json"));
       assert.ok(paths.includes("assets/logo.png"));
       assert.equal(paths.some((path) => path.includes("hooks") || path.endsWith(".app.json")), false);
+      assert.equal(paths.some((path) => path.startsWith("skills/ownership")), false);
+      assert.equal(buffer.includes(Buffer.from("get_ownership_by_person")), false);
       const mcp = JSON.parse(
         entries.find((entry) => entry.path === "mcp.json")?.data.toString("utf8") ?? "{}",
       ) as { mcpServers: { carsxe: { headers?: unknown; extensions: unknown } } };
@@ -163,5 +165,13 @@ describe("ChatGPT plugin package", () => {
       plugin.extensions["com.openai"].review.test_credentials = { password: "hunter2" };
       writeFileSync(pluginPath, JSON.stringify(plugin));
     }, "reviewer_credentials_forbidden");
+
+    assertForbidden((dir) => {
+      mkdirSync(join(dir, "skills", "ownership"));
+      writeFileSync(
+        join(dir, "skills", "ownership", "SKILL.md"),
+        "---\nname: ownership\ndescription: Owner lookup.\n---\n\nUse get_ownership_by_person.\n",
+      );
+    }, "chatgpt_ownership_tool_forbidden");
   });
 });

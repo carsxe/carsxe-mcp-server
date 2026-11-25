@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "carsxe",
   "version": "1.3.0",
-  "description": "Look up CarsXE vehicle data: specifications, plate and VIN decode, history, images, recalls, market value, OBD-II codes, and ownership records.",
+  "description": "Look up CarsXE vehicle data: specifications, plate and VIN decode, history, images, recalls, market value, and OBD-II codes.",
   "author": {
     "name": "CarsXE",
     "email": "info@carsxe.com",
@@ -25,7 +25,7 @@
       "interface": {
         "displayName": "CarsXE",
         "shortDescription": "Vehicle data and insights",
-        "longDescription": "CarsXE looks up vehicle data for people comparing, servicing, or researching a car. It returns specifications, license-plate and international VIN decodes, market-value estimates, history, images, safety recalls, year/make/model details, OBD-II definitions, and lien or theft records.\n\nRegistered-owner and resident lookups can return another person's name, age, gender, email, phone number, street address, and demographics. CarsXE does not buy or sell vehicles, arrange financing, book service, or give driving directions. Sign in with a CarsXE account to run a lookup.",
+        "longDescription": "CarsXE looks up vehicle data for people comparing, servicing, or researching a car. It returns specifications, license-plate and international VIN decodes, market-value estimates, history, images, safety recalls, year/make/model details, OBD-II definitions, and lien or theft records.\n\nCarsXE does not buy or sell vehicles, arrange financing, book service, or give driving directions. Sign in with a CarsXE account to run a lookup.",
         "developerName": "CarsXE",
         "category": "Data & Analytics",
         "capabilities": [
