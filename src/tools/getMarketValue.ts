@@ -14,7 +14,7 @@ export function registerGetMarketValueTool(
     {
       title: "Get Market Value",
       description:
-        "Get the estimated market value for a vehicle by VIN. Data tool only: returns Markdown plus structuredContent (retail/trade-in bands) for chaining. Do not expect UI from this tool. After fetching, call render_market_value with the structured result when the user should see the value card.",
+        "Get the estimated market value for a vehicle by VIN. Returns Markdown plus structuredContent with retail and trade-in bands.",
       inputSchema: {
         vin: z
           .string()
@@ -42,6 +42,7 @@ export function registerGetMarketValueTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ vin, state, mileage, condition }) => {

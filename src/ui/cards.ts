@@ -38,7 +38,7 @@ function asMoney(
 }
 
 export const vehicleCardSchema = {
-  vin: z.string().describe("17-character VIN from get_vehicle_specs"),
+  vin: z.string().describe("17-character Vehicle Identification Number"),
   year: z.string().optional(),
   make: z.string().optional(),
   model: z.string().optional(),
@@ -56,7 +56,7 @@ export const vehicleCardSchema = {
 };
 
 export const marketValueCardSchema = {
-  vin: z.string().describe("VIN from get_market_value"),
+  vin: z.string().describe("17-character Vehicle Identification Number"),
   year: z.string().optional(),
   make: z.string().optional(),
   model: z.string().optional(),
@@ -88,7 +88,7 @@ export const recallItemSchema = z.object({
 });
 
 export const recallsCardSchema = {
-  vin: z.string().describe("VIN from get_vehicle_recalls"),
+  vin: z.string().describe("17-character Vehicle Identification Number"),
   year: z.string().optional(),
   make: z.string().optional(),
   model: z.string().optional(),

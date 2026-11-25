@@ -32,6 +32,7 @@ export function registerDecodeVehiclePlateTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ plate, state, country }) => {

@@ -252,7 +252,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 1. `get_vehicle_specs` 🚙
 
-- **Description:** Get comprehensive vehicle specifications by VIN ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
+- **Description:** Get comprehensive vehicle specifications by VIN. Returns Markdown plus structuredContent (vin, year, make, model, and key specs). ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:**
   - `vin` (string, required): 17-character Vehicle Identification Number
 - **Example Prompts:**
@@ -303,7 +303,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 4. `get_market_value` 💰
 
-- **Description:** Get estimated market value for a vehicle by VIN ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
+- **Description:** Get the estimated market value for a vehicle by VIN. Returns Markdown plus structuredContent with retail and trade-in bands. ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
   - `state` (string, optional): US state abbreviation
@@ -360,7 +360,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 7. `get_vehicle_recalls` 🚨
 
-- **Description:** Get vehicle recall information by VIN ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
+- **Description:** Get vehicle recall information by VIN. Returns Markdown plus structuredContent (hasRecalls, recallCount, recalls[]). ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `vin` (string, required): 17-character VIN
 - **Example Prompts:**
@@ -480,7 +480,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 14. `submit_recalls_batch` 📦
 
-- **Description:** Submit an async bulk recall check for up to 10,000 VINs ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
+- **Description:** Creates a batch job on your CarsXE account; optionally calls your webhookUrl when complete. ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Parameters:**
   - `vins` (string[] or comma-separated string, optional)
   - `csv` (string, optional): inline CSV of VINs
@@ -613,7 +613,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 23. `render_vehicle_card` 🖼️
 
-- **Description:** Render a visual VIN identity + key-specs card. Always call `get_vehicle_specs` first and pass its `structuredContent`. ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
+- **Description:** Display a visual vehicle identity card from a VIN and key spec fields (year, make, model, trim, engine). Use when the user wants to see a card. ([Vehicle Specifications](https://carsxe.com/vehicle-specifications))
 - **Parameters:** `vin` (required) plus optional year, make, model, trim, style, engine, transmission, drivetrain, fuel, MPG, seating, MSRP, built-in country
 - **Example Prompts:**
 
@@ -625,7 +625,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 24. `render_market_value` 🖼️
 
-- **Description:** Render retail and trade-in value bands. Always call `get_market_value` first and pass its `structuredContent`. ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
+- **Description:** Display a visual market-value card from retail and trade-in value bands for a VIN. ([Vehicle Market Value](https://carsxe.com/vehicle-market-value))
 - **Example Prompts:**
 
   > What's VIN `WBAFR7C57CC811956` worth in California? Then show the market value card.
@@ -636,7 +636,7 @@ Below is a list of all available CarsXE tools, their parameters, and example pro
 
 ### 25. `render_recalls` 🖼️
 
-- **Description:** Render an open-recalls list. Always call `get_vehicle_recalls` first and pass its `structuredContent`. ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
+- **Description:** Display a visual open-recalls card from a VIN, recall count, and recall list. ([Vehicle Recalls](https://carsxe.com/vehicle-recalls))
 - **Example Prompts:**
 
   > Check recalls for VIN `1C4JJXR64PW696340` and show the recalls card.
@@ -693,5 +693,6 @@ Requests with no credentials get `401` with a `WWW-Authenticate` challenge, whic
 | `OAUTH_ISSUER` | `https://mcp.carsxe.com` | Issuer / endpoint base in the discovery metadata |
 | `OAUTH_WEB_BASE` | `https://api.carsxe.com` | CarsXE web app hosting the OAuth logic |
 | `MCP_OAUTH_INTERNAL_SECRET` | _(unset)_ | Set in the host environment, never commit. When unset, OAuth bearer tokens are rejected but API-key auth keeps working. |
+| `GOOGLE_CONNECTED_APPS_VERIFICATION` | _(unset)_ | Raw JSON string from Google Connected Console. When set, `GET /.well-known/google-connected-apps` returns it as `200` JSON with no redirect. When unset, that path returns `404` JSON. |
 
 > The Cloudflare Workers deployment (`src/index.ts`) does not serve the OAuth surface — only the GCP Cloud Run deployment (`src/index.gcp.ts`) behind `mcp.carsxe.com` does.

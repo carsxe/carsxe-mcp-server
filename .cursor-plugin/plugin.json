@@ -4,7 +4,7 @@
   "description": "MCP server for CarsXE vehicle data: VIN specs, plate decode, history, images, recalls (VIN, YMM, batch), YMM options, ownership, market value, and OBD codes.",
   "author": {
     "name": "CarsXE",
-    "email": "info@carsxe.com"
+    "email": "abraham@carsxe.com"
   },
   "homepage": "https://docs.carsxe.com/docs/integrations/mcp",
   "repository": "https://github.com/carsxe/carsxe-mcp-server",

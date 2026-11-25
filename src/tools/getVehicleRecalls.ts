@@ -14,7 +14,7 @@ export function registerGetVehicleRecallsTool(
     {
       title: "Get Vehicle Recalls",
       description:
-        "Get vehicle recall information by VIN. Data tool only: returns Markdown plus structuredContent (hasRecalls, recallCount, recalls[]) for chaining. Do not expect UI from this tool. After fetching, call render_recalls with the structured result when the user should see the recalls card.",
+        "Get vehicle recall information by VIN. Returns Markdown plus structuredContent (hasRecalls, recallCount, recalls[]).",
       inputSchema: {
         vin: z
           .string()
@@ -26,6 +26,7 @@ export function registerGetVehicleRecallsTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ vin }) => {

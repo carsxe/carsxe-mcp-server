@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getRegisteredTools, registerAllTools } from "../registerTools.js";
+import { createCarsxeMcpServer } from "../serverInfo.js";
 
 const OPEN_WORLD_FALSE = new Set([
   "render_vehicle_card",
@@ -42,8 +42,28 @@ const EXPECTED_TOOLS = [
   "render_recalls",
 ] as const;
 
+const EXPECTED_DESCRIPTIONS: Record<string, string> = {
+  get_vehicle_specs:
+    "Get comprehensive vehicle specifications by VIN. Returns Markdown plus structuredContent (vin, year, make, model, and key specs).",
+  get_market_value:
+    "Get the estimated market value for a vehicle by VIN. Returns Markdown plus structuredContent with retail and trade-in bands.",
+  get_vehicle_recalls:
+    "Get vehicle recall information by VIN. Returns Markdown plus structuredContent (hasRecalls, recallCount, recalls[]).",
+  render_vehicle_card:
+    "Display a visual vehicle identity card from a VIN and key spec fields (year, make, model, trim, engine). Use when the user wants to see a card.",
+  render_market_value:
+    "Display a visual market-value card from retail and trade-in value bands for a VIN.",
+  render_recalls:
+    "Display a visual open-recalls card from a VIN, recall count, and recall list.",
+  submit_recalls_batch:
+    "Creates a batch job on your CarsXE account; optionally calls your webhookUrl when complete.",
+};
+
+const STEERING_PATTERN =
+  /always call|call \w+ first|after fetching|do not remount|do not expect UI|do not attach UI|poll get_/i;
+
 function createServer() {
-  const server = new McpServer({ name: "carsxe-test", version: "1.0.1" });
+  const server = createCarsxeMcpServer();
   registerAllTools(server, () => null);
   return server;
 }
@@ -68,11 +88,17 @@ describe("OpenAI tool annotation matrix", () => {
       assertExplicitBoolean(annotations.readOnlyHint, `${name}.readOnlyHint`);
       assertExplicitBoolean(annotations.openWorldHint, `${name}.openWorldHint`);
       assertExplicitBoolean(annotations.destructiveHint, `${name}.destructiveHint`);
+      assertExplicitBoolean(annotations.idempotentHint, `${name}.idempotentHint`);
 
       assert.equal(
         annotations.readOnlyHint,
         !READ_ONLY_FALSE.has(name),
         `${name}.readOnlyHint`,
+      );
+      assert.equal(
+        annotations.idempotentHint,
+        !READ_ONLY_FALSE.has(name),
+        `${name}.idempotentHint`,
       );
       assert.equal(
         annotations.openWorldHint,
@@ -109,7 +135,15 @@ describe("OpenAI tool annotation matrix", () => {
     for (const name of EXPECTED_TOOLS) {
       const registered = tools[name]?.annotations;
       const submitted = submission.tools[name]?.annotations;
-      assert.deepEqual(submitted, registered, `${name} submission annotations`);
+      assert.deepEqual(
+        submitted,
+        {
+          readOnlyHint: registered?.readOnlyHint,
+          openWorldHint: registered?.openWorldHint,
+          destructiveHint: registered?.destructiveHint,
+        },
+        `${name} submission annotations`,
+      );
       const justification =
         submission.tools[name]?.justifications.open_world_justification ?? "";
       assert.ok(
@@ -123,6 +157,22 @@ describe("OpenAI tool annotation matrix", () => {
           justification,
           /internet-hosted|public internet|user-supplied/i,
         );
+      }
+    }
+  });
+
+  it("uses policy-safe descriptions without cross-tool steering", () => {
+    const tools = getRegisteredTools(createServer());
+    for (const name of EXPECTED_TOOLS) {
+      const description = tools[name]?.description ?? "";
+      assert.ok(description.length > 0, `${name} must have a description`);
+      assert.equal(
+        STEERING_PATTERN.test(description),
+        false,
+        `${name} description must not steer across tools: ${description}`,
+      );
+      if (name in EXPECTED_DESCRIPTIONS) {
+        assert.equal(description, EXPECTED_DESCRIPTIONS[name], name);
       }
     }
   });

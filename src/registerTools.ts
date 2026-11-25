@@ -44,11 +44,13 @@ export type RegisteredToolAnnotations = {
   readOnlyHint?: boolean | null;
   openWorldHint?: boolean | null;
   destructiveHint?: boolean | null;
+  idempotentHint?: boolean | null;
 };
 
 export function getRegisteredTools(server: McpServer): Record<
   string,
   {
+    description?: string;
     annotations?: RegisteredToolAnnotations;
     _meta?: Record<string, unknown>;
   }
@@ -58,6 +60,7 @@ export function getRegisteredTools(server: McpServer): Record<
       _registeredTools: Record<
         string,
         {
+          description?: string;
           annotations?: RegisteredToolAnnotations;
           _meta?: Record<string, unknown>;
         }

@@ -52,7 +52,7 @@ export function registerRecallsBatchTools(
     {
       title: "Submit Recalls Batch",
       description:
-        "Submit an async bulk recall check for up to 10,000 VINs (JSON list, inline CSV, and/or CSV URL)",
+        "Creates a batch job on your CarsXE account; optionally calls your webhookUrl when complete.",
       inputSchema: {
         vins: vinsSchema,
         csv: z
@@ -76,6 +76,7 @@ export function registerRecallsBatchTools(
         readOnlyHint: false,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: false,
       },
     },
     async ({ vins, csv, csvUrl, webhookUrl }) => {
@@ -127,16 +128,15 @@ export function registerRecallsBatchTools(
     "get_recalls_batch_status",
     {
       title: "Get Recalls Batch Status",
-      description: "Check the status of a previously submitted recalls batch",
+      description: "Check the status of a recalls batch job",
       inputSchema: {
-        batchId: z
-          .string()
-          .describe("Batch ID returned by submit_recalls_batch"),
+        batchId: z.string().describe("Recalls batch job ID"),
       },
       annotations: {
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ batchId }) => {
@@ -173,16 +173,15 @@ export function registerRecallsBatchTools(
     {
       title: "Get Recalls Batch Results",
       description:
-        "Fetch completed bulk recall results as JSON (use after status is completed or partial)",
+        "Fetch bulk recall results as JSON for a completed or partial batch",
       inputSchema: {
-        batchId: z
-          .string()
-          .describe("Batch ID returned by submit_recalls_batch"),
+        batchId: z.string().describe("Recalls batch job ID"),
       },
       annotations: {
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ batchId }) => {
@@ -198,7 +197,7 @@ export function registerRecallsBatchTools(
           content: [
             {
               type: "text",
-              text: "❌ Failed to retrieve batch results. Poll get_recalls_batch_status until completed or partial.",
+              text: "❌ Failed to retrieve batch results. The batch status must be completed or partial.",
             },
           ],
         };
@@ -219,16 +218,15 @@ export function registerRecallsBatchTools(
     {
       title: "Download Recalls Batch CSV",
       description:
-        "Download completed bulk recall results as CSV (use after status is completed or partial)",
+        "Download bulk recall results as CSV for a completed or partial batch",
       inputSchema: {
-        batchId: z
-          .string()
-          .describe("Batch ID returned by submit_recalls_batch"),
+        batchId: z.string().describe("Recalls batch job ID"),
       },
       annotations: {
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ batchId }) => {
@@ -244,7 +242,7 @@ export function registerRecallsBatchTools(
           content: [
             {
               type: "text",
-              text: "❌ Failed to download batch CSV. Poll get_recalls_batch_status until completed or partial.",
+              text: "❌ Failed to download batch CSV. The batch status must be completed or partial.",
             },
           ],
         };

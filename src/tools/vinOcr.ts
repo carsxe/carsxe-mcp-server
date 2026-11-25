@@ -33,6 +33,7 @@ export function registerVinOcrTool(
         readOnlyHint: true,
         openWorldHint: true,
         destructiveHint: false,
+        idempotentHint: true,
       },
     },
     async ({ imageUrl }) => {

@@ -20,12 +20,13 @@ export function registerRenderVehicleCardTool(server: McpServer): void {
     {
       title: "Render Vehicle Card",
       description:
-        "Render a visual vehicle identity card (VIN + key specs). Always call get_vehicle_specs first, then pass that tool's structuredContent fields here. Do not remount this UI on every specs fetch — only call this render tool when the user should see the card.",
+        "Display a visual vehicle identity card from a VIN and key spec fields (year, make, model, trim, engine). Use when the user wants to see a card.",
       inputSchema: vehicleCardSchema,
       annotations: {
         readOnlyHint: true,
         openWorldHint: false,
         destructiveHint: false,
+        idempotentHint: true,
       },
       _meta: uiToolMeta(UI_URIS.vehicleCard),
     },
@@ -54,12 +55,13 @@ export function registerRenderMarketValueTool(server: McpServer): void {
     {
       title: "Render Market Value",
       description:
-        "Render a visual market-value card with retail and trade-in bands. Always call get_market_value first, then pass that tool's structuredContent fields here. Do not attach UI to the data tool or remount this card on every valuation fetch.",
+        "Display a visual market-value card from retail and trade-in value bands for a VIN.",
       inputSchema: marketValueCardSchema,
       annotations: {
         readOnlyHint: true,
         openWorldHint: false,
         destructiveHint: false,
+        idempotentHint: true,
       },
       _meta: uiToolMeta(UI_URIS.marketValue),
     },
@@ -88,12 +90,13 @@ export function registerRenderRecallsTool(server: McpServer): void {
     {
       title: "Render Recalls",
       description:
-        "Render a visual open-recalls card. Always call get_vehicle_recalls first, then pass that tool's structuredContent (vin, hasRecalls, recallCount, recalls[]) here. Do not remount this UI on every recall fetch.",
+        "Display a visual open-recalls card from a VIN, recall count, and recall list.",
       inputSchema: recallsCardSchema,
       annotations: {
         readOnlyHint: true,
         openWorldHint: false,
         destructiveHint: false,
+        idempotentHint: true,
       },
       _meta: uiToolMeta(UI_URIS.recalls),
     },

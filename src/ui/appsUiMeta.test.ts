@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   getRegisteredResources,
   getRegisteredTools,
   registerAllTools,
 } from "../registerTools.js";
+import { createCarsxeMcpServer } from "../serverInfo.js";
 import {
   BRAND_LOGO_DARK,
   BRAND_LOGO_LIGHT,
@@ -41,7 +41,7 @@ const RENDER_TOOLS = {
 } as const;
 
 function createServer() {
-  const server = new McpServer({ name: "carsxe-test", version: "1.0.1" });
+  const server = createCarsxeMcpServer();
   registerAllTools(server, () => null);
   return server;
 }
