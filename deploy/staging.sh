@@ -29,12 +29,13 @@ echo "Pushing image..."
 docker push "${IMAGE}"
 
 echo "Deploying to Cloud Run (${PROJECT} / ${SERVICE})..."
+# --set-env-vars replaces the service's whole env list, so every staging var belongs here.
 gcloud run deploy "${SERVICE}" \
   --image "${IMAGE}" \
   --project "${PROJECT}" \
   --region "${REGION}" \
   --platform managed \
   --allow-unauthenticated \
-  --set-env-vars "STAGING=true,CARSXE_AUTH_URL=${CARSXE_AUTH_URL}"
+  --set-env-vars "STAGING=true,CARSXE_AUTH_URL=${CARSXE_AUTH_URL},OAUTH_WEB_BASE=https://carsxe.com"
 
 echo "Deploy complete."

@@ -28,11 +28,14 @@ echo "Pushing image..."
 docker push "${IMAGE}"
 
 echo "Deploying to Cloud Run (${PROJECT} / ${SERVICE})..."
+# --update-env-vars changes only this key. --set-env-vars would drop the
+# secrets and other vars already set on the service.
 gcloud run deploy "${SERVICE}" \
   --image "${IMAGE}" \
   --project "${PROJECT}" \
   --region "${REGION}" \
   --platform managed \
-  --allow-unauthenticated
+  --allow-unauthenticated \
+  --update-env-vars "OAUTH_WEB_BASE=https://carsxe.com"
 
 echo "Deploy complete."
