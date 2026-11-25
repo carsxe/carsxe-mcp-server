@@ -244,6 +244,14 @@ npm run preview:ui
 
 Then open `previews/vehicle-card.html`, `previews/market-value.html`, and `previews/recalls.html` in a browser.
 
+### ChatGPT directory package
+
+The uploadable OpenAI Plugins package (v1.3.0) is separate from the root `plugin.json` and `mcp.json`. Those root files keep the `X-API-Key` header for Claude and Cursor and are not part of the ChatGPT ZIP. Build and upload steps are in [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md).
+
+```bash
+npm run build:chatgpt-plugin
+```
+
 ---
 
 ## 🛠️ Available Tools & Example Prompts

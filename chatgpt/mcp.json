@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "carsxe": {
+      "type": "streamable-http",
+      "url": "https://mcp.carsxe.com/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "dcr"
+            },
+            "registrationUrl": "https://mcp.carsxe.com/oauth/register",
+            "baseScopes": ["mcp"]
+          }
+        }
+      }
+    }
+  }
+}

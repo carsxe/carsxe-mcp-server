@@ -1,0 +1,110 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "carsxe",
+  "version": "1.3.0",
+  "description": "Look up CarsXE vehicle data: specifications, plate and VIN decode, history, images, recalls, market value, OBD-II codes, and ownership records.",
+  "author": {
+    "name": "CarsXE",
+    "email": "info@carsxe.com",
+    "url": "https://carsxe.com"
+  },
+  "homepage": "https://docs.carsxe.com/docs/integrations/mcp",
+  "repository": "https://github.com/carsxe/carsxe-mcp-server",
+  "license": "MIT",
+  "keywords": [
+    "vehicle",
+    "vin",
+    "license-plate",
+    "recalls",
+    "market-value",
+    "obd",
+    "specifications"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "CarsXE",
+        "shortDescription": "Vehicle data and insights",
+        "longDescription": "CarsXE looks up vehicle data for people comparing, servicing, or researching a car. It returns specifications, license-plate and international VIN decodes, market-value estimates, history, images, safety recalls, year/make/model details, OBD-II definitions, and lien or theft records.\n\nRegistered-owner and resident lookups can return another person's name, age, gender, email, phone number, street address, and demographics. CarsXE does not buy or sell vehicles, arrange financing, book service, or give driving directions. Sign in with a CarsXE account to run a lookup.",
+        "developerName": "CarsXE",
+        "category": "Data & Analytics",
+        "capabilities": [
+          "Look up vehicle specifications",
+          "Check recalls and history",
+          "Estimate market value"
+        ],
+        "websiteURL": "https://carsxe.com",
+        "supportURL": "https://carsxe.com/support",
+        "privacyPolicyURL": "https://carsxe.com/privacy-policy",
+        "termsOfServiceURL": "https://carsxe.com/terms-and-conditions",
+        "defaultPrompt": [
+          "What are the full specifications for VIN WBAFR7C57CC811956?",
+          "Are there any recalls for VIN WBAFR7C57CC811956?",
+          "Estimate the market value of VIN WBAFR7C57CC811956 with 85000 miles."
+        ],
+        "brandColor": "#065774",
+        "composerIcon": "./assets/logo.png",
+        "logo": "./assets/logo.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Inspect specifications for a vehicle identified by VIN.",
+              "prompt": "What are the full specifications for VIN WBAFR7C57CC811956?",
+              "tools_triggered": "get_vehicle_specs",
+              "expected_behavior": "Returns available identification, engine, trim, dimensions, equipment, and other specification details for the VIN."
+            },
+            {
+              "description": "Estimate a used vehicle's value with condition adjustments.",
+              "prompt": "Estimate the market value of VIN WBAFR7C57CC811956 in California with 85000 miles in clean condition.",
+              "tools_triggered": "get_market_value",
+              "expected_behavior": "Returns the available market-value estimate and relevant valuation details for the supplied vehicle inputs."
+            },
+            {
+              "description": "Review vehicle history before a purchase decision.",
+              "prompt": "Get the vehicle history report for VIN WBAFR7C57CC811956.",
+              "tools_triggered": "get_vehicle_history",
+              "expected_behavior": "Returns available history information for the VIN and clearly reports when no matching report is available."
+            },
+            {
+              "description": "Check a VIN for safety recalls.",
+              "prompt": "Are there any recalls for VIN WBAFR7C57CC811956?",
+              "tools_triggered": "get_vehicle_recalls",
+              "expected_behavior": "Returns available recall records and their relevant safety details for the VIN."
+            },
+            {
+              "description": "Fetch specs as data, then render a vehicle card.",
+              "prompt": "Look up VIN WBAFR7C57CC811956 and show me the vehicle card.",
+              "tools_triggered": "get_vehicle_specs, render_vehicle_card",
+              "expected_behavior": "Calls get_vehicle_specs first, then render_vehicle_card with the structured specs. The data tool does not mount UI."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Do not trigger for mechanical repair instructions that do not require vehicle-data lookup.",
+              "prompt": "How do I replace brake pads on a bicycle?",
+              "expected_behavior": "The app should not be invoked because the request is unrelated to supported vehicle-data workflows."
+            },
+            {
+              "description": "Do not trigger for vehicle purchasing transactions.",
+              "prompt": "Buy the cheapest used SUV near me and arrange financing.",
+              "expected_behavior": "The app should not be invoked because it cannot purchase vehicles, contact sellers, or arrange financing."
+            },
+            {
+              "description": "Do not trigger for navigation or live traffic requests.",
+              "prompt": "Find the fastest driving route to the airport with current traffic.",
+              "expected_behavior": "The app should not be invoked because routing and live traffic are outside its supported workflows."
+            }
+          ]
+        },
+        "demo_recording_url": "https://TODO.invalid/carsxe-chatgpt-plugin-demo-recording",
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products or take payment. It looks up vehicle data for an existing CarsXE account."
+      },
+      "publication": {
+        "release_notes": "1.3.0 packages CarsXE for the OpenAI Plugins directory and uses OAuth dynamic client registration so reviewers can sign in. Version 1.0.0 was rejected because reviewers could not complete OAuth sign-in."
+      }
+    }
+  }
+}

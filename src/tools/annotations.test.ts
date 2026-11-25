@@ -89,7 +89,13 @@ describe("OpenAI tool annotation matrix", () => {
       dirname(fileURLToPath(import.meta.url)),
       "../../chatgpt-app-submission.json",
     );
-    const submission = JSON.parse(readFileSync(submissionPath, "utf8")) as {
+    const submissionText = readFileSync(submissionPath, "utf8");
+    assert.equal(
+      submissionText.includes("justification"),
+      false,
+      "chatgpt-app-submission.json must not contain justification fields",
+    );
+    const submission = JSON.parse(submissionText) as {
       tools: Record<
         string,
         {
@@ -98,11 +104,9 @@ describe("OpenAI tool annotation matrix", () => {
             openWorldHint: boolean | null;
             destructiveHint: boolean | null;
           };
-          justifications: { open_world_justification?: string };
         }
       >;
     };
-
     const submissionNames = Object.keys(submission.tools).sort();
     assert.deepEqual(submissionNames, Object.keys(tools).sort());
 
@@ -110,20 +114,11 @@ describe("OpenAI tool annotation matrix", () => {
       const registered = tools[name]?.annotations;
       const submitted = submission.tools[name]?.annotations;
       assert.deepEqual(submitted, registered, `${name} submission annotations`);
-      const justification =
-        submission.tools[name]?.justifications.open_world_justification ?? "";
-      assert.ok(
-        justification.length > 0,
-        `${name} must have an open_world_justification`,
+      assert.equal(
+        Object.hasOwn(submission.tools[name] ?? {}, "justifications"),
+        false,
+        `${name} must not carry annotation justifications`,
       );
-      if (OPEN_WORLD_FALSE.has(name)) {
-        assert.match(justification, /does not call external APIs/i);
-      } else {
-        assert.match(
-          justification,
-          /internet-hosted|public internet|user-supplied/i,
-        );
-      }
     }
   });
 });
