@@ -142,11 +142,12 @@ describe("ChatGPT OAuth surface", () => {
       assert.equal(names.includes(name), false, name);
       assert.equal(getRegisteredTools(server)[name], undefined);
       await assert.rejects(
-        () =>
-          handlers(server).get("tools/call")?.(
-            { method: "tools/call", params: { name, arguments: { vin: "1".repeat(17) } } },
-            {},
-          ),
+        async () => {
+          await handlers(server).get("tools/call")?.({
+            method: "tools/call",
+            params: { name, arguments: { vin: "1".repeat(17) } },
+          }, {});
+        },
         /not found/,
       );
     }
