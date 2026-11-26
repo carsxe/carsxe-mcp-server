@@ -1,4 +1,4 @@
-import { isOAuthAccessToken } from "./oauth.js";
+import { isOAuthAccessToken, normalizeAudience } from "./oauth.js";
 
 /**
  * Owner and resident lookups. They return names, addresses, phones, and
@@ -70,11 +70,6 @@ export function classifyIncomingCredential(input: {
   const queryKey = blankToNull(input.queryKey);
   if (queryKey) return { kind: "api-key", secret: queryKey };
   return { kind: "missing" };
-}
-
-function normalizeAudience(audience: string | null | undefined): string | null {
-  if (!audience) return null;
-  return audience.trim().replace(/\/+$/, "");
 }
 
 function blankToNull(value: string | null | undefined): string | null {

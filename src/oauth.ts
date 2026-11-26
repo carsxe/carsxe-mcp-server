@@ -17,7 +17,6 @@ const ISSUER = (process.env.OAUTH_ISSUER ?? "https://mcp.carsxe.com").replace(
 const WEB_BASE = (
 	process.env.OAUTH_WEB_BASE ?? "https://api.carsxe.com"
 ).replace(/\/$/, "");
-const INTERNAL_SECRET = process.env.MCP_OAUTH_INTERNAL_SECRET ?? "";
 
 const CORS_HEADERS: Record<string, string> = {
 	"Access-Control-Allow-Origin": "*",
@@ -224,10 +223,51 @@ export interface ResolvedOAuthToken {
 	audience: string | null;
 }
 
-/** Reads the fields this server uses. Older introspection responses omit `aud`. */
+/** Drops trailing slashes so `https://mcp.carsxe.com/mcp/` matches the resource. */
+export function normalizeAudience(
+	audience: string | null | undefined,
+): string | null {
+	if (!audience) return null;
+	return audience.trim().replace(/\/+$/, "");
+}
+
+/**
+ * `null` accepts a token with no audience. `false` rejects a present `aud`
+ * that is not this server's resource. A string is the audience to keep.
+ */
+function selectAudience(aud: string | string[] | null): string | null | false {
+	const expected = normalizeAudience(`${ISSUER}/mcp`);
+	if (Array.isArray(aud)) {
+		for (const value of aud) {
+			if (normalizeAudience(value) === expected) return value;
+		}
+		return false;
+	}
+	if (typeof aud !== "string") return null;
+	const normalized = normalizeAudience(aud);
+	if (!normalized) return null;
+	return normalized === expected ? aud : false;
+}
+
+function readAudience(aud: unknown): string | string[] | null {
+	if (typeof aud === "string") {
+		const trimmed = aud.trim();
+		return trimmed ? trimmed : null;
+	}
+	if (Array.isArray(aud)) {
+		return aud
+			.filter((entry): entry is string => typeof entry === "string")
+			.map((entry) => entry.trim());
+	}
+	// Present, but not a string or array: not this resource.
+	if (aud != null) return [];
+	return null;
+}
+
+/** Reads `api_key` and `aud`. `aud` may be a string or an array; older responses omit it. */
 export function readIntrospectionBody(data: unknown): {
 	apiKey: string | null;
-	audience: string | null;
+	audience: string | string[] | null;
 } {
 	if (!data || typeof data !== "object") {
 		return { apiKey: null, audience: null };
@@ -239,22 +279,19 @@ export function readIntrospectionBody(data: unknown): {
 		record.api_key.trim()
 			? record.api_key.trim()
 			: null;
-	const audience =
-		typeof record.aud === "string" && record.aud.trim()
-			? record.aud.trim()
-			: null;
-	return { apiKey, audience };
+	return { apiKey, audience: readAudience(record.aud) };
 }
 
 /**
  * Resolves an OAuth access token to the user's CarsXE API key, or null if
- * the token is invalid, expired, or revoked. `audience` is set when the
- * authorization server stored the OAuth `resource` parameter.
+ * the token is invalid, expired, revoked, or issued for a different audience.
+ * Tokens with no `aud` are still accepted.
  */
 export async function resolveAccessToken(
 	token: string,
 ): Promise<ResolvedOAuthToken | null> {
-	if (!INTERNAL_SECRET) {
+	const secret = process.env.MCP_OAUTH_INTERNAL_SECRET ?? "";
+	if (!secret) {
 		console.error(
 			"MCP_OAUTH_INTERNAL_SECRET is not set; rejecting OAuth bearer token",
 		);
@@ -274,15 +311,21 @@ export async function resolveAccessToken(
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				"X-Internal-Secret": INTERNAL_SECRET,
+				"X-Internal-Secret": secret,
 			},
 			body: JSON.stringify({ token }),
 		});
 		if (!res.ok) return null; // don't cache transient upstream failures
 		const { apiKey, audience } = readIntrospectionBody(await res.json());
+		const selected = selectAudience(audience);
+		if (selected === false && apiKey) {
+			console.warn(
+				`Rejecting OAuth access token: aud ${JSON.stringify(audience)} is not ${ISSUER}/mcp`,
+			);
+		}
 		introspectionCache.set(cacheKey, {
-			apiKey,
-			audience,
+			apiKey: selected === false ? null : apiKey,
+			audience: selected === false ? null : selected,
 			cachedAt: Date.now(),
 		});
 		if (introspectionCache.size > 10_000) {
@@ -292,7 +335,7 @@ export async function resolveAccessToken(
 				}
 			}
 		}
-		return apiKey ? { apiKey, audience } : null;
+		return selected !== false && apiKey ? { apiKey, audience: selected } : null;
 	} catch (error) {
 		console.error("Token introspection failed:", error);
 		return null;
