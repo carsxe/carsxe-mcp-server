@@ -208,6 +208,7 @@ export async function handleOAuthRequest(
 // hit the web app on every request. Keyed by token hash — never the token.
 interface CachedIntrospection {
 	apiKey: string | null;
+	audience: string | null;
 	cachedAt: number;
 }
 const introspectionCache = new Map<string, CachedIntrospection>();
@@ -217,13 +218,42 @@ export function isOAuthAccessToken(token: string): boolean {
 	return token.startsWith("mcp_at_");
 }
 
+export interface ResolvedOAuthToken {
+	apiKey: string;
+	/** RFC 8707 resource stored on the token, when introspection returns `aud`. */
+	audience: string | null;
+}
+
+/** Reads the fields this server uses. Older introspection responses omit `aud`. */
+export function readIntrospectionBody(data: unknown): {
+	apiKey: string | null;
+	audience: string | null;
+} {
+	if (!data || typeof data !== "object") {
+		return { apiKey: null, audience: null };
+	}
+	const record = data as Record<string, unknown>;
+	const apiKey =
+		record.active === true &&
+		typeof record.api_key === "string" &&
+		record.api_key.trim()
+			? record.api_key.trim()
+			: null;
+	const audience =
+		typeof record.aud === "string" && record.aud.trim()
+			? record.aud.trim()
+			: null;
+	return { apiKey, audience };
+}
+
 /**
  * Resolves an OAuth access token to the user's CarsXE API key, or null if
- * the token is invalid, expired, or revoked.
+ * the token is invalid, expired, or revoked. `audience` is set when the
+ * authorization server stored the OAuth `resource` parameter.
  */
 export async function resolveAccessToken(
 	token: string,
-): Promise<string | null> {
+): Promise<ResolvedOAuthToken | null> {
 	if (!INTERNAL_SECRET) {
 		console.error(
 			"MCP_OAUTH_INTERNAL_SECRET is not set; rejecting OAuth bearer token",
@@ -234,7 +264,9 @@ export async function resolveAccessToken(
 	const cacheKey = createHash("sha256").update(token).digest("hex");
 	const cached = introspectionCache.get(cacheKey);
 	if (cached && Date.now() - cached.cachedAt < INTROSPECTION_CACHE_TTL_MS) {
-		return cached.apiKey;
+		return cached.apiKey
+			? { apiKey: cached.apiKey, audience: cached.audience }
+			: null;
 	}
 
 	try {
@@ -247,12 +279,12 @@ export async function resolveAccessToken(
 			body: JSON.stringify({ token }),
 		});
 		if (!res.ok) return null; // don't cache transient upstream failures
-		const data = (await res.json()) as {
-			active: boolean;
-			api_key?: string | null;
-		};
-		const apiKey = data.active && data.api_key ? data.api_key : null;
-		introspectionCache.set(cacheKey, { apiKey, cachedAt: Date.now() });
+		const { apiKey, audience } = readIntrospectionBody(await res.json());
+		introspectionCache.set(cacheKey, {
+			apiKey,
+			audience,
+			cachedAt: Date.now(),
+		});
 		if (introspectionCache.size > 10_000) {
 			for (const [key, value] of introspectionCache) {
 				if (Date.now() - value.cachedAt >= INTROSPECTION_CACHE_TTL_MS) {
@@ -260,7 +292,7 @@ export async function resolveAccessToken(
 				}
 			}
 		}
-		return apiKey;
+		return apiKey ? { apiKey, audience } : null;
 	} catch (error) {
 		console.error("Token introspection failed:", error);
 		return null;

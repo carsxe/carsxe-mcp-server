@@ -11,6 +11,7 @@
     "build": "tsc && chmod 755 build/index.js",
     "build:cf": "tsc && chmod 755 build/index.js",
     "build:gcp": "tsc -p tsconfig.gcp.json --noEmit && esbuild src/index.gcp.ts --bundle --platform=node --target=node22 --outfile=dist/gcp/server.js --format=cjs",
+    "build:chatgpt-plugin": "tsx src/chatgpt-plugin/build.ts",
     "dev": "wrangler dev",
     "format": "biome format --write",
     "lint:fix": "biome lint --fix",

@@ -244,6 +244,14 @@ npm run preview:ui
 
 Then open `previews/vehicle-card.html`, `previews/market-value.html`, and `previews/recalls.html` in a browser.
 
+### ChatGPT directory package
+
+The uploadable OpenAI Plugins package (v1.3.0) is separate from the root `plugin.json` and `mcp.json`. Those root files keep the `X-API-Key` header for Claude and Cursor and are not part of the ChatGPT ZIP. Owner and resident lookups stay available to API-key clients. They are left off the ChatGPT OAuth connection. Build and upload steps are in [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md).
+
+```bash
+npm run build:chatgpt-plugin
+```
+
 ---
 
 ## 🛠️ Available Tools & Example Prompts
@@ -685,6 +693,8 @@ The hosted server at `https://mcp.carsxe.com/mcp` supports two authentication me
 2. **OAuth 2.1** — used by hosted MCP clients such as the Claude.ai custom connector. Clicking **Connect** in Claude.ai runs a standard Authorization Code + PKCE flow: dynamic client registration (RFC 7591), browser sign-in on the CarsXE consent page, then token exchange. Access tokens (`mcp_at_*`, 1 h) map to the user's CarsXE API key; refresh tokens (`mcp_rt_*`, 90 d) are rotated on every refresh.
 
 Requests with no credentials get `401` with a `WWW-Authenticate` challenge, which is what prompts Claude.ai to start the flow.
+
+ChatGPT's plugin connector is a separate OAuth caller. Its `tools/list` and tool calls do not include `get_ownership_by_vin`, `get_ownership_by_person`, `get_ownership_by_address`, or `get_ownership_by_zip`. Those tools return personal data the privacy policy does not list. Claude Desktop, Cursor, and any other API-key client still get them, as does a Claude.ai OAuth token that does not identify as ChatGPT. See [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md) for how that caller is recognized.
 
 ### Environment variables
 
