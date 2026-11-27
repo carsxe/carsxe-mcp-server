@@ -10,7 +10,9 @@ import {
 	resolveAccessToken,
 	sendUnauthorized,
 } from "./oauth.js";
+import { publicAsset } from "./publicAssets.js";
 import { registerAllTools } from "./registerTools.js";
+import { mcpServerInfo } from "./serverInfo.js";
 
 const PORT = parseInt(process.env.PORT ?? "8080", 10);
 const OPENAI_APPS_CHALLENGE_TOKEN =
@@ -58,6 +60,16 @@ const httpServer = http.createServer(async (req, res) => {
 	if (url.pathname === "/health") {
 		res.writeHead(200, { "Content-Type": "application/json" });
 		res.end(JSON.stringify({ status: "ok" }));
+		return;
+	}
+
+	const asset = publicAsset(url.pathname);
+	if (asset) {
+		res.writeHead(200, {
+			"Content-Type": asset.contentType,
+			"Cache-Control": "public, max-age=86400",
+		});
+		res.end(asset.body);
 		return;
 	}
 
@@ -118,7 +130,7 @@ const httpServer = http.createServer(async (req, res) => {
 		}
 	}
 
-	const mcpServer = new McpServer({ name: "carsxe", version: "1.0.1" });
+	const mcpServer = new McpServer(mcpServerInfo());
 	const getApiKey = () => apiKey;
 
 	registerAllTools(mcpServer, getApiKey, { chatgptSurface });
