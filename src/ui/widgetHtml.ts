@@ -297,7 +297,14 @@ function onHostMessage(event) {
   if (event.source !== window.parent) return;
   var message = event.data;
   if (!message || message.jsonrpc !== "2.0") return;
-  if (message.id && message.id === carsxeInitId) {
+  if (
+    (message.method === "ping" || message.method === "ui/resource-teardown") &&
+    message.id
+  ) {
+    postToHost({ jsonrpc: "2.0", id: message.id, result: {} });
+    return;
+  }
+  if (message.id && message.id === carsxeInitId && !message.method) {
     carsxeInitId = 0;
     carsxeReady = true;
     var theme = message.result && message.result.hostContext && message.result.hostContext.theme;

@@ -64,12 +64,14 @@ const httpServer = http.createServer(async (req, res) => {
 	}
 
 	const asset = publicAsset(url.pathname);
-	if (asset) {
+	if (asset && (req.method === "GET" || req.method === "HEAD")) {
 		res.writeHead(200, {
 			"Content-Type": asset.contentType,
 			"Cache-Control": "public, max-age=86400",
+			"Content-Length": asset.body.length,
 		});
-		res.end(asset.body);
+		if (req.method === "HEAD") res.end();
+		else res.end(asset.body);
 		return;
 	}
 

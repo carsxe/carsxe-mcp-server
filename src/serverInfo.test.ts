@@ -17,14 +17,16 @@ describe("server icon", () => {
     assert.equal(info?.name, "carsxe");
     assert.equal(info?.icons?.[0]?.src, SERVER_ICON_URL);
     assert.equal(info?.icons?.[0]?.mimeType, "image/png");
-    assert.deepEqual(info?.icons?.[0]?.sizes, ["511x84"]);
+    assert.deepEqual(info?.icons?.[0]?.sizes, ["256x256"]);
     await client.close();
     await server.close();
   });
 
-  it("serves the wordmark at /logo.png and /favicon.ico", () => {
+  it("serves the square mark at /logo.png and /favicon.ico", () => {
     assert.equal(LOGO_PNG.subarray(0, 8).toString("binary"), "\x89PNG\r\n\x1a\n");
-    assert.equal(LOGO_PNG.length, 22411);
+    assert.equal(LOGO_PNG.readUInt32BE(16), 256);
+    assert.equal(LOGO_PNG.readUInt32BE(20), 256);
+    assert.equal(LOGO_PNG.length, 16401);
     for (const path of ["/logo.png", "/favicon.ico"]) {
       const asset = publicAsset(path);
       assert.equal(asset?.contentType, "image/png");

@@ -12,6 +12,7 @@ type Posted = {
   jsonrpc?: string;
   id?: number;
   method?: string;
+  result?: unknown;
   params?: { width?: number; height?: number; arguments?: unknown };
 };
 
@@ -190,6 +191,37 @@ describe("widget handshake", () => {
     });
     assert.ok(view.root.innerHTML.includes("BMW"));
     assert.equal(view.root.innerHTML.includes("[object Object]"), false);
+  });
+
+  it("does not treat a request that still has a method as the initialize reply", () => {
+    const view = mount(vehicleCardHtml());
+    view.dispatch({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "ui/notifications/tool-result",
+      params: { structuredContent: PREVIEW_VEHICLE_CARD },
+    });
+    assert.equal(
+      view.posted.some(
+        (message) => message.method === "ui/notifications/initialized",
+      ),
+      false,
+    );
+    assert.equal(view.root.innerHTML.includes("BMW"), false);
+  });
+
+  it("answers ping and resource teardown with an empty result", () => {
+    const view = mount(vehicleCardHtml());
+    view.dispatch({ jsonrpc: "2.0", id: 7, method: "ping" });
+    view.dispatch({ jsonrpc: "2.0", id: 8, method: "ui/resource-teardown" });
+    const ping = JSON.parse(
+      JSON.stringify(view.posted.find((message) => message.id === 7)),
+    );
+    const teardown = JSON.parse(
+      JSON.stringify(view.posted.find((message) => message.id === 8)),
+    );
+    assert.deepEqual(ping, { jsonrpc: "2.0", id: 7, result: {} });
+    assert.deepEqual(teardown, { jsonrpc: "2.0", id: 8, result: {} });
   });
 
   it("reads window.openai.toolOutput after the handshake", () => {

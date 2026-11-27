@@ -14,7 +14,7 @@ export function mcpServerInfo(): Implementation {
       {
         src: SERVER_ICON_URL,
         mimeType: "image/png",
-        sizes: ["511x84"],
+        sizes: ["256x256"],
       },
     ],
   };
