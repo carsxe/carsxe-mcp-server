@@ -224,11 +224,16 @@ html, body {
   <div id="root" class="shell"><div class="body">Loading…</div></div>
   <script>window.__CARSXE_PREVIEW__ = {"vin":"WBAFR7C57CC811956","year":"2012","make":"BMW","model":"550i","trim":"xDrive","style":"Sedan","engine":"4.4L V8 Twin Turbo","transmission":"8-speed automatic","drivetrain":"AWD","fuelType":"Gasoline","cityMpg":"15","highwayMpg":"22","seating":"5","msrp":"64400","madeIn":"Germany"};
 
+var carsxeHostTheme = null;
 (function syncTheme() {
   var mq = window.matchMedia("(prefers-color-scheme: dark)");
-  function apply() { document.documentElement.classList.toggle("dark", mq.matches); }
+  function apply() {
+    var dark = carsxeHostTheme ? carsxeHostTheme === "dark" : mq.matches;
+    document.documentElement.classList.toggle("dark", dark);
+  }
   apply();
   if (mq.addEventListener) mq.addEventListener("change", apply);
+  window.__carsxeApplyTheme = apply;
 })();
 function brandHeader(title, vin, badge) {
   return '<div class="header"><div class="brand">' +
@@ -245,25 +250,117 @@ function unwrap(payload) {
   if (payload.structuredContent) return payload.structuredContent;
   return payload;
 }
-function currentOutput() {
-  if (window.__CARSXE_PREVIEW__) return window.__CARSXE_PREVIEW__;
-  if (window.openai && window.openai.toolOutput) return unwrap(window.openai.toolOutput);
-  return null;
+var carsxeRender = null;
+var carsxeReady = false;
+var carsxeInitId = 0;
+var carsxeSawResult = false;
+var carsxePending = [];
+var carsxeLastSize = "";
+function postToHost(message) {
+  if (!window.parent || window.parent === window) return;
+  window.parent.postMessage(message, "*");
+}
+function reportSize() {
+  var root = document.getElementById("root");
+  var height = Math.ceil(
+    (root && root.offsetHeight) ||
+    (document.body && document.body.scrollHeight) ||
+    document.documentElement.scrollHeight ||
+    0
+  );
+  var width = Math.ceil(window.innerWidth || document.documentElement.clientWidth || 0);
+  if (!width || !height) return;
+  var key = width + "x" + height;
+  if (key === carsxeLastSize) return;
+  carsxeLastSize = key;
+  postToHost({
+    jsonrpc: "2.0",
+    method: "ui/notifications/size-changed",
+    params: { width: width, height: height }
+  });
+}
+function deliver(payload, isResult) {
+  var data = unwrap(payload);
+  if (!data || !carsxeRender) return;
+  if (isResult) carsxeSawResult = true;
+  carsxeRender(data);
+  reportSize();
+}
+function onHostMessage(event) {
+  if (event.source !== window.parent) return;
+  var message = event.data;
+  if (!message || message.jsonrpc !== "2.0") return;
+  if (
+    (message.method === "ping" || message.method === "ui/resource-teardown") &&
+    message.id
+  ) {
+    postToHost({ jsonrpc: "2.0", id: message.id, result: {} });
+    return;
+  }
+  if (message.id && message.id === carsxeInitId && !message.method) {
+    carsxeInitId = 0;
+    carsxeReady = true;
+    var theme = message.result && message.result.hostContext && message.result.hostContext.theme;
+    if (theme) {
+      carsxeHostTheme = theme;
+      if (window.__carsxeApplyTheme) window.__carsxeApplyTheme();
+    }
+    postToHost({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} });
+    reportSize();
+    var queued = carsxePending.splice(0, carsxePending.length);
+    for (var i = 0; i < queued.length; i++) onHostMessage({ source: window.parent, data: queued[i] });
+    if (!carsxeSawResult && window.openai && window.openai.toolOutput) {
+      deliver(window.openai.toolOutput, true);
+    }
+    return;
+  }
+  if (!carsxeReady && message.method) {
+    carsxePending.push(message);
+    return;
+  }
+  if (message.method === "ui/notifications/tool-result") {
+    deliver(message.params, true);
+    return;
+  }
+  if (message.method === "ui/notifications/tool-input" && !carsxeSawResult) {
+    var args = message.params && message.params.arguments != null
+      ? message.params.arguments
+      : message.params;
+    deliver(args, false);
+    return;
+  }
+  if (message.method === "ui/notifications/host-context-changed") {
+    var next = message.params && message.params.theme;
+    if (next) {
+      carsxeHostTheme = next;
+      if (window.__carsxeApplyTheme) window.__carsxeApplyTheme();
+    }
+  }
 }
 function subscribe(render) {
-  const first = currentOutput();
-  if (first) render(first);
-  window.addEventListener("message", function (event) {
-    if (event.source !== window.parent) return;
-    var message = event.data;
-    if (!message || message.jsonrpc !== "2.0") return;
-    if (message.method === "ui/notifications/tool-result") {
-      render(unwrap(message.params));
+  carsxeRender = render;
+  if (window.__CARSXE_PREVIEW__) {
+    deliver(window.__CARSXE_PREVIEW__, true);
+    return;
+  }
+  // ChatGPT will not mount the iframe until this handshake finishes.
+  window.addEventListener("message", onHostMessage);
+  if (window.ResizeObserver && document.body) {
+    new window.ResizeObserver(function () {
+      if (carsxeReady) reportSize();
+    }).observe(document.body);
+  }
+  carsxeInitId = 1;
+  postToHost({
+    jsonrpc: "2.0",
+    id: carsxeInitId,
+    method: "ui/initialize",
+    params: {
+      protocolVersion: "2026-01-26",
+      appInfo: { name: "carsxe-card", version: "1.0.1" },
+      appCapabilities: { availableDisplayModes: ["inline"] }
     }
-    if (message.method === "ui/notifications/tool-input" && !currentOutput()) {
-      render(unwrap(message.params));
-    }
-  }, { passive: true });
+  });
 }
 function esc(value) {
   return String(value == null ? "" : value)
